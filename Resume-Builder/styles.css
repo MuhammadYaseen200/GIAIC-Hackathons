@@ -1,0 +1,114 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0a3d62, #3b5998); /* Dark blue gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: backgroundFade 10s ease infinite;
+  }
+  
+  /* Container */
+  .container {
+    text-align: center;
+    color: #ffffff; /* White text for contrast */
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  /* Title styling with animation */
+  .title {
+    font-size: 4rem; /* Larger font size for prominence */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: slideDown 1.5s ease-in-out forwards;
+    color: #ffcc00; /* Bright gold for a striking title */
+  }
+  
+  /* Subtitle styling with animation */
+  .subtitle {
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+    animation: slideUp 1.5s ease-in-out forwards;
+    opacity: 0.9; /* Slightly transparent */
+    color: #b0c4de; /* Light steel blue for subtitle */
+  }
+  
+  /* Button styling with hover effect */
+  /* Button styling with hover effect */
+.enter-btn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #007bff, #00c6ff); /* Gradient background */
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 30px; /* More rounded corners for a softer look */
+    display: inline-block;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Deeper shadow for more contrast */
+    border: none; /* Remove border for a cleaner look */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  .enter-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #00aaff); /* Darker gradient on hover */
+    transform: scale(1.05); /* Button enlarges on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* More pronounced shadow on hover */
+  }
+  
+  .enter-btn:active {
+    transform: scale(0.95); /* Slightly shrink when clicked */
+  }
+  
+  
+  /* Animations */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes backgroundFade {
+    0% {
+      background: linear-gradient(135deg, #0a3d62, #427bf5,blue); /* Dark blue gradient */
+    }
+    50% {
+      background: linear-gradient(135deg, #364cb1, #1d60f1,rgb(0, 81, 255)); /* Medium blue gradient */
+    }
+    100% {
+      background: linear-gradient(135deg, #010847, #1d01bb,rgb(10, 33, 233)); /* Dark blue gradient */
+    }
+  }
+  

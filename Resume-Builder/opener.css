@@ -1,0 +1,462 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+/* Overall Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, cadetblue, grey, rgb(63, 62, 62), rgb(24, 24, 116));
+;
+    color: #343a40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header Styles */
+.header {
+    font-family: 'Bebas Neue';
+
+    margin-bottom: 70px;
+    background: linear-gradient(to right, #2f4f4f, #4b4b4b, #000000, #00008b);
+    padding: 30px 20px;
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100vw;
+    height: 35px;
+}
+
+.header h1 {
+    font-size: 3.8rem;
+    margin-bottom: 3px;
+    margin: 0;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Section Styles */
+.section {
+    /* background: linear-gradient(to right, #2f4f4f, #4b4b4b, #000000, #00008b); */
+    background: linear-gradient(to right, #2f4f4f, #4b4b4b, #000000, #00008b);
+    width: 70vw;
+    padding: 30px;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 6px 5px 16px 20px rgb(115 99 137 / 50%);
+}
+.section1 {
+    /* background: linear-gradient(to right, #2f4f4f, #4b4b4b, #000000, #00008b); */
+    background: rgb(255, 255, 255);
+    width: 70vw;
+    padding: 30px;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 6px 5px 16px 20px rgb(115 99 137 / 50%);
+}
+
+/* Form Styles */
+.form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+}
+
+/* Heading Styles */
+h2, h3 {
+    margin-top: 9vh;
+    font-size: 1.5rem;
+    color: #2bbdc1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Input Styles */
+input[type="text"], input[type="email"], textarea, input[type="number"] {
+    font-size: 1rem;
+    width: 97%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 2px solid #3A86FF;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #343a40;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus, input[type="number"]:focus {
+    border-color: #8338EC;
+    box-shadow: 0 0 5px rgba(131, 56, 236, 0.5);
+    outline: none;
+}
+
+/* Button Styles */
+button {
+    font-size: 0.99rem;
+    height: 3.3rem;
+    background-color: #223fa9;
+    margin: 20px 0px;
+    color: #ffffff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #8338EC;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(131, 56, 236, 0.5);
+}
+
+/* Generated Resume Styles */
+#output {
+    display: none;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+#cv-header {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#cv-header img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    border: 3px solid cadetblue;
+    margin-right: 20px;
+}
+
+#cv-header h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: #3A0CA3;
+}
+
+#cv-header h4 {
+    margin: 5px 0;
+    color: #FFBE0B;
+}
+
+/* Contact and Address Styles */
+#output-contact, #output-address {
+    border: 2px cadetblue;
+    text-align: justify;
+    font-family: emoji;
+    font-style: oblique;
+    color: #888;
+    text-spacing-trim: space-first;
+    font-size: 1.1rem;
+    margin: 0;}
+
+/* Content Styles */
+#cv-content h3 {
+    color: #5fa7a9;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #343a40;
+    padding-bottom: 5px;
+    font-size: 1.5rem;
+}
+
+
+
+#cv-content li {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid  cadetblue;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgb(59, 142, 167,0.4);
+    position: relative;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+#cv-content li:hover {
+    transform: translateY(-2px);
+    background-color: #ffffff;
+}
+
+/* Styling the Job/Education Title and Organization */
+#cv-content li h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #343a40;
+    font-weight: bold;
+}
+
+#cv-content li p {
+    margin: 5px 0 0 0;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* Date Styling */
+#cv-content li .date {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    background-color: #FFBE0B;
+    color: #343a40;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsiveness for Education and Work Cards */
+@media (max-width: 600px) {
+    #cv-content li .date {
+        right: 10px;
+        top: 10px;
+        font-size: 0.8rem;
+        padding: 3px 8px;
+    }
+    
+    #cv-content li h4 {
+        font-size: 1rem;
+    }
+
+    #cv-content li p {
+        font-size: 0.9rem;
+    }
+}
+@media (max-width:400) {
+    .output-contact{
+        margin-left: 0vw;
+    }
+    
+}
+
+/* Additional Styles */
+.date-output {
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 1rem !important;
+    color: #4a4a4a !important;
+    text-align: right !important;
+    padding: 8px 12px !important;
+    border-bottom: 2px solid #ddd !important;
+    margin-bottom: 15px !important;
+    background-color: transparent !important;
+    letter-spacing: 0.5px !important;
+}
+
+.date-output span {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.start-date {
+    margin-bottom: 7px;
+    width: 150px;
+    height: 25px;
+    padding: 5px;
+    border: 1px solid #1000e9;
+    border-radius: 5px;
+}
+
+.end-date {
+    width: 150px;
+    height: 25px;
+    padding: 5px;
+    border: 1px solid #1000e9;
+    border-radius: 5px;
+}
+
+.work-info {
+    padding: 20px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.job-firm {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border: 2px solid rgba(99, 99, 245, 0.911);
+    font-weight: bold;
+    color: #2c3e50;
+    display: block;
+}
+
+.dates {
+    text-decoration-style: wavy;
+    display: block;
+    margin-top: 5px;
+    color: #555;
+    font-style: italic;
+}
+
+.work-info:hover {
+    border-color: #007bff;
+    background-color: #f1f8ff;
+    transition: all 0.3s ease;
+}
+
+.genrated {
+    text-align: center;
+}
+
+.skill {
+    width: 200px;
+    border: 1px solid #750efd;
+}
+.flex {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  
+  .output-contact {
+    margin-left: 30vw;
+    word-spacing: -5px;
+    margin-right: -25px;
+    width: 100%;
+    max-width: 300px;
+    margin-top: -17vh;
+  }
+  
+  @media screen and (max-width: 1024px) {
+    .output-contact {
+      margin-left: 24vw; /* Less upward movement on medium screens */
+      margin-top: -4vh;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    .output-contact {
+      margin-left: 24vw; /* Less upward movement on medium screens */
+      margin-top: -4vh;
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    .output-contact {
+      margin-left: 30vw; /* Less upward movement on medium screens */
+      margin-top: -13vh;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .flex {
+      justify-content: center; /* Center the contact section on smaller screens */
+    }
+  
+
+  }
+  
+  @media screen and (max-width: 750px) {
+    .output-contact {
+       
+      margin-top: 10px; /* Move it slightly downward if necessary on very small screens */
+      margin-left: 0vw;
+    }
+    .output-picture{
+        margin-left: 11vw;
+    }
+    .header h1{
+        font-size: 2.4rem;
+        margin: 0;
+        margin-right: 8vw;
+    }
+  }
+  .name{
+    font-size: xx-large;
+    margin: 0;
+    color: cadetblue;
+    text-align: center;
+    background: grey;
+
+    
+  }
+  .title{
+    margin: 0;
+    margin-bottom: 7px;
+    text-align: center;
+    color:gray;
+    background: rgb(101, 184, 187);
+
+  }
+
+  .italic{
+    display: inline;
+    font-style: italic;
+  }
+  .summary{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+    color: grey;
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid cadetblue;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgb(59 142 167 / 40%);
+    position: relative;
+    transition: transform 0.3s, background-color 0.3s;
+  }
+  .output-picture{
+    margin-bottom: 4vh;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    border: 3px solid cadetblue;
+    margin-right: 20px;
+  }
+  /* Styles for the Opener Page */
+/* Opener Page Styles */
+/* Global styling */
+
+  /* Global styling */
+.output-end{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+    color: grey;
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid cadetblue;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgb(59 142 167 / 40%);
+    position: relative;
+    transition: transform 0.3s, background-color 0.3s;
+}
+@media print {
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: visible; /* Prevents content from being cut off */
+    }
+  
+    #resume {
+      width: 100%; /* Ensure full width */
+      height: auto; /* Ensure full height */
+    }
+  
+    /* Hide any elements that shouldn't appear in the PDF */
+    .no-print {
+      display: none;
+    }
+  }
+  li{ font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+    color: grey;
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid cadetblue;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgb(59 142 167 / 40%);
+    position: relative;
+    transition: transform 0.3s, background-color 0.3s;}
+   
