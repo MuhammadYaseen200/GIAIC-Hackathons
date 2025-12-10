@@ -25,10 +25,10 @@ These tasks involve verifying the implementation and ensuring quality.
 ## Atomic Tasks:
 
 - [ ] **Phase 1: Setup and Docusaurus Structure**
-    - [ ] **Task 0.1:** System Agent using `skill:setup` to Setup the Agent Definitions in `/agents/definitions.yaml`.
-    - [ ] **Task 1.1:** System Agent using `skill:setup` to create feature directory `specs/001-ros-nervous-system/`.
-    - [ ] **Task 1.2:** System Agent using `skill:setup` to create `checklists` subdirectory for feature within `specs/001-ros-nervous-system/`.
-    - [ ] **Task 1.3:** System Agent using `skill:setup` to create `requirements.md` checklist file within `specs/001-ros-nervous-system/checklists/`.
+    - [x] **Task 0.1:** System Agent using `skill:setup` to Setup the Agent Definitions in `/agents/definitions.yaml`.
+    - [x] **Task 1.1:** System Agent using `skill:setup` to create feature directory `specs/001-ros-nervous-system/`.
+    - [x] **Task 1.2:** System Agent using `skill:setup` to create `checklists` subdirectory for feature within `specs/001-ros-nervous-system/`.
+    - [x] **Task 1.3:** System Agent using `skill:setup` to create `requirements.md` checklist file within `specs/001-ros-nervous-system/checklists/`.
     - [ ] **Task 1.4:** System Agent using `skill:setup` to define initial Docusaurus site structure (if not existing) in `docs/` or `website/` base structure.
 
 - [ ] **Phase 2: Content Creation**
