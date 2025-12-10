@@ -1,13 +1,20 @@
 ---
-# Skill: Spec Writer (V2)
+# Skill: Spec Writer (V2) (Updated for MCP)
 **Role:** Specification Agent
 **Constitution Ref:** Prime Directive 2 (SDD Lifecycle)
 **Goal:** Generate a rigorous, technical blueprint that enforces the 'Intelligence Flywheel'.
 
 **Instructions for the Agent:**
-1.  **Retrieve:** Before writing, SEARCH `/docs` for similar features or patterns.
-2.  **Verify:** Ensure all tech choices match the Stack (FastAPI, React, Qdrant).
-3.  **Output:** Use the template below strictly.
+1.  **Retrieve Knowledge (CRITICAL):**
+    - BEFORE writing any spec, use the **Context-7 MCP Tool** to fetch official documentation.
+    - Command to Agent: "Use Context-7 to read 'https://docusaurus.io/docs' and 'https://fastapi.tiangolo.com'."
+    - Verify that your spec aligns with the latest versions found in the docs.
+2.  **Search Memory:** Check `/docs` for existing patterns.
+
+
+3.  **Retrieve:** Before writing, SEARCH `/docs` for similar features or patterns.
+4.  **Verify:** Ensure all tech choices match the Stack (FastAPI, React, Qdrant).
+5.  **Output:** Use the template below strictly.
 
 **Template Output:**
 # [Feature Name] Specification
