@@ -1,0 +1,152 @@
+/**
+ * Custom CSS for Physical AI & Humanoid Robotics Textbook
+ * Combines Docusaurus defaults with Tailwind CSS utilities
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * CSS variables for theming
+ */
+:root {
+  --ifm-color-primary: #0ea5e9;
+  --ifm-color-primary-dark: #0284c7;
+  --ifm-color-primary-darker: #0369a1;
+  --ifm-color-primary-darkest: #075985;
+  --ifm-color-primary-light: #38bdf8;
+  --ifm-color-primary-lighter: #7dd3fc;
+  --ifm-color-primary-lightest: #bae6fd;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] {
+  --ifm-color-primary: #38bdf8;
+  --ifm-color-primary-dark: #0ea5e9;
+  --ifm-color-primary-darker: #0284c7;
+  --ifm-color-primary-darkest: #0369a1;
+  --ifm-color-primary-light: #7dd3fc;
+  --ifm-color-primary-lighter: #bae6fd;
+  --ifm-color-primary-lightest: #e0f2fe;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/**
+ * Typography enhancements
+ */
+.markdown h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.markdown h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/**
+ * Code block styling
+ */
+.prism-code {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/**
+ * Admonition customization
+ */
+.admonition {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+}
+
+/**
+ * Chat widget container (for RAG chatbot - to be implemented)
+ */
+.chat-widget-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+}
+
+.chat-widget-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.chat-widget-button:hover {
+  background-color: var(--ifm-color-primary-dark);
+  transform: scale(1.05);
+}
+
+/**
+ * Custom utility classes
+ */
+.hero-gradient {
+  background: linear-gradient(135deg, var(--ifm-color-primary-light), var(--ifm-color-primary-dark));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/**
+ * Responsive iframe embeds
+ */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * Print styles
+ */
+@media print {
+  .chat-widget-container {
+    display: none;
+  }
+
+  .navbar {
+    display: none;
+  }
+
+  .footer {
+    display: none;
+  }
+}

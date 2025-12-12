@@ -1,0 +1,33 @@
+[tool.black]
+line-length = 100
+target-version = ['py311']
+extend-exclude = '''
+/(
+  \.eggs
+  | \.git
+  | \.venv
+  | build
+  | dist
+  | alembic/versions
+)/
+'''
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = ["alembic/versions/", "tests/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "W503"]
+exclude = [".git", "__pycache__", ".venv", "build", "dist", "alembic/versions"]

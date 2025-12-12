@@ -1,0 +1,50 @@
+# Alembic Database Migrations
+
+This directory contains database migration scripts for the Physical AI & Humanoid Robotics textbook backend.
+
+## Setup
+
+1. Ensure your `.env` file has the correct `DATABASE_URL` for Neon Serverless Postgres
+2. Install dependencies: `pip install -r requirements.txt`
+
+## Common Commands
+
+### Create a new migration
+```bash
+alembic revision --autogenerate -m "description of changes"
+```
+
+### Apply migrations (upgrade to latest)
+```bash
+alembic upgrade head
+```
+
+### Rollback one migration
+```bash
+alembic downgrade -1
+```
+
+### View migration history
+```bash
+alembic history
+```
+
+### View current database version
+```bash
+alembic current
+```
+
+## Manual SQL Migration
+
+For the initial schema setup, you can also run the SQL migration directly:
+```bash
+psql $DATABASE_URL -f db/migrations/001_initial_schema.sql
+```
+
+## Best Practices
+
+1. Always review auto-generated migrations before applying
+2. Test migrations on a development database first
+3. Never edit applied migrations - create new ones instead
+4. Keep migrations small and focused on single changes
+5. Add descriptive messages to migrations
