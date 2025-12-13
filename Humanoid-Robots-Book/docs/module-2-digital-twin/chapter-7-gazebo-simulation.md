@@ -580,7 +580,7 @@ The code you write for Gazebo **works identically** on the real Unitree Go2:
 :::tip Deployment Strategy
 1. Develop algorithm in Gazebo (safe, fast iteration)
 2. Test 1000+ scenarios (stairs, slopes, obstacles)
-3. Deploy to real Go2 (minimal tuning, <5% changes)
+3. Deploy to real Go2 (minimal tuning, \<5% changes)
 :::
 
 ## Summary

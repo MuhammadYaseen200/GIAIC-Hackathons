@@ -54,10 +54,45 @@ This project demonstrates **Reusable Intelligence** through a library of special
 
 **Usage**: After chapter generation, invoke this skill to validate hardware compatibility and add safety warnings.
 
-### How Skills Work Together
-1. **write-chapter** generates chapter content → 2. **ros2-coder** produces code examples → 3. **review-hardware** validates hardware requirements
+### 4. FastAPI Coder Skill (`skills/fastapi-coder.md`)
+**Purpose**: Generate production-ready FastAPI endpoints with Pydantic validation
 
-This creates a **feedback loop** that improves content quality automatically.
+**Persona**: Senior Backend Engineer prioritizing type safety and async patterns
+
+**Key Principles**:
+- Async First: All database and API calls must be `async def`
+- Type Safety: Strict type hinting for all arguments
+- Environment: Always load secrets using `os.getenv` or `pydantic-settings`
+- Docs: Include docstrings for Swagger/OpenAPI generation
+
+**Usage**: Build backend API routes for RAG chatbot, authentication, and data services.
+
+### 5. React Component Skill (`skills/react-component.md`)
+**Purpose**: Build React components optimized for Docusaurus Swizzling
+
+**Persona**: Frontend Architect specializing in Docusaurus functional components
+
+**Key Principles**:
+- Hooks: Use `useState`, `useEffect`, `useCallback` properly
+- Tailwind: Use utility classes for styling
+- Client-Side: Check for `ExecutionEnvironment` when using browser APIs
+- Accessibility: Ensure ARIA labels are present
+
+**Usage**: Create chat widget UI, personalization components, and Docusaurus layout customizations.
+
+### How Skills Work Together
+
+**Content Generation Workflow** (Textbook Chapters):
+```
+write-chapter → ros2-coder → review-hardware → Feedback Loop
+```
+
+**Software Development Workflow** (RAG Chatbot, Features):
+```
+fastapi-coder (backend API) + react-component (frontend UI) → review-hardware (deployment safety) → Integration Testing
+```
+
+This creates **dual feedback loops** that improve both content quality and software architecture automatically.
 
 ### Multi-Agent Architecture (Sub-Agent Pattern)
 
@@ -266,9 +301,11 @@ Humanoid-Robots-Book/
 ├── skills/                   # Reusable Intelligence (P+Q+P format)
 │   ├── write-chapter.md     # Chapter generation skill
 │   ├── ros2-coder.md        # ROS 2 code generation skill
-│   └── review-hardware.md   # Hardware validation skill
+│   ├── review-hardware.md   # Hardware validation skill
+│   ├── fastapi-coder.md     # FastAPI backend code generation skill
+│   └── react-component.md   # React/Docusaurus component skill
 ├── agents/                   # Multi-Agent System
-│   └── team.md              # AI Team Manifest (Orchestrator + 3 sub-agents)
+│   └── team.md              # AI Team Manifest (Orchestrator + 6 sub-agents)
 ├── history/                  # PHRs and ADRs
 │   ├── adr/
 │   └── prompts/
@@ -295,9 +332,10 @@ This project follows Spec-Driven Development (SDD):
 
 **Bonus Points (200)**
 - ✅ **Agent Skills demonstration: 50 points** ← **COMPLETED!**
-  - 3 reusable skills created (write-chapter, ros2-coder, review-hardware)
+  - 5 reusable skills created (write-chapter, ros2-coder, review-hardware, fastapi-coder, react-component)
+  - 6 specialized agents (Orchestrator + Content-Professor + ROS2-Architect + Hardware-Safety + Backend-Engineer + Frontend-Architect)
   - P+Q+P (Persona + Questions + Principles) format
-  - Skills work together in feedback loop
+  - Dual feedback loops (content generation + software development)
 - ⏳ Better Auth integration: 40 points (schema ready, routes pending)
 - ⏳ Per-chapter personalization: 60 points (schema ready, routes pending)
 - ⏳ Urdu translation: 50 points (i18n configured, implementation pending)

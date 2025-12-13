@@ -296,7 +296,7 @@ def image_callback(self, msg: Image) -> None:
 **How it works**:
 - ROS 2 calls this function **automatically** when a message arrives
 - The `msg` parameter contains the `Image` data
-- **Non-blocking**: Callbacks should execute quickly (<10ms ideal)
+- **Non-blocking**: Callbacks should execute quickly (\<10ms ideal)
 
 :::caution Callback Performance
 Never do heavy processing in callbacks! For object detection or SLAM, use a **separate thread** or **timer** to process queued images.
@@ -483,7 +483,7 @@ def image_callback(self, msg):
     time.sleep(5)  # ❌ Blocks other callbacks!
 ```
 
-**Fix**: Callbacks should execute in <10ms. Use timers for long processing.
+**Fix**: Callbacks should execute in \<10ms. Use timers for long processing.
 
 ### Mistake 3: Wrong Queue Size
 ```python

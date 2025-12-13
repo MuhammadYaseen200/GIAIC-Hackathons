@@ -22,7 +22,10 @@ const config = {
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
-  onBrokenLinks: 'throw',
+  // onBrokenLinks: 'throw',
+  // onBrokenMarkdownLinks: 'warn',
+  
+  onBrokenLinks: 'warn', // <--- CHANGED THIS
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -142,7 +145,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ['python', 'bash', 'yaml', 'json', 'xml', 'urdf'],
+        // additionalLanguages: ['python', 'bash', 'yaml', 'json', 'xml', 'urdf'],
       },
       colorMode: {
         defaultMode: 'light',

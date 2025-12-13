@@ -1,0 +1,332 @@
+openapi: 3.1.0
+info:
+  title: RAG Chatbot API
+  version: 1.0.0
+  description: |
+    Physical AI Tutor chatbot backend API for retrieving textbook content using RAG (Retrieval-Augmented Generation).
+
+    ## Features
+    - Semantic search over textbook chapters
+    - GPT-4 powered responses with citations
+    - Session-based conversation history
+    - Rate limiting (10 requests/minute per session)
+
+  contact:
+    name: GIAIC Hackathon Team
+    url: https://github.com/your-username/Humanoid-Robots-Book
+
+servers:
+  - url: https://api.example.com
+    description: Production (Railway)
+  - url: http://localhost:8000
+    description: Local development
+
+tags:
+  - name: chat
+    description: Chat endpoints for RAG chatbot
+  - name: health
+    description: Health check endpoints
+
+paths:
+  /api/chat:
+    post:
+      summary: Send chat message
+      description: |
+        Send a user question and receive an AI-generated response with citations.
+
+        **Rate Limit**: 10 requests per minute per session.
+
+        **Response Time**: Typically 1-3 seconds (95th percentile: <3s per SC-001).
+
+        **Retrieval**: Top-5 most relevant chunks with cosine similarity ≥ 0.7.
+
+      operationId: chatMessage
+      tags:
+        - chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              basic_question:
+                summary: Basic question
+                value:
+                  question: "How do I create a ROS 2 subscriber?"
+                  session_id: "550e8400-e29b-41d4-a716-446655440000"
+              with_context:
+                summary: Question with chapter context
+                value:
+                  question: "Show me code for that"
+                  session_id: "550e8400-e29b-41d4-a716-446655440000"
+                  chapter_context: "module-1-ros2-basics/chapter-2"
+              select_to_ask:
+                summary: Select-to-Ask (highlighted text)
+                value:
+                  question: "Selected text: 'A publisher sends messages to a topic using the publish() method.'\n\nCan you show me an example?"
+                  session_id: "550e8400-e29b-41d4-a716-446655440000"
+                  chapter_context: "module-1-ros2-basics/chapter-2"
+
+      responses:
+        '200':
+          description: Successful response with answer and citations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+              examples:
+                subscriber_example:
+                  summary: Response with code example
+                  value:
+                    answer: |
+                      To create a ROS 2 subscriber, inherit from `rclpy.node.Node` and use `create_subscription()`:
+
+                      ```python
+                      from rclpy.node import Node
+                      from std_msgs.msg import String
+
+                      class MySubscriber(Node):
+                          def __init__(self):
+                              super().__init__('my_subscriber')
+                              self.subscription = self.create_subscription(
+                                  String,
+                                  'topic_name',
+                                  self.listener_callback,
+                                  10
+                              )
+
+                          def listener_callback(self, msg):
+                              self.get_logger().info(f'Received: {msg.data}')
+                      ```
+
+                      This pattern follows OOP best practices from the textbook.
+                    citations:
+                      - title: "Chapter 2: Publisher-Subscriber Communication"
+                        url: "../module-1-ros2-basics/chapter-2-pub-sub.md"
+                        chapter_id: "module-1-ros2-basics/chapter-2"
+                    tokens_used: 1247
+
+        '400':
+          description: Invalid request (validation error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_question:
+                  value:
+                    error: "Validation error"
+                    detail: "Field 'question' is required"
+                question_too_long:
+                  value:
+                    error: "Validation error"
+                    detail: "Field 'question' exceeds maximum length of 500 characters"
+
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limit:
+                  value:
+                    error: "Rate limit exceeded"
+                    detail: "Maximum 10 requests per minute. Try again in 45 seconds."
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                openai_failure:
+                  value:
+                    error: "Internal server error"
+                    detail: "OpenAI API temporarily unavailable"
+                qdrant_unreachable:
+                  value:
+                    error: "Internal server error"
+                    detail: "Vector database unreachable"
+
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                maintenance:
+                  value:
+                    error: "Service unavailable"
+                    detail: "The chatbot is temporarily unavailable. Please try again later."
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns service health status
+      operationId: healthCheck
+      tags:
+        - health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  dependencies:
+                    type: object
+                    properties:
+                      database:
+                        type: string
+                        enum: [connected, disconnected]
+                      vector_db:
+                        type: string
+                        enum: [connected, disconnected]
+                      openai:
+                        type: string
+                        enum: [available, unavailable]
+              example:
+                status: healthy
+                timestamp: "2025-12-13T14:30:00Z"
+                dependencies:
+                  database: connected
+                  vector_db: connected
+                  openai: available
+
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [unhealthy]
+                  error:
+                    type: string
+              example:
+                status: unhealthy
+                error: "Database connection failed"
+
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      required:
+        - question
+        - session_id
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: User's question about textbook content
+          example: "How do I create a ROS 2 subscriber?"
+
+        session_id:
+          type: string
+          format: uuid
+          description: Client-generated session UUID (v4)
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+        chapter_context:
+          type: string
+          nullable: true
+          pattern: '^module-\d+-[\w-]+/chapter-\d+'
+          description: |
+            Optional chapter ID indicating which chapter the user is currently reading.
+            Used to prioritize context from the current chapter.
+          example: "module-1-ros2-basics/chapter-2"
+
+    ChatResponse:
+      type: object
+      required:
+        - answer
+        - citations
+        - tokens_used
+      properties:
+        answer:
+          type: string
+          description: Markdown-formatted response from GPT-4
+          example: |
+            To create a subscriber, use `create_subscription()`:
+
+            ```python
+            self.subscription = self.create_subscription(String, 'topic', callback, 10)
+            ```
+
+        citations:
+          type: array
+          minItems: 1
+          description: Source citations for the answer
+          items:
+            $ref: '#/components/schemas/Citation'
+
+        tokens_used:
+          type: integer
+          minimum: 0
+          description: Total tokens consumed (prompt + completion)
+          example: 1247
+
+    Citation:
+      type: object
+      required:
+        - title
+        - url
+        - chapter_id
+      properties:
+        title:
+          type: string
+          description: Human-readable chapter title
+          example: "Chapter 2: Publisher-Subscriber Communication"
+
+        url:
+          type: string
+          description: Relative URL to chapter markdown file
+          example: "../module-1-ros2-basics/chapter-2-pub-sub.md"
+
+        chapter_id:
+          type: string
+          description: Unique chapter identifier
+          example: "module-1-ros2-basics/chapter-2"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Rate limit exceeded"
+
+        detail:
+          type: string
+          nullable: true
+          description: Additional error details
+          example: "Maximum 10 requests per minute. Try again in 45 seconds."
+
+  securitySchemes:
+    # Future: Add API key or OAuth if needed
+    # For MVP: No authentication (open API)
+    {}
+
+security: []
+
+x-rate-limits:
+  chat:
+    limit: 10
+    period: 60  # seconds
+    per: session_id

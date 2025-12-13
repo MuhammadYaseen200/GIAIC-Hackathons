@@ -18,3 +18,13 @@
 - **Source Skill:** `skills/review-hardware.md`
 - **Role:** Safety Engineer
 - **Responsibility:** Reviews all generated content for physical risks (e.g., voltage warnings, latency traps).
+
+## 5. Agent: @Backend-Engineer
+- **Source Skill:** `skills/fastapi-coder.md`
+- **Role:** Senior Backend Engineer
+- **Responsibility:** Generates production-ready FastAPI endpoints with Pydantic validation, async patterns, and type safety.
+
+## 6. Agent: @Frontend-Architect
+- **Source Skill:** `skills/react-component.md`
+- **Role:** Frontend Architect
+- **Responsibility:** Builds React components optimized for Docusaurus with Hooks, Tailwind styling, and accessibility standards.
