@@ -22,8 +22,9 @@ load_dotenv()
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.db.qdrant_setup import QdrantManager, COLLECTION_NAME
+from src.db.qdrant_setup import QdrantManager
 from src.chat.gemini_service import GeminiService
+from src.config import settings
 
 logging.basicConfig(
     level=logging.INFO,
@@ -194,7 +195,7 @@ async def ingest_documents(
 
     # Create or verify collection
     if not dry_run:
-        logger.info(f"Setting up Qdrant collection: {COLLECTION_NAME}")
+        logger.info(f"Setting up Qdrant collection: {settings.qdrant_collection_name}")
         qdrant.create_collection(recreate=recreate_collection)
 
     # Find all markdown files

@@ -33,18 +33,18 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ur'],
+    locales: ['en'], // Temporarily disabled 'ur' until translated content is available
     localeConfigs: {
       en: {
         label: 'English',
         direction: 'ltr',
         htmlLang: 'en-US',
       },
-      ur: {
-        label: 'اردو',
-        direction: 'rtl',
-        htmlLang: 'ur-PK',
-      },
+      // ur: {
+      //   label: 'اردو',
+      //   direction: 'rtl',
+      //   htmlLang: 'ur-PK',
+      // },
     },
   },
 

@@ -129,32 +129,46 @@ async def chat_endpoint(
 ):
     try:
         # 1. Get Embedding for the user's question
-        query_vector = gemini.get_embedding(request.message)
+        query_vector = await gemini.generate_embedding(request.message)
 
         # 2. Search Qdrant for relevant textbook chunks
         search_results = qdrant.search(
-            query_vector=query_vector, 
+            query_vector=query_vector,
             limit=settings.top_k_retrieval
         )
 
         # 3. Build Context from search results
-        context_text = ""
+        context_chunks = []
         sources = []
         for hit in search_results:
-            context_text += f"{hit.payload['content']}\n\n"
+            # Extract all fields from Qdrant payload
+            title = hit.payload.get("title", "Unknown")
+            section = hit.payload.get("section", "")
+            file_path = hit.payload.get("file_path", "")
+            text_content = hit.payload.get("text", "")
+
+            context_chunks.append({
+                "text": text_content,
+                "metadata": {
+                    "title": title,
+                    "chapter_id": file_path.replace("\\", "/").split("/")[-1].replace(".md", ""),
+                    "url": f"/{file_path.replace(chr(92), '/')}".replace(".md", "")
+                }
+            })
             sources.append({
-                "source": hit.payload.get("source", "Unknown"),
-                "score": hit.score
+                "title": title,
+                "url": f"/{file_path.replace(chr(92), '/')}".replace(".md", ""),
+                "chapter_id": section
             })
 
         # 4. Generate Answer using Gemini + Context
-        answer = gemini.generate_response(
-            query=request.message,
-            context=context_text,
-            history=request.history
+        result = await gemini.generate_response(
+            question=request.message,
+            context_chunks=context_chunks,
+            chapter_context=None
         )
 
-        return ChatResponse(response=answer, sources=sources)
+        return ChatResponse(response=result["answer"], sources=sources)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
