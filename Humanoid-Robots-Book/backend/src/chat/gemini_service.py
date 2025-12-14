@@ -25,7 +25,7 @@ class GeminiService:
     def __init__(
         self,
         google_api_key: str | None = None,
-        model: str = "gemini-1.5-flash",
+        model: str = "gemini-2.5-flash",
         embedding_model: str = "models/text-embedding-004",
     ):
         """

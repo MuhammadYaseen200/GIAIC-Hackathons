@@ -320,14 +320,98 @@ class QdrantManager:
     def search(self, query_vector, limit=5):
         """Search for relevant textbook chunks"""
         try:
-            return self.client.search(
+            results = self.client.query_points(
                 collection_name=self.collection_name,
-                query_vector=query_vector,
-                limit=limit
+                query=query_vector,
+                limit=limit,
+                with_payload=True
             )
+            # Return the points from the QueryResponse
+            return results.points if hasattr(results, 'points') else []
         except Exception as e:
             logger.error(f"Search failed: {e}")
             return []
+
+    def create_collection(self, recreate: bool = False) -> None:
+        """Create the Physical AI textbook vector collection."""
+        try:
+            from qdrant_client.models import VectorParams, Distance
+
+            # Check if collection exists
+            collections = self.client.get_collections().collections
+            collection_exists = any(c.name == self.collection_name for c in collections)
+
+            if collection_exists and recreate:
+                logger.warning(f"Deleting existing collection: {self.collection_name}")
+                self.client.delete_collection(collection_name=self.collection_name)
+                collection_exists = False
+
+            if not collection_exists:
+                logger.info(f"Creating collection: {self.collection_name}")
+                self.client.create_collection(
+                    collection_name=self.collection_name,
+                    vectors_config=VectorParams(
+                        size=768,  # Gemini text-embedding-004 dimension
+                        distance=Distance.COSINE,
+                    ),
+                )
+                logger.info(f"Collection {self.collection_name} created successfully")
+            else:
+                logger.info(f"Collection {self.collection_name} already exists")
+
+        except Exception as e:
+            logger.error(f"Error creating collection: {e}")
+            raise
+
+    def index_documents(self, documents: list, batch_size: int = 100) -> int:
+        """Index document chunks into Qdrant."""
+        try:
+            from qdrant_client.models import PointStruct
+            import uuid
+
+            points = [
+                PointStruct(
+                    id=str(uuid.uuid5(uuid.NAMESPACE_DNS, doc["id"])),  # Convert string ID to UUID
+                    vector=doc["vector"],
+                    payload={
+                        "chapter_id": doc["chapter_id"],
+                        "module_id": doc["module_id"],
+                        "text": doc["text"],
+                        "title": doc.get("metadata", {}).get("title", ""),
+                        "section": doc.get("metadata", {}).get("section", ""),
+                        "file_path": doc.get("metadata", {}).get("file_path", ""),
+                    },
+                )
+                for doc in documents
+            ]
+
+            # Upload in batches
+            for i in range(0, len(points), batch_size):
+                batch = points[i : i + batch_size]
+                self.client.upsert(
+                    collection_name=self.collection_name,
+                    points=batch,
+                )
+                logger.info(f"Indexed batch {i // batch_size + 1}: {len(batch)} documents")
+
+            logger.info(f"Successfully indexed {len(documents)} documents")
+            return len(documents)
+
+        except Exception as e:
+            logger.error(f"Error indexing documents: {e}")
+            raise
+
+    def get_collection_stats(self):
+        """Get collection statistics."""
+        try:
+            info = self.client.get_collection(self.collection_name)
+            return {
+                "points_count": info.points_count,
+                "vectors_count": info.vectors_count,
+            }
+        except Exception as e:
+            logger.error(f"Error getting stats: {e}")
+            return {}
 
 # Singleton instance helper
 def get_qdrant_manager():
