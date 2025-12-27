@@ -1,0 +1,27 @@
+name: evolution-of-todo
+version: "1.0"
+
+structure:
+  specs_dir: specs
+  features_dir: specs/001-core-crud
+  api_dir: specs/api
+  database_dir: specs/database
+
+phases:
+  - name: phase1-console
+    features: [core-crud]
+    deadline: 2025-12-07
+  - name: phase2-web
+    features: [core-crud, authentication]
+    deadline: 2025-12-14
+  - name: phase3-chatbot
+    features: [core-crud, authentication, chatbot]
+    deadline: 2025-12-21
+  - name: phase4-kubernetes
+    features: [core-crud, authentication, chatbot, kubernetes]
+    deadline: 2026-01-04
+  - name: phase5-cloud
+    features: [core-crud, authentication, chatbot, kubernetes, kafka-dapr]
+    deadline: 2026-01-18
+
+current_phase: phase1-console

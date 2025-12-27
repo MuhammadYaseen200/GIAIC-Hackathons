@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" branch --show-current)",
+      "Bash(git fetch:*)",
+      "Bash(ls:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" rev-parse --git-dir)",
+      "Bash(uv init:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run python:*)",
+      "Bash(uv run pytest:*)"
+    ]
+  }
+}
