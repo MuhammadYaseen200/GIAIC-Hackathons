@@ -1,15 +1,15 @@
 [project]
 name = "evolution-of-todo"
 version = "0.1.0"
-description = "Phase I: In-Memory Python Console Todo App - Hackathon II"
+description = "Evolution of Todo - Hackathon II Monorepo (5 Phases)"
 requires-python = ">=3.13"
 dependencies = []
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]
+testpaths = ["phase-1-console/tests"]
+pythonpath = ["phase-1-console"]
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.2",
+    "pytest>=8.0.0",
 ]

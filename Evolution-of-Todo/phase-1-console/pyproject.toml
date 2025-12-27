@@ -1,0 +1,15 @@
+[project]
+name = "phase-1-console"
+version = "1.0.0"
+description = "Phase I: In-Memory Python Console Todo App - Evolution of Todo Hackathon"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]

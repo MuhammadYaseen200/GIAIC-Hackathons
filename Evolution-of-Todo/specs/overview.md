@@ -55,21 +55,32 @@ Master Spec-Driven Development & Cloud-Native AI through iterative evolution fro
 
 > Specify -> Plan -> Tasks -> Implement
 
-## Repository Structure
+## Repository Structure (Monorepo)
 
 ```
-hackathon-todo/
-├── .specify/           # Spec-Kit Plus configuration
-├── .spec-kit/          # Project phase configuration
-├── .claude/            # Claude agent definitions
-├── specs/              # Specifications (intelligence layer)
-│   ├── 001-core-crud/  # Phase I feature specs
-│   └── overview.md     # This file
-├── history/            # PHR and ADR records
-├── src/                # Source code (generated)
-├── AGENTS.md           # Agent behavior rules
-├── CLAUDE.md           # Claude Code instructions
-└── README.md           # Project documentation
+Evolution-of-Todo/
+├── .specify/              # Spec-Kit Plus configuration (shared)
+├── .spec-kit/             # Project phase configuration (shared)
+├── .claude/               # Claude agent definitions (shared)
+├── specs/                 # Cross-phase specifications
+│   └── overview.md        # This file
+├── history/               # PHR and ADR records (shared)
+│   ├── adr/               # Architecture Decision Records
+│   └── prompts/           # Prompt History Records
+├── phase-1-console/       # Phase I: Console App (SEALED)
+│   ├── src/               # Phase I source code
+│   ├── tests/             # Phase I tests (69 passing)
+│   ├── specs/001-core-crud/  # Phase I specifications
+│   ├── pyproject.toml     # Phase I Python config
+│   └── CLAUDE.md          # Phase I context
+├── phase-2-web/           # Phase II: Full-Stack (Pending)
+├── phase-3-ai/            # Phase III: AI Chatbot (Pending)
+├── phase-4-k8s/           # Phase IV: Kubernetes (Pending)
+├── phase-5-cloud/         # Phase V: Cloud Native (Pending)
+├── pyproject.toml         # Root monorepo config
+├── AGENTS.md              # Agent behavior rules
+├── CLAUDE.md              # Root navigation
+└── README.md              # Project documentation
 ```
 
 ## Architecture Decision Records (ADRs)
