@@ -1,0 +1,45 @@
+# Web Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Database
+asyncpg
+sqlalchemy
+alembic
+
+# Vector Database
+qdrant-client
+
+# Google Gemini
+langchain-google-genai
+google-generativeai
+
+# Authentication
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+
+# HTTP & CORS
+aiohttp
+httpx
+
+# Text Processing
+tiktoken
+
+# Testing
+pytest
+pytest-asyncio
+httpx
+
+# Code Quality
+black
+flake8
+mypy==1.8.0
+
+# Utilities
+pydantic
+pydantic-settings
+
+# Rate Limiting
+slowapi
