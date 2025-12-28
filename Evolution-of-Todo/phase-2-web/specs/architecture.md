@@ -1155,11 +1155,45 @@ Developer Push to GitHub
 
 ---
 
+## Clarifications
+
+### Session 2025-12-29
+
+The following architectural decisions were clarified during spec review:
+
+#### CL-001: JWT Token Strategy
+- **Decision**: httpOnly Cookie + Middleware extraction
+- **Rationale**: Cookie stores JWT securely (prevents XSS), Next.js middleware extracts token and adds Bearer header to API requests
+- **Impact**: Frontend components don't handle tokens directly; auth flows through middleware layer
+
+#### CL-002: Data Fetching Strategy
+- **Decision**: Server Actions with revalidatePath
+- **Rationale**: Form submissions use Server Actions for mutations, revalidatePath triggers fresh data fetch
+- **Impact**: Minimal client-side state; server-driven data flow aligns with Next.js App Router patterns
+
+#### CL-003: Database Migration Strategy
+- **Decision**: Alembic migrations
+- **Rationale**: Version-controlled schema changes with rollback support, CI/CD friendly, Python ecosystem standard
+- **Impact**: All schema changes go through `backend/alembic/versions/`, manual SQL avoided
+
+#### CL-004: Route Protection Mechanism
+- **Decision**: Layout-based auth with cookies()
+- **Rationale**: Dashboard layout checks auth via `next/headers` cookies(), redirects unauthorized users to /login
+- **Impact**: Protected routes wrapped in authenticated layout; middleware reserved for token extraction only
+
+#### CL-005: CORS Configuration Strategy
+- **Decision**: Next.js API proxy
+- **Rationale**: Frontend calls `/api/*` routes, Next.js rewrites to FastAPI backend, eliminates CORS complexity entirely
+- **Impact**: No CORS headers needed on FastAPI; all traffic appears same-origin to browser
+
+---
+
 ## 13. Document History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-29 | Spec Architect | Initial architecture specification |
+| 1.0.1 | 2025-12-29 | Spec Architect | Added clarifications (CL-001 to CL-005) |
 
 ---
 

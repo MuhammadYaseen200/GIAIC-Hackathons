@@ -69,6 +69,18 @@
 
 ---
 
+## Clarifications
+
+### Session 2025-12-29
+
+- Q: JWT Token Passing Strategy (cookie vs Bearer header)? → A: **httpOnly Cookie + Middleware extraction** - Cookie stores JWT securely, Next.js middleware extracts and adds Bearer header to API requests
+- Q: Data Fetching Strategy (Server Actions vs client fetch)? → A: **Server Actions with revalidatePath** - Form submissions use Server Actions, mutations trigger revalidatePath for data refresh
+- Q: Database Migration Strategy? → A: **Alembic migrations** - Version-controlled schema changes with rollback support, CI/CD friendly
+- Q: Route Protection Mechanism (Middleware vs Layout)? → A: **Layout-based auth with cookies()** - Dashboard layout checks auth via next/headers cookies(), redirects unauthorized users
+- Q: CORS Configuration Strategy? → A: **Next.js API proxy** - Frontend calls /api/* routes, Next.js rewrites to FastAPI backend, eliminates CORS complexity
+
+---
+
 ## 3. User Scenarios & Testing
 
 ### User Story 1 - User Registration (Priority: P1)
