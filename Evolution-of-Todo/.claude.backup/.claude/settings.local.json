@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" branch --show-current)",
+      "Bash(git fetch:*)",
+      "Bash(ls:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" rev-parse --git-dir)",
+      "Bash(uv init:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run python:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(git commit:*)",
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" log -1 --oneline)",
+      "Bash(git -C \"E:/M.Y/GIAIC-Hackathons/Evolution-of-Todo\" status --short)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "mcp__vercel-awesome-ai__list_projects",
+      "Bash(gh api:*)",
+      "mcp__vercel-awesome-ai__list_deployments",
+      "mcp__vercel-awesome-ai__get_project",
+      "Bash(tree:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(cat:*)",
+      "Bash(git rm:*)",
+      "Bash(git mv:*)",
+      "Bash(dir /A /B \"E:\\\\M.Y\\\\GIAIC-Hackathons\\\\Evolution-of-Todo\")",
+      "Bash(dir /A /B \"E:\\\\M.Y\\\\GIAIC-Hackathons\\\\Evolution-of-Todo\\\\phase-1-console\")",
+      "Bash(test:*)"
+    ]
+  }
+}
