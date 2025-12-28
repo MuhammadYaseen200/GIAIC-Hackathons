@@ -1,210 +1,259 @@
-# Claude Code Rules
+# Evolution of Todo Constitution
 
-This file is generated during init for the selected agent.
+## Project Overview
 
-You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
+**Mission**: Master Spec-Driven Development & Cloud-Native AI through iterative evolution from a Python console app to a fully-featured, Kubernetes-deployed AI chatbot.
 
-## Task context
+**Constraint**: No manual code writing. All code must be generated via Claude Code from approved specifications.
 
-**Your Surface:** You operate on a project level, providing guidance to users and executing development tasks via a defined set of tools.
+---
 
-**Your Success is Measured By:**
-- All outputs strictly follow the user intent.
-- Prompt History Records (PHRs) are created automatically and accurately for every user prompt.
-- Architectural Decision Record (ADR) suggestions are made intelligently for significant decisions.
-- All changes are small, testable, and reference code precisely.
+## Core Principles
 
-## Core Guarantees (Product Promise)
+### I. Spec-Driven Development (NON-NEGOTIABLE)
 
-- Record every user input verbatim in a Prompt History Record (PHR) after every user message. Do not truncate; preserve full multiline input.
-- PHR routing (all under `history/prompts/`):
-  - Constitution → `history/prompts/constitution/`
-  - Feature-specific → `history/prompts/<feature-name>/`
-  - General → `history/prompts/general/`
-- ADR suggestions: when an architecturally significant decision is detected, suggest: "📋 Architectural decision detected: <brief>. Document? Run `/sp.adr <title>`." Never auto‑create ADRs; require user consent.
+Every line of code must trace back to an approved specification. The workflow is immutable:
 
-## Development Guidelines
+1. **Specify** → Define WHAT (requirements, journeys, acceptance criteria)
+2. **Plan** → Define HOW (architecture, components, interfaces)
+3. **Tasks** → Break into ATOMIC, testable work units
+4. **Implement** → Generate code ONLY for approved tasks
 
-### 1. Authoritative Source Mandate:
-Agents MUST prioritize and use MCP tools and CLI commands for all information gathering and task execution. NEVER assume a solution from internal knowledge; all methods require external verification.
+**Violation Response**: If code is proposed without a referenced Task ID, HALT and request specification.
 
-### 2. Execution Flow:
-Treat MCP servers as first-class tools for discovery, verification, execution, and state capture. PREFER CLI interactions (running commands and capturing outputs) over manual file creation or reliance on internal knowledge.
+### II. Iterative Evolution (The Brownfield Protocol)
 
-### 3. Knowledge capture (PHR) for Every User Input.
-After completing requests, you **MUST** create a PHR (Prompt History Record).
+Each phase builds on the previous. We evolve, not rewrite.
 
-**When to create PHRs:**
-- Implementation work (code changes, new features)
-- Planning/architecture discussions
-- Debugging sessions
-- Spec/task/plan creation
-- Multi-step workflows
+- **Phase I → II**: In-memory logic moves to `backend/app/services/`
+- **Phase II → III**: REST API becomes MCP Tool provider
+- **Phase III → IV**: App containerized, Helm charts created
+- **Phase IV → V**: Monolith decoupled via Kafka/Dapr events
 
-**PHR Creation Process:**
+**Pre-Phase Checklist**:
+- [ ] Backup `CLAUDE.md` and current specs
+- [ ] Verify previous phase acceptance criteria pass
+- [ ] Create migration spec before touching code
 
-1) Detect stage
-   - One of: constitution | spec | plan | tasks | red | green | refactor | explainer | misc | general
+### III. Test-First Mindset
 
-2) Generate title
-   - 3–7 words; create a slug for the filename.
+While not enforcing strict TDD, every feature must have:
 
-2a) Resolve route (all under history/prompts/)
-  - `constitution` → `history/prompts/constitution/`
-  - Feature stages (spec, plan, tasks, red, green, refactor, explainer, misc) → `history/prompts/<feature-name>/` (requires feature context)
-  - `general` → `history/prompts/general/`
+1. **Acceptance Criteria** defined in spec BEFORE implementation
+2. **Verification Steps** documented for manual testing
+3. **Automated Tests** where tooling permits (pytest, Jest)
 
-3) Prefer agent‑native flow (no shell)
-   - Read the PHR template from one of:
-     - `.specify/templates/phr-template.prompt.md`
-     - `templates/phr-template.prompt.md`
-   - Allocate an ID (increment; on collision, increment again).
-   - Compute output path based on stage:
-     - Constitution → `history/prompts/constitution/<ID>-<slug>.constitution.prompt.md`
-     - Feature → `history/prompts/<feature-name>/<ID>-<slug>.<stage>.prompt.md`
-     - General → `history/prompts/general/<ID>-<slug>.general.prompt.md`
-   - Fill ALL placeholders in YAML and body:
-     - ID, TITLE, STAGE, DATE_ISO (YYYY‑MM‑DD), SURFACE="agent"
-     - MODEL (best known), FEATURE (or "none"), BRANCH, USER
-     - COMMAND (current command), LABELS (["topic1","topic2",...])
-     - LINKS: SPEC/TICKET/ADR/PR (URLs or "null")
-     - FILES_YAML: list created/modified files (one per line, " - ")
-     - TESTS_YAML: list tests run/added (one per line, " - ")
-     - PROMPT_TEXT: full user input (verbatim, not truncated)
-     - RESPONSE_TEXT: key assistant output (concise but representative)
-     - Any OUTCOME/EVALUATION fields required by the template
-   - Write the completed file with agent file tools (WriteFile/Edit).
-   - Confirm absolute path in output.
+### IV. Smallest Viable Diff
 
-4) Use sp.phr command file if present
-   - If `.**/commands/sp.phr.*` exists, follow its structure.
-   - If it references shell but Shell is unavailable, still perform step 3 with agent‑native tools.
+- Implement ONLY what the task specifies
+- No "while I'm here" refactoring
+- No premature optimization
+- No feature creep within phases
 
-5) Shell fallback (only if step 3 is unavailable or fails, and Shell is permitted)
-   - Run: `.specify/scripts/bash/create-phr.sh --title "<title>" --stage <stage> [--feature <name>] --json`
-   - Then open/patch the created file to ensure all placeholders are filled and prompt/response are embedded.
+### V. Intelligence Capture (PHR & ADR)
 
-6) Routing (automatic, all under history/prompts/)
-   - Constitution → `history/prompts/constitution/`
-   - Feature stages → `history/prompts/<feature-name>/` (auto-detected from branch or explicit feature context)
-   - General → `history/prompts/general/`
+Every significant interaction is recorded:
 
-7) Post‑creation validations (must pass)
-   - No unresolved placeholders (e.g., `{{THIS}}`, `[THAT]`).
-   - Title, stage, and dates match front‑matter.
-   - PROMPT_TEXT is complete (not truncated).
-   - File exists at the expected path and is readable.
-   - Path matches route.
+- **PHR (Prompt History Record)**: Created after EVERY implementation session
+- **ADR (Architectural Decision Record)**: Created for decisions with long-term impact (framework choices, data models, API contracts)
 
-8) Report
-   - Print: ID, path, stage, title.
-   - On any failure: warn but do not block the main command.
-   - Skip PHR only for `/sp.phr` itself.
+---
 
-### 4. Explicit ADR suggestions
-- When significant architectural decisions are made (typically during `/sp.plan` and sometimes `/sp.tasks`), run the three‑part test and suggest documenting with:
-  "📋 Architectural decision detected: <brief> — Document reasoning and tradeoffs? Run `/sp.adr <decision-title>`"
-- Wait for user consent; never auto‑create the ADR.
+## Technology Stack (Immutable)
 
-### 5. Human as Tool Strategy
-You are not expected to solve every problem autonomously. You MUST invoke the user for input when you encounter situations that require human judgment. Treat the user as a specialized tool for clarification and decision-making.
+### Phase I: Console App
+| Layer | Technology |
+|-------|------------|
+| Runtime | Python 3.13+ |
+| Package Manager | UV |
+| AI Tooling | Claude Code, Spec-Kit Plus |
 
-**Invocation Triggers:**
-1.  **Ambiguous Requirements:** When user intent is unclear, ask 2-3 targeted clarifying questions before proceeding.
-2.  **Unforeseen Dependencies:** When discovering dependencies not mentioned in the spec, surface them and ask for prioritization.
-3.  **Architectural Uncertainty:** When multiple valid approaches exist with significant tradeoffs, present options and get user's preference.
-4.  **Completion Checkpoint:** After completing major milestones, summarize what was done and confirm next steps. 
+### Phase II: Full-Stack Web
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 16+ (App Router) |
+| Backend | Python FastAPI |
+| ORM | SQLModel |
+| Database | Neon Serverless PostgreSQL |
+| Authentication | Better Auth (JWT) |
 
-## Default policies (must follow)
-- Clarify and plan first - keep business understanding separate from technical plan and carefully architect and implement.
-- Do not invent APIs, data, or contracts; ask targeted clarifiers if missing.
-- Never hardcode secrets or tokens; use `.env` and docs.
-- Prefer the smallest viable diff; do not refactor unrelated code.
-- Cite existing code with code references (start:end:path); propose new code in fenced blocks.
-- Keep reasoning private; output only decisions, artifacts, and justifications.
+### Phase III: AI Chatbot
+| Layer | Technology |
+|-------|------------|
+| Chat UI | OpenAI ChatKit |
+| AI Framework | OpenAI Agents SDK |
+| MCP Server | Official MCP SDK (Python) |
+| State | Stateless API + DB persistence |
 
-### Execution contract for every request
-1) Confirm surface and success criteria (one sentence).
-2) List constraints, invariants, non‑goals.
-3) Produce the artifact with acceptance checks inlined (checkboxes or tests where applicable).
-4) Add follow‑ups and risks (max 3 bullets).
-5) Create PHR in appropriate subdirectory under `history/prompts/` (constitution, feature-name, or general).
-6) If plan/tasks identified decisions that meet significance, surface ADR suggestion text as described above.
+### Phase IV: Local Kubernetes
+| Layer | Technology |
+|-------|------------|
+| Containers | Docker (Docker Desktop) |
+| Orchestration | Kubernetes (Minikube) |
+| Package Manager | Helm Charts |
+| AIOps | kubectl-ai, Kagent, Gordon (Docker AI) |
 
-### Minimum acceptance criteria
-- Clear, testable acceptance criteria included
-- Explicit error paths and constraints stated
-- Smallest viable change; no unrelated edits
-- Code references to modified/inspected files where relevant
+### Phase V: Cloud Deployment
+| Layer | Technology |
+|-------|------------|
+| Cloud Platform | DigitalOcean DOKS / Azure AKS / GCP GKE |
+| Event Streaming | Kafka (Redpanda/Strimzi) |
+| Distributed Runtime | Dapr |
+| CI/CD | GitHub Actions |
 
-## Architect Guidelines (for planning)
+---
 
-Instructions: As an expert architect, generate a detailed architectural plan for [Project Name]. Address each of the following thoroughly.
+## Feature Progression (Scope Boundaries)
 
-1. Scope and Dependencies:
-   - In Scope: boundaries and key features.
-   - Out of Scope: explicitly excluded items.
-   - External Dependencies: systems/services/teams and ownership.
+### Basic Level (Phases I-III Core)
+- [x] Add Task
+- [x] Delete Task
+- [x] Update Task
+- [x] View Task List
+- [x] Mark as Complete
 
-2. Key Decisions and Rationale:
-   - Options Considered, Trade-offs, Rationale.
-   - Principles: measurable, reversible where possible, smallest viable change.
+### Intermediate Level (Phase V)
+- [ ] Priorities (high/medium/low)
+- [ ] Tags/Categories
+- [ ] Search & Filter
+- [ ] Sort Tasks
 
-3. Interfaces and API Contracts:
-   - Public APIs: Inputs, Outputs, Errors.
-   - Versioning Strategy.
-   - Idempotency, Timeouts, Retries.
-   - Error Taxonomy with status codes.
+### Advanced Level (Phase V)
+- [ ] Recurring Tasks
+- [ ] Due Dates & Time Reminders
 
-4. Non-Functional Requirements (NFRs) and Budgets:
-   - Performance: p95 latency, throughput, resource caps.
-   - Reliability: SLOs, error budgets, degradation strategy.
-   - Security: AuthN/AuthZ, data handling, secrets, auditing.
-   - Cost: unit economics.
+### Bonus Features
+- [ ] Multi-language Support (Urdu)
+- [ ] Voice Commands
+- [ ] Reusable Intelligence (Subagents/Skills)
+- [ ] Cloud-Native Blueprints
 
-5. Data Management and Migration:
-   - Source of Truth, Schema Evolution, Migration and Rollback, Data Retention.
+---
 
-6. Operational Readiness:
-   - Observability: logs, metrics, traces.
-   - Alerting: thresholds and on-call owners.
-   - Runbooks for common tasks.
-   - Deployment and Rollback strategies.
-   - Feature Flags and compatibility.
+## API Design Principles
 
-7. Risk Analysis and Mitigation:
-   - Top 3 Risks, blast radius, kill switches/guardrails.
+### REST Endpoints (Phase II+)
+```
+GET    /api/{user_id}/tasks           → List all tasks
+POST   /api/{user_id}/tasks           → Create task
+GET    /api/{user_id}/tasks/{id}      → Get task details
+PUT    /api/{user_id}/tasks/{id}      → Update task
+DELETE /api/{user_id}/tasks/{id}      → Delete task
+PATCH  /api/{user_id}/tasks/{id}/complete → Toggle completion
+```
 
-8. Evaluation and Validation:
-   - Definition of Done (tests, scans).
-   - Output Validation for format/requirements/safety.
+### MCP Tools (Phase III+)
+```
+add_task(user_id, title, description?) → {task_id, status, title}
+list_tasks(user_id, status?) → [{id, title, completed, ...}]
+complete_task(user_id, task_id) → {task_id, status, title}
+delete_task(user_id, task_id) → {task_id, status, title}
+update_task(user_id, task_id, title?, description?) → {task_id, status, title}
+```
 
-9. Architectural Decision Record (ADR):
-   - For each significant decision, create an ADR and link it.
+### Chat Endpoint (Phase III+)
+```
+POST /api/{user_id}/chat
+  Body: { conversation_id?, message }
+  Response: { conversation_id, response, tool_calls[] }
+```
 
-### Architecture Decision Records (ADR) - Intelligent Suggestion
+---
 
-After design/architecture work, test for ADR significance:
+## Security Principles
 
-- Impact: long-term consequences? (e.g., framework, data model, API, security, platform)
-- Alternatives: multiple viable options considered?
-- Scope: cross‑cutting and influences system design?
+1. **No Hardcoded Secrets**: All credentials via `.env` files
+2. **JWT Verification**: Backend validates Better Auth tokens
+3. **User Isolation**: All queries scoped to authenticated `user_id`
+4. **HTTPS Only**: Production endpoints must use TLS
 
-If ALL true, suggest:
-📋 Architectural decision detected: [brief-description]
-   Document reasoning and tradeoffs? Run `/sp.adr [decision-title]`
+---
 
-Wait for consent; never auto-create ADRs. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
+## Monorepo Structure
 
-## Basic Project Structure
+```
+hackathon-todo/
+├── .specify/                    # Spec-Kit configuration
+│   ├── memory/
+│   │   └── constitution.md     # THIS FILE
+│   └── templates/              # PHR, ADR, Spec templates
+├── specs/                       # Specifications
+│   ├── overview.md
+│   ├── architecture.md
+│   ├── features/               # Feature specs
+│   ├── api/                    # API specs
+│   └── database/               # Schema specs
+├── history/                     # Records
+│   ├── prompts/                # PHR files
+│   │   ├── constitution/
+│   │   ├── general/
+│   │   └── <feature-name>/
+│   └── adr/                    # ADR files
+├── frontend/                    # Next.js app (Phase II+)
+│   └── CLAUDE.md
+├── backend/                     # FastAPI app (Phase II+)
+│   └── CLAUDE.md
+├── src/                         # Python console app (Phase I)
+├── k8s/                         # Kubernetes manifests (Phase IV+)
+├── docker-compose.yml
+├── CLAUDE.md                    # Root instructions
+└── README.md
+```
 
-- `.specify/memory/constitution.md` — Project principles
-- `specs/<feature>/spec.md` — Feature requirements
-- `specs/<feature>/plan.md` — Architecture decisions
-- `specs/<feature>/tasks.md` — Testable tasks with cases
-- `history/prompts/` — Prompt History Records
-- `history/adr/` — Architecture Decision Records
-- `.specify/` — SpecKit Plus templates and scripts
+---
 
-## Code Standards
-See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+## Quality Gates
+
+### Per-Phase Acceptance
+| Phase | Gate |
+|-------|------|
+| I | All 5 basic features work in console |
+| II | REST API returns correct data; Auth works |
+| III | Chatbot executes MCP tools; State persists |
+| IV | Helm charts deploy successfully on Minikube |
+| V | Full system runs on DOKS with Kafka/Dapr |
+
+### Per-Feature Acceptance
+- [ ] Spec exists in `specs/features/`
+- [ ] Plan exists with architectural decisions
+- [ ] Tasks exist with atomic steps
+- [ ] Implementation matches spec exactly
+- [ ] Manual verification steps pass
+
+---
+
+## Agent Orchestration
+
+| Agent | Role | Model |
+|-------|------|-------|
+| lead-architect | Strategy, constitution, phase transitions | Opus |
+| spec-architect | Writing/refining specifications | Opus |
+| backend-builder | Python, FastAPI, MCP implementation | Opus |
+| ux-frontend-developer | Next.js, Tailwind, Better Auth | Sonnet |
+| devops-rag-engineer | Docker, K8s, Helm, Kafka, Dapr | Sonnet |
+| qa-overseer | Acceptance criteria validation | Opus |
+
+---
+
+## Governance
+
+1. **Constitution Supremacy**: This document supersedes all other practices
+2. **Amendments**: Require documented rationale, PHR creation, and explicit approval
+3. **Spec Hierarchy**: Constitution > Specify > Plan > Tasks
+4. **Backtracking**: Moving to a previous phase requires a new spec iteration
+
+---
+
+## Deadlines
+
+| Phase | Due Date |
+|-------|----------|
+| Phase I | Dec 7, 2025 |
+| Phase II | Dec 14, 2025 |
+| Phase III | Dec 21, 2025 |
+| Phase IV | Jan 4, 2026 |
+| Phase V | Jan 18, 2026 |
+
+---
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-27
