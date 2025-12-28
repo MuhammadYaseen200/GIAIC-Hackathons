@@ -61,6 +61,17 @@ Key architectural decisions (from CL-001 to CL-005):
 | Database | Neon Serverless PostgreSQL | Neon PostgreSQL |
 | Authentication | Better Auth (JWT) | Custom JWT (simpler for Phase II) |
 
+### Architecture Decision Records
+
+The following ADRs formalize key architectural decisions for Phase II:
+
+| ADR | Title | Status | Description |
+|-----|-------|--------|-------------|
+| [ADR-004](../../history/adr/ADR-004-httponly-cookie-jwt-strategy.md) | HTTP-Only Cookie JWT Strategy | Accepted | JWT stored in httpOnly cookie, middleware extracts for API calls |
+| [ADR-005](../../history/adr/ADR-005-nextjs-server-actions-data-layer.md) | Server Actions as Data Layer | Accepted | Use Server Actions for mutations, revalidatePath for cache |
+| [ADR-006](../../history/adr/ADR-006-sqlmodel-alembic-migrations.md) | SQLModel with Alembic | Accepted | Alembic for migrations, no create_all() in production |
+| [ADR-007](../../history/adr/ADR-007-brownfield-isolation-strategy.md) | Brownfield Isolation Strategy | Accepted | Port logic, do not import from phase-1-console/ |
+
 ---
 
 ## Project Structure
