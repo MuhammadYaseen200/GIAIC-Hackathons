@@ -63,6 +63,10 @@ docker-compose.override.yml
 *.sql.backup
 *.dump
 pgdata/
+*.db
+*.sqlite
+*.sqlite3
+todo_dev.db
 
 # Logs
 *.log
@@ -70,3 +74,8 @@ pgdata/
 # Temporary
 *.tmp
 *.temp
+
+# Backup directories
+.specify_backup/
+*.backup
+nul

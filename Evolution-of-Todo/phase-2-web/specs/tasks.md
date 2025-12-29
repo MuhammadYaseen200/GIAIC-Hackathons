@@ -56,37 +56,37 @@ docker-compose -f phase-2-web/docker-compose.yml up -d
 
 ### Database & Models
 
-- [ ] T008 Create SQLModel User model in phase-2-web/backend/app/models/user.py
-- [ ] T009 Create SQLModel Task model in phase-2-web/backend/app/models/task.py
-- [ ] T010 Create models __init__.py exporting User, Task in phase-2-web/backend/app/models/__init__.py
-- [ ] T011 Initialize Alembic with SQLModel metadata in phase-2-web/backend/alembic/
-- [ ] T012 Create initial database migration in phase-2-web/backend/alembic/versions/
+- [x] T008 Create SQLModel User model in phase-2-web/backend/app/models/user.py
+- [x] T009 Create SQLModel Task model in phase-2-web/backend/app/models/task.py
+- [x] T010 Create models __init__.py exporting User, Task in phase-2-web/backend/app/models/__init__.py
+- [x] T011 Initialize Alembic with SQLModel metadata in phase-2-web/backend/alembic/
+- [x] T012 Create initial database migration in phase-2-web/backend/alembic/versions/
 
 ### Core Infrastructure
 
-- [ ] T013 [P] Implement Pydantic Settings configuration in phase-2-web/backend/app/core/config.py
-- [ ] T014 [P] Implement JWT encode/decode and password hashing in phase-2-web/backend/app/core/security.py
-- [ ] T015 Implement async database session management in phase-2-web/backend/app/core/database.py
-- [ ] T016 [P] Create core __init__.py exports in phase-2-web/backend/app/core/__init__.py
+- [x] T013 [P] Implement Pydantic Settings configuration in phase-2-web/backend/app/core/config.py
+- [x] T014 [P] Implement JWT encode/decode and password hashing in phase-2-web/backend/app/core/security.py
+- [x] T015 Implement async database session management in phase-2-web/backend/app/core/database.py
+- [x] T016 [P] Create core __init__.py exports in phase-2-web/backend/app/core/__init__.py
 
 ### Backend Services
 
-- [ ] T017 Implement AuthService (register, login, get_user) in phase-2-web/backend/app/services/auth_service.py
-- [ ] T018 Port TaskService from Phase 1 with multi-tenancy in phase-2-web/backend/app/services/task_service.py
-- [ ] T019 [P] Create services __init__.py exports in phase-2-web/backend/app/services/__init__.py
+- [x] T017 Implement AuthService (register, login, get_user) in phase-2-web/backend/app/services/auth_service.py
+- [x] T018 Port TaskService from Phase 1 with multi-tenancy in phase-2-web/backend/app/services/task_service.py
+- [x] T019 [P] Create services __init__.py exports in phase-2-web/backend/app/services/__init__.py
 
 ### API Framework
 
-- [ ] T020 Implement JWT authentication dependency in phase-2-web/backend/app/api/deps.py
-- [ ] T021 Create API v1 router aggregation in phase-2-web/backend/app/api/v1/router.py
-- [ ] T022 Create FastAPI main entry point with router registration in phase-2-web/backend/app/main.py
+- [x] T020 Implement JWT authentication dependency in phase-2-web/backend/app/api/deps.py
+- [x] T021 Create API v1 router aggregation in phase-2-web/backend/app/api/v1/router.py
+- [x] T022 Create FastAPI main entry point with router registration in phase-2-web/backend/app/main.py
 
 ### Frontend Foundation
 
-- [ ] T023 [P] Create TypeScript types matching backend models in phase-2-web/frontend/types/index.ts
-- [ ] T024 [P] Create lib/api.ts fetch wrapper with error handling in phase-2-web/frontend/lib/api.ts
-- [ ] T025 Implement Next.js middleware for auth and header injection in phase-2-web/frontend/middleware.ts
-- [ ] T026 Configure next.config.js API proxy rewrites in phase-2-web/frontend/next.config.js
+- [x] T023 [P] Create TypeScript types matching backend models in phase-2-web/frontend/types/index.ts
+- [x] T024 [P] Create lib/api.ts fetch wrapper with error handling in phase-2-web/frontend/lib/api.ts
+- [x] T025 Implement Next.js middleware for auth and header injection in phase-2-web/frontend/middleware.ts
+- [x] T026 Configure next.config.ts API proxy rewrites in phase-2-web/frontend/next.config.ts
 
 **Verification**:
 ```bash
@@ -112,12 +112,12 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 1
 
-- [ ] T027 [US1] Implement POST /api/v1/auth/register endpoint in phase-2-web/backend/app/api/v1/auth.py
-- [ ] T028 [P] [US1] Create RegisterForm component with validation in phase-2-web/frontend/components/auth/RegisterForm.tsx
-- [ ] T029 [P] [US1] Create Button UI component with variants in phase-2-web/frontend/components/ui/Button.tsx
-- [ ] T030 [P] [US1] Create Input UI component with error state in phase-2-web/frontend/components/ui/Input.tsx
-- [ ] T031 [US1] Create register page using RegisterForm in phase-2-web/frontend/app/(auth)/register/page.tsx
-- [ ] T032 [US1] Implement register Server Action in phase-2-web/frontend/app/actions/auth.ts
+- [x] T027 [US1] Implement POST /api/v1/auth/register endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [x] T028 [P] [US1] Create RegisterForm component with validation in phase-2-web/frontend/components/auth/RegisterForm.tsx
+- [x] T029 [P] [US1] Create Button UI component with variants in phase-2-web/frontend/components/ui/Button.tsx
+- [x] T030 [P] [US1] Create Input UI component with error state in phase-2-web/frontend/components/ui/Input.tsx
+- [x] T031 [US1] Create register page using RegisterForm in phase-2-web/frontend/app/(auth)/register/page.tsx
+- [x] T032 [US1] Implement register Server Action in phase-2-web/frontend/app/actions/auth.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Valid email/password creates account, redirects to login with success message
@@ -138,13 +138,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] Implement POST /api/v1/auth/login endpoint in phase-2-web/backend/app/api/v1/auth.py
-- [ ] T034 [US2] Implement POST /api/v1/auth/logout endpoint in phase-2-web/backend/app/api/v1/auth.py
-- [ ] T035 [US2] Implement GET /api/v1/auth/me endpoint in phase-2-web/backend/app/api/v1/auth.py
-- [ ] T036 [P] [US2] Create LoginForm component with validation in phase-2-web/frontend/components/auth/LoginForm.tsx
-- [ ] T037 [US2] Create login page using LoginForm in phase-2-web/frontend/app/(auth)/login/page.tsx
-- [ ] T038 [US2] Implement login Server Action (sets httpOnly cookie) in phase-2-web/frontend/app/actions/auth.ts
-- [ ] T039 [US2] Implement logout Server Action (clears cookie) in phase-2-web/frontend/app/actions/auth.ts
+- [x] T033 [US2] Implement POST /api/v1/auth/login endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [x] T034 [US2] Implement POST /api/v1/auth/logout endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [x] T035 [US2] Implement GET /api/v1/auth/me endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [x] T036 [P] [US2] Create LoginForm component with validation in phase-2-web/frontend/components/auth/LoginForm.tsx
+- [x] T037 [US2] Create login page using LoginForm in phase-2-web/frontend/app/(auth)/login/page.tsx
+- [x] T038 [US2] Implement login Server Action (sets httpOnly cookie) in phase-2-web/frontend/app/actions/auth.ts
+- [x] T039 [US2] Implement logout Server Action (clears cookie) in phase-2-web/frontend/app/actions/auth.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Valid credentials authenticate and redirect to dashboard
