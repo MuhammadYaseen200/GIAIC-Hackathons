@@ -26,13 +26,13 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend project structure per plan.md in phase-2-web/backend/
-- [ ] T002 [P] Initialize FastAPI project with pyproject.toml in phase-2-web/backend/pyproject.toml
-- [ ] T003 [P] Create frontend Next.js 15+ project with App Router in phase-2-web/frontend/
-- [ ] T004 [P] Create docker-compose.yml for PostgreSQL in phase-2-web/docker-compose.yml
-- [ ] T005 [P] Create .env.example with all required environment variables in phase-2-web/.env.example
-- [ ] T006 [P] Create backend CLAUDE.md with implementation instructions in phase-2-web/backend/CLAUDE.md
-- [ ] T007 [P] Create frontend CLAUDE.md with implementation instructions in phase-2-web/frontend/CLAUDE.md
+- [x] T001 Create backend project structure per plan.md in phase-2-web/backend/
+- [x] T002 [P] Initialize FastAPI project with pyproject.toml in phase-2-web/backend/pyproject.toml
+- [x] T003 [P] Create frontend Next.js 15+ project with App Router in phase-2-web/frontend/
+- [x] T004 [P] Create docker-compose.yml for PostgreSQL in phase-2-web/docker-compose.yml
+- [x] T005 [P] Create .env.example with all required environment variables in phase-2-web/.env.example
+- [x] T006 [P] Create backend CLAUDE.md with implementation instructions in phase-2-web/backend/CLAUDE.md
+- [x] T007 [P] Create frontend CLAUDE.md with implementation instructions in phase-2-web/frontend/CLAUDE.md
 
 **Verification**:
 ```bash
