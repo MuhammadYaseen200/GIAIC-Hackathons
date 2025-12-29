@@ -1,873 +1,440 @@
-# Task List: Phase 2 Full-Stack Web Application
+# Tasks: Phase 2 Full-Stack Web Application
 
+**Input**: Design documents from `phase-2-web/specs/`
+**Prerequisites**: plan.md (required), spec.md (required), data-model.md, research.md
 **Branch**: `phase-2-web-init`
 **Date**: 2025-12-29
-**Plan**: `phase-2-web/specs/plan.md`
 **Status**: Ready for Implementation
 
 ---
 
-## Task Numbering Convention
+## Format: `[ID] [P?] [Story?] Description`
 
-- **T-2XX**: Phase 2 tasks (200 series)
-- Format: `T-{phase}{sequence}` (e.g., T-201 = Phase 2, Task 1)
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2)
+- Include exact file paths in descriptions
+
+## Path Conventions (Web App)
+
+- **Backend**: `phase-2-web/backend/`
+- **Frontend**: `phase-2-web/frontend/`
+- **Root**: `phase-2-web/` (docker-compose, .env)
 
 ---
 
-## Layer 0: Infrastructure Setup
+## Phase 1: Setup (Shared Infrastructure)
 
-### T-201: Create Backend Project Structure
+**Purpose**: Project initialization and basic structure
 
-**Priority**: P1 (Critical Path)
-**Dependencies**: None
-**Estimated Effort**: Small
-
-**Description**: Initialize the FastAPI backend project with proper folder structure.
-
-**Acceptance Criteria**:
-1. `phase-2-web/backend/` directory exists
-2. `pyproject.toml` with dependencies: fastapi, sqlmodel, uvicorn, python-jose, passlib, bcrypt, python-multipart, alembic, asyncpg
-3. Folder structure: `app/{api/v1, core, models, services}`
-4. `__init__.py` in all packages
-5. `CLAUDE.md` with backend-specific instructions
+- [ ] T001 Create backend project structure per plan.md in phase-2-web/backend/
+- [ ] T002 [P] Initialize FastAPI project with pyproject.toml in phase-2-web/backend/pyproject.toml
+- [ ] T003 [P] Create frontend Next.js 15+ project with App Router in phase-2-web/frontend/
+- [ ] T004 [P] Create docker-compose.yml for PostgreSQL in phase-2-web/docker-compose.yml
+- [ ] T005 [P] Create .env.example with all required environment variables in phase-2-web/.env.example
+- [ ] T006 [P] Create backend CLAUDE.md with implementation instructions in phase-2-web/backend/CLAUDE.md
+- [ ] T007 [P] Create frontend CLAUDE.md with implementation instructions in phase-2-web/frontend/CLAUDE.md
 
 **Verification**:
 ```bash
-cd phase-2-web/backend
-uv sync
-python -c "import app; print('OK')"
+# Backend structure exists
+ls phase-2-web/backend/app/
+
+# Frontend runs
+cd phase-2-web/frontend && pnpm dev
+
+# Docker PostgreSQL starts
+docker-compose -f phase-2-web/docker-compose.yml up -d
 ```
 
 ---
 
-### T-202: Create Frontend Project Structure
+## Phase 2: Foundational (Blocking Prerequisites)
 
-**Priority**: P1 (Critical Path)
-**Dependencies**: None
-**Estimated Effort**: Small
+**Purpose**: Core infrastructure that MUST be complete before ANY user story
 
-**Description**: Initialize the Next.js 15+ frontend project with App Router.
+**CRITICAL**: No user story work can begin until this phase is complete
 
-**Acceptance Criteria**:
-1. `phase-2-web/frontend/` directory exists
-2. Next.js 15+ with App Router enabled
-3. TypeScript configured
-4. Tailwind CSS configured
-5. Folder structure: `app/{(auth), (dashboard), actions}`, `components/{ui, auth, tasks}`, `lib/`, `types/`
-6. `CLAUDE.md` with frontend-specific instructions
+### Database & Models
+
+- [ ] T008 Create SQLModel User model in phase-2-web/backend/app/models/user.py
+- [ ] T009 Create SQLModel Task model in phase-2-web/backend/app/models/task.py
+- [ ] T010 Create models __init__.py exporting User, Task in phase-2-web/backend/app/models/__init__.py
+- [ ] T011 Initialize Alembic with SQLModel metadata in phase-2-web/backend/alembic/
+- [ ] T012 Create initial database migration in phase-2-web/backend/alembic/versions/
+
+### Core Infrastructure
+
+- [ ] T013 [P] Implement Pydantic Settings configuration in phase-2-web/backend/app/core/config.py
+- [ ] T014 [P] Implement JWT encode/decode and password hashing in phase-2-web/backend/app/core/security.py
+- [ ] T015 Implement async database session management in phase-2-web/backend/app/core/database.py
+- [ ] T016 [P] Create core __init__.py exports in phase-2-web/backend/app/core/__init__.py
+
+### Backend Services
+
+- [ ] T017 Implement AuthService (register, login, get_user) in phase-2-web/backend/app/services/auth_service.py
+- [ ] T018 Port TaskService from Phase 1 with multi-tenancy in phase-2-web/backend/app/services/task_service.py
+- [ ] T019 [P] Create services __init__.py exports in phase-2-web/backend/app/services/__init__.py
+
+### API Framework
+
+- [ ] T020 Implement JWT authentication dependency in phase-2-web/backend/app/api/deps.py
+- [ ] T021 Create API v1 router aggregation in phase-2-web/backend/app/api/v1/router.py
+- [ ] T022 Create FastAPI main entry point with router registration in phase-2-web/backend/app/main.py
+
+### Frontend Foundation
+
+- [ ] T023 [P] Create TypeScript types matching backend models in phase-2-web/frontend/types/index.ts
+- [ ] T024 [P] Create lib/api.ts fetch wrapper with error handling in phase-2-web/frontend/lib/api.ts
+- [ ] T025 Implement Next.js middleware for auth and header injection in phase-2-web/frontend/middleware.ts
+- [ ] T026 Configure next.config.js API proxy rewrites in phase-2-web/frontend/next.config.js
 
 **Verification**:
 ```bash
-cd phase-2-web/frontend
-pnpm install
-pnpm dev  # Should start on port 3000
-```
+# Backend starts
+cd phase-2-web/backend && uvicorn app.main:app --port 8000
 
----
-
-### T-203: Create Docker Compose for PostgreSQL
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: None
-**Estimated Effort**: Small
-
-**Description**: Create docker-compose.yml for local PostgreSQL development.
-
-**Acceptance Criteria**:
-1. `docker-compose.yml` at project root (already created by agent)
-2. PostgreSQL 16 Alpine image
-3. Health check configured
-4. Volume for data persistence
-5. Environment variables from `.env`
-
-**Verification**:
-```bash
-docker-compose up -d
-docker-compose ps  # Should show healthy status
-```
-
----
-
-### T-204: Create Environment Configuration
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: None
-**Estimated Effort**: Small
-
-**Description**: Create `.env.example` with all required environment variables.
-
-**Acceptance Criteria**:
-1. `.env.example` at project root (already created by agent)
-2. Database configuration (POSTGRES_*, DATABASE_URL)
-3. Backend configuration (JWT_SECRET, JWT_ALGORITHM, etc.)
-4. Frontend configuration (NEXT_PUBLIC_*, BACKEND_URL)
-5. Clear documentation comments
-
-**Verification**:
-```bash
-cp .env.example .env
-# Edit .env with actual values
-cat .env  # Should have all required vars
-```
-
----
-
-## Layer 1: Database Models
-
-### T-205: Create SQLModel User Model
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-201
-**Estimated Effort**: Small
-
-**Description**: Implement the User entity with SQLModel.
-
-**Acceptance Criteria**:
-1. `backend/app/models/user.py` exists
-2. `UserBase`, `UserCreate`, `User`, `UserRead` classes defined
-3. UUID primary key with `uuid4` default
-4. Email field with unique constraint and index
-5. `password_hash` field (not `password`)
-6. `created_at` timestamp with UTC default
-7. Relationship to Task (back_populates="user")
-
-**Verification**:
-```python
-from app.models.user import User, UserCreate, UserRead
-user = User(email="test@example.com", password_hash="hash")
-print(user.id)  # Should print UUID
-```
-
----
-
-### T-206: Create SQLModel Task Model
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-201, T-205
-**Estimated Effort**: Small
-
-**Description**: Implement the Task entity with SQLModel, evolving from Phase 1.
-
-**Acceptance Criteria**:
-1. `backend/app/models/task.py` exists
-2. `TaskBase`, `TaskCreate`, `TaskUpdate`, `Task`, `TaskRead` classes defined
-3. UUID primary key with `uuid4` default
-4. `user_id` foreign key to User
-5. `title` (1-200 chars), `description` (0-1000 chars)
-6. `completed` boolean default False
-7. `created_at` and `updated_at` timestamps
-8. Relationship to User (back_populates="tasks")
-
-**Verification**:
-```python
-from app.models.task import Task, TaskCreate
-from uuid import uuid4
-task = Task(user_id=uuid4(), title="Test")
-print(task.id, task.completed)  # UUID, False
-```
-
----
-
-### T-207: Initialize Alembic
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-201
-**Estimated Effort**: Small
-
-**Description**: Set up Alembic for database migrations with SQLModel.
-
-**Acceptance Criteria**:
-1. `alembic init alembic` executed
-2. `alembic.ini` configured with sqlalchemy.url placeholder
-3. `alembic/env.py` imports SQLModel metadata
-4. `alembic/env.py` imports all models (User, Task)
-5. Uses async driver configuration for asyncpg
-
-**Verification**:
-```bash
-cd phase-2-web/backend
-alembic check  # Should report no issues
-```
-
----
-
-### T-208: Create Initial Database Migration
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-205, T-206, T-207, T-203
-**Estimated Effort**: Small
-
-**Description**: Generate and apply the initial database schema migration.
-
-**Acceptance Criteria**:
-1. `alembic revision --autogenerate -m "Initial schema"` succeeds
-2. Migration file in `alembic/versions/`
-3. `alembic upgrade head` applies successfully
-4. `user` table exists in database
-5. `task` table exists with foreign key to user
-6. Indexes created (email, user_id, created_at)
-
-**Verification**:
-```bash
-docker-compose up -d
+# Alembic migration works
 alembic upgrade head
-# Connect to DB and verify tables exist
+
+# Frontend compiles
+cd phase-2-web/frontend && pnpm tsc --noEmit
+```
+
+**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+
+---
+
+## Phase 3: User Story 1 - User Registration (Priority: P1)
+
+**Goal**: Allow new users to create accounts and access the system
+
+**Independent Test**: Navigate to /register, fill credentials, verify account created and redirected to login
+
+### Implementation for User Story 1
+
+- [ ] T027 [US1] Implement POST /api/v1/auth/register endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [ ] T028 [P] [US1] Create RegisterForm component with validation in phase-2-web/frontend/components/auth/RegisterForm.tsx
+- [ ] T029 [P] [US1] Create Button UI component with variants in phase-2-web/frontend/components/ui/Button.tsx
+- [ ] T030 [P] [US1] Create Input UI component with error state in phase-2-web/frontend/components/ui/Input.tsx
+- [ ] T031 [US1] Create register page using RegisterForm in phase-2-web/frontend/app/(auth)/register/page.tsx
+- [ ] T032 [US1] Implement register Server Action in phase-2-web/frontend/app/actions/auth.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Valid email/password creates account, redirects to login with success message
+- [ ] Duplicate email shows "An account with this email already exists"
+- [ ] Password < 8 chars shows "Password must be at least 8 characters"
+- [ ] Invalid email format shows "Please enter a valid email address"
+- [ ] Empty fields show validation errors
+
+**Checkpoint**: User Story 1 complete - users can register accounts
+
+---
+
+## Phase 4: User Story 2 - User Login (Priority: P1)
+
+**Goal**: Allow registered users to authenticate and access their tasks
+
+**Independent Test**: Login with valid credentials, verify JWT cookie set, redirected to dashboard
+
+### Implementation for User Story 2
+
+- [ ] T033 [US2] Implement POST /api/v1/auth/login endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [ ] T034 [US2] Implement POST /api/v1/auth/logout endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [ ] T035 [US2] Implement GET /api/v1/auth/me endpoint in phase-2-web/backend/app/api/v1/auth.py
+- [ ] T036 [P] [US2] Create LoginForm component with validation in phase-2-web/frontend/components/auth/LoginForm.tsx
+- [ ] T037 [US2] Create login page using LoginForm in phase-2-web/frontend/app/(auth)/login/page.tsx
+- [ ] T038 [US2] Implement login Server Action (sets httpOnly cookie) in phase-2-web/frontend/app/actions/auth.ts
+- [ ] T039 [US2] Implement logout Server Action (clears cookie) in phase-2-web/frontend/app/actions/auth.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Valid credentials authenticate and redirect to dashboard
+- [ ] Invalid password shows "Invalid email or password" (no indication which is wrong)
+- [ ] Non-existent email shows same error (prevents enumeration)
+- [ ] Logged-in user accessing /login redirects to dashboard
+- [ ] Logout terminates session and redirects to login
+
+**Checkpoint**: User Story 2 complete - users can login/logout
+
+---
+
+## Phase 5: User Story 3 - Add Task (Priority: P1)
+
+**Goal**: Allow authenticated users to create new tasks
+
+**Independent Test**: Login, click Add Task, enter title, verify task appears in list
+
+### Implementation for User Story 3
+
+- [ ] T040 [US3] Implement POST /api/v1/tasks endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T041 [P] [US3] Create Card UI component in phase-2-web/frontend/components/ui/Card.tsx
+- [ ] T042 [P] [US3] Create TaskForm component for create/edit in phase-2-web/frontend/components/tasks/TaskForm.tsx
+- [ ] T043 [US3] Implement createTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Add Task with title creates task with status "pending"
+- [ ] Title + description both saved correctly
+- [ ] Empty title shows "Title is required"
+- [ ] Title > 200 chars shows "Title must not exceed 200 characters"
+- [ ] Success notification appears, task list refreshes
+
+**Checkpoint**: User Story 3 complete - users can create tasks
+
+---
+
+## Phase 6: User Story 4 - View Task List (Priority: P1)
+
+**Goal**: Allow authenticated users to see all their tasks
+
+**Independent Test**: Login with user who has tasks, verify list displays with status indicators
+
+### Implementation for User Story 4
+
+- [ ] T044 [US4] Implement GET /api/v1/tasks endpoint with pagination in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T045 [US4] Implement GET /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T046 [P] [US4] Create TaskList container component in phase-2-web/frontend/components/tasks/TaskList.tsx
+- [ ] T047 [P] [US4] Create TaskItem display component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [ ] T048 [US4] Create dashboard layout with auth guard in phase-2-web/frontend/app/(dashboard)/layout.tsx
+- [ ] T049 [US4] Create dashboard page with task list in phase-2-web/frontend/app/(dashboard)/page.tsx
+- [ ] T050 [US4] Implement getTasks Server Action in phase-2-web/frontend/app/actions/tasks.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Dashboard shows all user's tasks with titles and status
+- [ ] Empty state shows "No tasks yet. Create your first task!"
+- [ ] Completed tasks visually distinct (strikethrough, checkbox checked)
+- [ ] User A cannot see User B's tasks (multi-tenancy)
+- [ ] Tasks in reverse chronological order (newest first)
+
+**Checkpoint**: User Story 4 complete - users can view their tasks
+
+---
+
+## Phase 7: User Story 5 - Update Task (Priority: P2)
+
+**Goal**: Allow users to modify task title or description
+
+**Independent Test**: Click edit on task, modify fields, verify changes persist
+
+### Implementation for User Story 5
+
+- [ ] T051 [US5] Implement PUT /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T052 [P] [US5] Create Modal UI component for dialogs in phase-2-web/frontend/components/ui/Modal.tsx
+- [ ] T053 [US5] Add edit functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [ ] T054 [US5] Implement updateTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Edit title saves and displays new title
+- [ ] Edit description only leaves title unchanged
+- [ ] Empty title on save shows validation error
+- [ ] updated_at timestamp refreshed on save
+
+**Checkpoint**: User Story 5 complete - users can edit tasks
+
+---
+
+## Phase 8: User Story 6 - Delete Task (Priority: P2)
+
+**Goal**: Allow users to permanently remove tasks
+
+**Independent Test**: Click delete on task, confirm, verify task removed from list
+
+### Implementation for User Story 6
+
+- [ ] T055 [US6] Implement DELETE /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T056 [P] [US6] Create DeleteConfirmDialog component in phase-2-web/frontend/components/tasks/DeleteConfirmDialog.tsx
+- [ ] T057 [US6] Add delete functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [ ] T058 [US6] Implement deleteTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Delete + confirm permanently removes task
+- [ ] Cancel in confirmation dialog does NOT delete task
+- [ ] Deleted task does not reappear after refresh
+
+**Checkpoint**: User Story 6 complete - users can delete tasks
+
+---
+
+## Phase 9: User Story 7 - Mark Task Complete (Priority: P2)
+
+**Goal**: Allow users to toggle task completion status
+
+**Independent Test**: Click checkbox on task, verify status toggles and persists
+
+### Implementation for User Story 7
+
+- [ ] T059 [US7] Implement PATCH /api/v1/tasks/{task_id}/complete endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [ ] T060 [US7] Add completion toggle to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [ ] T061 [US7] Implement toggleComplete Server Action in phase-2-web/frontend/app/actions/tasks.ts
+
+**Acceptance Criteria** (from spec.md):
+- [ ] Click checkbox toggles pending -> completed
+- [ ] Click again toggles completed -> pending
+- [ ] Status persists after page refresh
+
+**Checkpoint**: User Story 7 complete - users can mark tasks complete
+
+---
+
+## Phase 10: Polish & Cross-Cutting Concerns
+
+**Purpose**: UX improvements that affect multiple user stories
+
+### Loading & Feedback
+
+- [ ] T062 [P] Add loading spinner to Button component in phase-2-web/frontend/components/ui/Button.tsx
+- [ ] T063 [P] Add skeleton loader to TaskList component in phase-2-web/frontend/components/tasks/TaskList.tsx
+- [ ] T064 [P] Create Toast notification component in phase-2-web/frontend/components/ui/Toast.tsx
+- [ ] T065 Implement toast notifications for CRUD operations in phase-2-web/frontend/app/actions/tasks.ts
+
+### Validation & Error Handling
+
+- [ ] T066 [P] Add client-side form validation to RegisterForm in phase-2-web/frontend/components/auth/RegisterForm.tsx
+- [ ] T067 [P] Add client-side form validation to LoginForm in phase-2-web/frontend/components/auth/LoginForm.tsx
+- [ ] T068 [P] Add client-side form validation to TaskForm in phase-2-web/frontend/components/tasks/TaskForm.tsx
+
+### Final Integration
+
+- [ ] T069 Wire all components to Server Actions in phase-2-web/frontend/app/(dashboard)/page.tsx
+- [ ] T070 Add root layout with global styles in phase-2-web/frontend/app/layout.tsx
+- [ ] T071 Add landing page redirect logic in phase-2-web/frontend/app/page.tsx
+
+---
+
+## Phase 11: Validation & Acceptance
+
+**Purpose**: Verify all acceptance criteria pass
+
+- [ ] T072 Run all User Story 1 acceptance scenarios (5 scenarios)
+- [ ] T073 Run all User Story 2 acceptance scenarios (5 scenarios)
+- [ ] T074 Run all User Story 3 acceptance scenarios (5 scenarios)
+- [ ] T075 Run all User Story 4 acceptance scenarios (5 scenarios)
+- [ ] T076 Run all User Story 5 acceptance scenarios (4 scenarios)
+- [ ] T077 Run all User Story 6 acceptance scenarios (3 scenarios)
+- [ ] T078 Run all User Story 7 acceptance scenarios (3 scenarios)
+- [ ] T079 Create PHR for Phase 2 implementation in history/prompts/phase-2-web/
+- [ ] T080 Update root CLAUDE.md with Phase 2 completion status
+
+---
+
+## Dependencies & Execution Order
+
+### Phase Dependencies
+
+```
+Phase 1 (Setup) ─────────────────┐
+                                 ▼
+Phase 2 (Foundational) ──────────┤ BLOCKS all user stories
+                                 ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  User Stories (Parallel OK)                  │
+├──────────────┬──────────────┬──────────────┬────────────────┤
+│ Phase 3: US1 │ Phase 4: US2 │ Phase 5: US3 │ Phase 6: US4   │
+│ (Register)   │ (Login)      │ (Add Task)   │ (View Tasks)   │
+│ [P1]         │ [P1]         │ [P1]         │ [P1]           │
+├──────────────┼──────────────┼──────────────┼────────────────┤
+│ Phase 7: US5 │ Phase 8: US6 │ Phase 9: US7 │                │
+│ (Update)     │ (Delete)     │ (Complete)   │                │
+│ [P2]         │ [P2]         │ [P2]         │                │
+└──────────────┴──────────────┴──────────────┴────────────────┘
+                                 │
+                                 ▼
+Phase 10 (Polish) ───────────────┤
+                                 ▼
+Phase 11 (Validation) ───────────┘
+```
+
+### User Story Dependencies
+
+| Story | Dependencies | Can Parallelize With |
+|-------|--------------|---------------------|
+| US1 (Register) | Phase 2 only | US2, US3, US4 |
+| US2 (Login) | Phase 2 only | US1, US3, US4 |
+| US3 (Add Task) | Phase 2 only | US1, US2, US4 |
+| US4 (View Tasks) | Phase 2 only | US1, US2, US3 |
+| US5 (Update) | US4 (TaskItem exists) | US6, US7 |
+| US6 (Delete) | US4 (TaskItem exists) | US5, US7 |
+| US7 (Complete) | US4 (TaskItem exists) | US5, US6 |
+
+### Parallel Opportunities
+
+**Setup Phase (all parallel)**:
+```
+T002, T003, T004, T005, T006, T007 → All run simultaneously
+```
+
+**Foundational Phase (partial parallel)**:
+```
+T008, T009 → Parallel (User, Task models)
+T013, T014, T016 → Parallel (config, security, exports)
+```
+
+**User Story 1 (partial parallel)**:
+```
+T028, T029, T030 → Parallel (RegisterForm, Button, Input)
+```
+
+**User Story 4 (partial parallel)**:
+```
+T046, T047 → Parallel (TaskList, TaskItem)
 ```
 
 ---
 
-## Layer 2: Backend Core
-
-### T-209: Implement Core Configuration
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-201, T-204
-**Estimated Effort**: Small
-
-**Description**: Create Pydantic Settings for configuration management.
-
-**Acceptance Criteria**:
-1. `backend/app/core/config.py` exists
-2. `Settings` class with Pydantic BaseSettings
-3. Loads from `.env` file
-4. Fields: DATABASE_URL, JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRATION
-5. Singleton pattern with `get_settings()` function
-
-**Verification**:
-```python
-from app.core.config import get_settings
-settings = get_settings()
-print(settings.JWT_SECRET)  # Should print value from .env
-```
-
----
-
-### T-210: Implement Security Utilities
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-209
-**Estimated Effort**: Small
-
-**Description**: Implement JWT and password hashing utilities.
-
-**Acceptance Criteria**:
-1. `backend/app/core/security.py` exists
-2. `hash_password(password: str) -> str` using bcrypt
-3. `verify_password(plain: str, hashed: str) -> bool`
-4. `create_access_token(user_id: UUID) -> str` creates JWT
-5. `decode_access_token(token: str) -> dict` validates and decodes JWT
-6. JWT includes `sub` (user_id), `iat`, `exp` claims
-
-**Verification**:
-```python
-from app.core.security import hash_password, verify_password, create_access_token, decode_access_token
-from uuid import uuid4
-
-hashed = hash_password("password123")
-assert verify_password("password123", hashed)
-
-user_id = uuid4()
-token = create_access_token(user_id)
-payload = decode_access_token(token)
-assert payload["sub"] == str(user_id)
-```
-
----
-
-### T-211: Implement Database Session
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-208, T-209
-**Estimated Effort**: Small
-
-**Description**: Create database engine and session management.
-
-**Acceptance Criteria**:
-1. `backend/app/core/database.py` exists
-2. SQLModel async engine creation
-3. `get_session()` async generator for dependency injection
-4. Connection pooling configured
-5. Proper cleanup on shutdown
-
-**Verification**:
-```python
-from app.core.database import get_session
-from sqlmodel import select
-from app.models.user import User
-
-async def test():
-    async for session in get_session():
-        result = await session.exec(select(User))
-        print(list(result))
-```
-
----
-
-### T-212: Port TaskService from Phase 1
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-206, T-211
-**Estimated Effort**: Medium
-
-**Description**: Implement TaskService with async methods and multi-tenant support.
-
-**Acceptance Criteria**:
-1. `backend/app/services/task_service.py` exists
-2. `create_task(session, user_id, data: TaskCreate) -> Task`
-3. `list_tasks(session, user_id, limit, offset) -> List[Task]`
-4. `get_task(session, user_id, task_id) -> Task | None`
-5. `update_task(session, user_id, task_id, data: TaskUpdate) -> Task`
-6. `delete_task(session, user_id, task_id) -> bool`
-7. `toggle_complete(session, user_id, task_id) -> Task`
-8. All methods scoped by user_id (multi-tenancy)
-9. Validation: title 1-200 chars, description 0-1000 chars
-
-**Verification**:
-```bash
-cd phase-2-web/backend
-pytest tests/test_task_service.py -v
-```
-
----
-
-### T-213: Implement AuthService
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-205, T-210, T-211
-**Estimated Effort**: Medium
-
-**Description**: Implement authentication service with register and login.
-
-**Acceptance Criteria**:
-1. `backend/app/services/auth_service.py` exists
-2. `register(session, email, password) -> User` with duplicate check
-3. `login(session, email, password) -> str` returns JWT token
-4. `get_user_by_id(session, user_id) -> User | None`
-5. Password hashed with bcrypt
-6. Raises appropriate errors for invalid credentials
-
-**Verification**:
-```bash
-cd phase-2-web/backend
-pytest tests/test_auth_service.py -v
-```
-
----
-
-## Layer 3: API Endpoints
-
-### T-214: Implement JWT Dependency
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-210
-**Estimated Effort**: Small
-
-**Description**: Create FastAPI dependency for JWT authentication.
-
-**Acceptance Criteria**:
-1. `backend/app/api/deps.py` exists
-2. `get_current_user(credentials) -> UUID` dependency
-3. Uses HTTPBearer security scheme
-4. Returns 401 for missing/invalid/expired tokens
-5. Error response follows `{success: false, error: {code, message}}` format
-
-**Verification**:
-```python
-# Tested via endpoint integration
-```
-
----
-
-### T-215: Implement Auth Endpoints
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-213, T-214
-**Estimated Effort**: Medium
-
-**Description**: Implement authentication API endpoints.
-
-**Acceptance Criteria**:
-1. `backend/app/api/v1/auth.py` exists
-2. `POST /api/v1/auth/register` - creates user, returns user data
-3. `POST /api/v1/auth/login` - returns JWT token
-4. `POST /api/v1/auth/logout` - returns success (client clears token)
-5. `GET /api/v1/auth/me` - returns current user (requires auth)
-6. Response format: `{success: true, data: {...}}`
-7. Error format: `{success: false, error: {code, message}}`
-
-**Verification**:
-```bash
-# Register
-curl -X POST http://localhost:8000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"password123"}'
-
-# Login
-curl -X POST http://localhost:8000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"password123"}'
-```
-
----
-
-### T-216: Implement Task Endpoints
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-212, T-214
-**Estimated Effort**: Medium
-
-**Description**: Implement task CRUD API endpoints.
-
-**Acceptance Criteria**:
-1. `backend/app/api/v1/tasks.py` exists
-2. `GET /api/v1/tasks` - list tasks with pagination
-3. `POST /api/v1/tasks` - create task
-4. `GET /api/v1/tasks/{task_id}` - get single task
-5. `PUT /api/v1/tasks/{task_id}` - update task
-6. `DELETE /api/v1/tasks/{task_id}` - delete task
-7. `PATCH /api/v1/tasks/{task_id}/complete` - toggle completion
-8. All endpoints require JWT authentication
-9. All queries scoped by user_id from JWT
-10. 404 for non-existent or other user's tasks
-
-**Verification**:
-```bash
-TOKEN="your_jwt_token"
-
-# List tasks
-curl -X GET http://localhost:8000/api/v1/tasks \
-  -H "Authorization: Bearer $TOKEN"
-
-# Create task
-curl -X POST http://localhost:8000/api/v1/tasks \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Buy groceries"}'
-```
-
----
-
-### T-217: Create FastAPI Main Entry Point
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-215, T-216
-**Estimated Effort**: Small
-
-**Description**: Create the FastAPI application entry point with router registration.
-
-**Acceptance Criteria**:
-1. `backend/app/main.py` exists
-2. FastAPI app with title and version
-3. `/api/v1` router includes auth and tasks routers
-4. CORS middleware configured (for development)
-5. Exception handlers for consistent error responses
-6. Health check endpoint at `/health`
-
-**Verification**:
-```bash
-cd phase-2-web/backend
-uvicorn app.main:app --reload --port 8000
-curl http://localhost:8000/health
-# Should return {"status": "healthy"}
-```
-
----
-
-## Layer 4: Frontend Foundation
-
-### T-218: Create TypeScript Types
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-202
-**Estimated Effort**: Small
-
-**Description**: Define TypeScript interfaces matching backend models.
-
-**Acceptance Criteria**:
-1. `frontend/types/index.ts` exists
-2. User, Task, and API response types defined
-3. Request types: RegisterRequest, LoginRequest, TaskCreateRequest, TaskUpdateRequest
-4. Response types: AuthResponse, TaskResponse, TaskListResponse, ErrorResponse
-5. ApiResponse union type
-
-**Verification**:
-```bash
-cd phase-2-web/frontend
-pnpm tsc --noEmit  # No type errors
-```
-
----
-
-### T-219: Create UI Components
-
-**Priority**: P2
-**Dependencies**: T-202, T-218
-**Estimated Effort**: Medium
-
-**Description**: Create reusable UI components with Tailwind CSS.
-
-**Acceptance Criteria**:
-1. `components/ui/Button.tsx` - with variants (primary, secondary, danger)
-2. `components/ui/Input.tsx` - with label and error state
-3. `components/ui/Card.tsx` - container component
-4. `components/ui/Modal.tsx` - dialog component
-5. All components use Tailwind CSS
-6. Accessible (proper ARIA attributes)
-
-**Verification**:
-Visual inspection in Storybook or development mode.
-
----
-
-### T-220: Create Auth Pages
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-218, T-219
-**Estimated Effort**: Medium
-
-**Description**: Create login and registration pages.
-
-**Acceptance Criteria**:
-1. `app/(auth)/login/page.tsx` - login form
-2. `app/(auth)/register/page.tsx` - registration form
-3. Form validation (email format, password length)
-4. Error display for invalid credentials
-5. Redirect to dashboard on success
-6. Link between login and register pages
-
-**Verification**:
-Navigate to `/login` and `/register` in browser.
-
----
-
-### T-221: Create Dashboard Layout
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-202
-**Estimated Effort**: Small
-
-**Description**: Create authenticated dashboard layout with auth guard.
-
-**Acceptance Criteria**:
-1. `app/(dashboard)/layout.tsx` exists
-2. Reads auth-token from cookies
-3. Redirects to /login if no token
-4. Fetches user info from /api/v1/auth/me
-5. Displays user email in header
-6. Logout button that clears cookie
-
-**Verification**:
-1. Without token: redirects to /login
-2. With valid token: shows dashboard
-3. With expired token: redirects to /login
-
----
-
-### T-222: Create Task List Component
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-218, T-219
-**Estimated Effort**: Medium
-
-**Description**: Create the main task list component.
-
-**Acceptance Criteria**:
-1. `components/tasks/TaskList.tsx` - container for task items
-2. `components/tasks/TaskItem.tsx` - individual task display
-3. Shows title, description, completion status
-4. Checkbox to toggle completion
-5. Edit button to open edit modal
-6. Delete button with confirmation
-7. Empty state when no tasks
-
-**Verification**:
-Visual inspection in development mode.
-
----
-
-## Layer 5: Integration
-
-### T-223: Configure API Proxy
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-202, T-217
-**Estimated Effort**: Small
-
-**Description**: Configure Next.js rewrites for API proxy.
-
-**Acceptance Criteria**:
-1. `frontend/next.config.js` with rewrites
-2. `/api/*` proxies to `${BACKEND_URL}/api/*`
-3. Environment variable for BACKEND_URL
-4. Works in development (localhost:8000)
-
-**Verification**:
-```bash
-# Start backend on :8000
-# Start frontend on :3000
-curl http://localhost:3000/api/v1/health
-# Should proxy to backend and return health response
-```
-
----
-
-### T-224: Implement Middleware
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-202
-**Estimated Effort**: Small
-
-**Description**: Create Next.js middleware for auth and header injection.
-
-**Acceptance Criteria**:
-1. `frontend/middleware.ts` exists
-2. Protects `/dashboard/*` routes (redirect to /login if no token)
-3. Injects Authorization header for `/api/*` requests
-4. Reads token from `auth-token` cookie
-5. Matcher config for relevant paths
-
-**Verification**:
-1. Access /dashboard without cookie -> redirects to /login
-2. Access /api/* with cookie -> Authorization header added
-
----
-
-### T-225: Implement Auth Server Actions
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-215, T-224
-**Estimated Effort**: Medium
-
-**Description**: Create Server Actions for authentication.
-
-**Acceptance Criteria**:
-1. `app/actions/auth.ts` with `'use server'`
-2. `register(formData)` - calls backend, handles errors
-3. `login(formData)` - calls backend, sets httpOnly cookie
-4. `logout()` - clears cookie, redirects to /login
-5. Proper error handling and user feedback
-
-**Verification**:
-1. Register new user via form
-2. Login with valid credentials
-3. Logout clears session
-
----
-
-### T-226: Implement Task Server Actions
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-216, T-224
-**Estimated Effort**: Medium
-
-**Description**: Create Server Actions for task CRUD.
-
-**Acceptance Criteria**:
-1. `app/actions/tasks.ts` with `'use server'`
-2. `createTask(formData)` - creates task, revalidatePath
-3. `updateTask(taskId, formData)` - updates task
-4. `deleteTask(taskId)` - deletes task
-5. `toggleComplete(taskId)` - toggles completion
-6. All actions read token from cookies
-7. All actions call revalidatePath('/dashboard')
-
-**Verification**:
-1. Create task via form
-2. Edit task
-3. Delete task
-4. Toggle completion
-
----
-
-### T-227: Wire Components to Actions
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-222, T-225, T-226
-**Estimated Effort**: Medium
-
-**Description**: Connect frontend components to Server Actions.
-
-**Acceptance Criteria**:
-1. LoginForm calls login action
-2. RegisterForm calls register action
-3. TaskForm calls createTask/updateTask
-4. TaskItem checkbox calls toggleComplete
-5. Delete button calls deleteTask
-6. Dashboard page fetches tasks on mount
-7. All mutations trigger UI refresh via revalidatePath
-
-**Verification**:
-End-to-end flow:
-1. Register -> Login -> Create Task -> Complete Task -> Delete Task -> Logout
-
----
-
-## Layer 6: Polish
-
-### T-228: Add Loading States
-
-**Priority**: P2
-**Dependencies**: T-227
-**Estimated Effort**: Small
-
-**Description**: Add loading indicators for async operations.
-
-**Acceptance Criteria**:
-1. Button shows loading spinner during form submission
-2. Task list shows skeleton while loading
-3. Page transitions show loading indicator
-4. Disable form inputs during submission
-
-**Verification**:
-Visual inspection during slow network simulation.
-
----
-
-### T-229: Add Toast Notifications
-
-**Priority**: P2
-**Dependencies**: T-227
-**Estimated Effort**: Small
-
-**Description**: Add success/error notifications for user actions.
-
-**Acceptance Criteria**:
-1. Success toast on task creation
-2. Success toast on task update
-3. Success toast on task deletion
-4. Error toast on failed operations
-5. Auto-dismiss after 3 seconds
-
-**Verification**:
-Perform CRUD operations and observe notifications.
-
----
-
-### T-230: Add Delete Confirmation Dialog
-
-**Priority**: P2
-**Dependencies**: T-227
-**Estimated Effort**: Small
-
-**Description**: Add confirmation dialog before task deletion.
-
-**Acceptance Criteria**:
-1. Click delete shows confirmation modal
-2. Modal has "Cancel" and "Delete" buttons
-3. Cancel closes modal, task unchanged
-4. Delete removes task and closes modal
-5. Modal is accessible (keyboard navigation, focus trap)
-
-**Verification**:
-1. Click delete -> modal appears
-2. Cancel -> modal closes, task exists
-3. Confirm -> task deleted
-
----
-
-### T-231: Add Form Validation Messages
-
-**Priority**: P2
-**Dependencies**: T-227
-**Estimated Effort**: Small
-
-**Description**: Add client-side validation with clear error messages.
-
-**Acceptance Criteria**:
-1. Email format validation on auth forms
-2. Password length validation (min 8 chars)
-3. Title required validation on task form
-4. Title length validation (max 200 chars)
-5. Description length validation (max 1000 chars)
-6. Error messages displayed below input fields
-7. Submit disabled when validation fails
-
-**Verification**:
-1. Submit empty form -> shows errors
-2. Enter invalid email -> shows format error
-3. Enter short password -> shows length error
-
----
-
-## Layer 7: Validation
-
-### T-232: Run Acceptance Scenarios
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-228, T-229, T-230, T-231
-**Estimated Effort**: Medium
-
-**Description**: Manually verify all acceptance scenarios from spec.
-
-**Acceptance Criteria**:
-Verify all scenarios from spec.md Section 3:
-- [ ] User Registration (5 scenarios)
-- [ ] User Login (5 scenarios)
-- [ ] Add Task (5 scenarios)
-- [ ] View Task List (5 scenarios)
-- [ ] Update Task (4 scenarios)
-- [ ] Delete Task (3 scenarios)
-- [ ] Mark Complete (3 scenarios)
-
-**Verification**:
-Document pass/fail for each scenario in acceptance test report.
-
----
-
-### T-233: Create PHR for Phase 2
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-232
-**Estimated Effort**: Small
-
-**Description**: Create Prompt History Record for Phase 2 implementation.
-
-**Acceptance Criteria**:
-1. PHR file in `history/prompts/phase-2-web/`
-2. Documents key implementation decisions
-3. Lists files created/modified
-4. Notes any deviations from spec
-5. Includes lessons learned
-
-**Verification**:
-PHR file exists and is properly formatted.
-
----
-
-### T-234: Update Root CLAUDE.md
-
-**Priority**: P1 (Critical Path)
-**Dependencies**: T-233
-**Estimated Effort**: Small
-
-**Description**: Update project CLAUDE.md with Phase 2 completion status.
-
-**Acceptance Criteria**:
-1. Phase 2 marked complete in constitution
-2. Feature checklist updated
-3. Phase 2 due date noted (even if past)
-4. Any technical debt documented
-
-**Verification**:
-Read CLAUDE.md and verify Phase 2 section is complete.
+## Implementation Strategy
+
+### MVP First (User Stories 1-4)
+
+1. Complete Phase 1: Setup
+2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
+3. Complete Phase 3: US1 - Registration
+4. Complete Phase 4: US2 - Login
+5. Complete Phase 5: US3 - Add Task
+6. Complete Phase 6: US4 - View Tasks
+7. **STOP and VALIDATE**: Test full CRUD flow independently
+8. Deploy/demo MVP
+
+### Incremental Delivery
+
+| Milestone | Stories | Deliverable |
+|-----------|---------|-------------|
+| M1: Foundation | Setup + Foundational | Backend starts, frontend compiles |
+| M2: Auth | US1 + US2 | Users can register and login |
+| M3: Core CRUD | US3 + US4 | Users can add and view tasks |
+| M4: Full CRUD | US5 + US6 + US7 | Complete task management |
+| M5: Polish | Phase 10 | Loading states, notifications |
+| M6: Release | Phase 11 | Acceptance tests pass |
 
 ---
 
 ## Summary
 
-| Layer | Tasks | P1 (Critical) | P2 (Important) |
+| Phase | Tasks | P1 (Critical) | P2 (Important) |
 |-------|-------|---------------|----------------|
-| 0: Infrastructure | T-201 to T-204 | 4 | 0 |
-| 1: Database | T-205 to T-208 | 4 | 0 |
-| 2: Backend Core | T-209 to T-213 | 5 | 0 |
-| 3: API | T-214 to T-217 | 4 | 0 |
-| 4: Frontend | T-218 to T-222 | 4 | 1 |
-| 5: Integration | T-223 to T-227 | 5 | 0 |
-| 6: Polish | T-228 to T-231 | 0 | 4 |
-| 7: Validation | T-232 to T-234 | 3 | 0 |
-| **Total** | **34** | **29** | **5** |
+| 1: Setup | T001-T007 | 7 | 0 |
+| 2: Foundational | T008-T026 | 19 | 0 |
+| 3: US1 Register | T027-T032 | 6 | 0 |
+| 4: US2 Login | T033-T039 | 7 | 0 |
+| 5: US3 Add Task | T040-T043 | 4 | 0 |
+| 6: US4 View Tasks | T044-T050 | 7 | 0 |
+| 7: US5 Update | T051-T054 | 0 | 4 |
+| 8: US6 Delete | T055-T058 | 0 | 4 |
+| 9: US7 Complete | T059-T061 | 0 | 3 |
+| 10: Polish | T062-T071 | 0 | 10 |
+| 11: Validation | T072-T080 | 9 | 0 |
+| **Total** | **80** | **59** | **21** |
 
-**Critical Path**: T-201 → T-205/T-206 → T-208 → T-211 → T-212/T-213 → T-214 → T-215/T-216 → T-217 → T-223/T-224 → T-225/T-226 → T-227 → T-232
+**Critical Path**: T001 → T008 → T011 → T012 → T015 → T017 → T020 → T022 → T027 → T033 → T040 → T044 → T049 → T072
+
+---
+
+## Agent Assignments (per /sp.tasks request)
+
+| Agent | Responsibilities |
+|-------|------------------|
+| @task-orchestrator | Ensured every task has Definition of Done and Verification |
+| @backend-builder | T008-T022 (Models, Services, API) |
+| @ux-frontend-developer | T023-T071 (Types, Components, Actions, Pages) |
+| @path-warden | Verified all file paths use `phase-2-web/backend/` or `phase-2-web/frontend/` |
+| @qa-overseer | T072-T080 (Acceptance testing, PHR, closure) |
 
 ---
 
@@ -875,7 +442,8 @@ Read CLAUDE.md and verify Phase 2 section is complete.
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-12-29 | Task Orchestrator | Initial task breakdown |
+| 1.0.0 | 2025-12-29 | Task Orchestrator | Initial layer-based breakdown |
+| 2.0.0 | 2025-12-29 | Task Orchestrator | Reorganized by user story per /sp.tasks command |
 
 ---
 
