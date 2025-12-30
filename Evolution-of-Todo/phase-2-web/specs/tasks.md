@@ -165,10 +165,10 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 3
 
-- [ ] T040 [US3] Implement POST /api/v1/tasks endpoint in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T041 [P] [US3] Create Card UI component in phase-2-web/frontend/components/ui/Card.tsx
-- [ ] T042 [P] [US3] Create TaskForm component for create/edit in phase-2-web/frontend/components/tasks/TaskForm.tsx
-- [ ] T043 [US3] Implement createTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T040 [US3] Implement POST /api/v1/tasks endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T041 [P] [US3] Create Card UI component in phase-2-web/frontend/components/ui/Card.tsx
+- [x] T042 [P] [US3] Create TaskForm component for create/edit in phase-2-web/frontend/components/tasks/TaskForm.tsx
+- [x] T043 [US3] Implement createTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Add Task with title creates task with status "pending"
@@ -189,13 +189,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 4
 
-- [ ] T044 [US4] Implement GET /api/v1/tasks endpoint with pagination in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T045 [US4] Implement GET /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T046 [P] [US4] Create TaskList container component in phase-2-web/frontend/components/tasks/TaskList.tsx
-- [ ] T047 [P] [US4] Create TaskItem display component in phase-2-web/frontend/components/tasks/TaskItem.tsx
-- [ ] T048 [US4] Create dashboard layout with auth guard in phase-2-web/frontend/app/(dashboard)/layout.tsx
-- [ ] T049 [US4] Create dashboard page with task list in phase-2-web/frontend/app/(dashboard)/page.tsx
-- [ ] T050 [US4] Implement getTasks Server Action in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T044 [US4] Implement GET /api/v1/tasks endpoint with pagination in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T045 [US4] Implement GET /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T046 [P] [US4] Create TaskList container component in phase-2-web/frontend/components/tasks/TaskList.tsx
+- [x] T047 [P] [US4] Create TaskItem display component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [x] T048 [US4] Create dashboard layout with auth guard in phase-2-web/frontend/app/dashboard/layout.tsx
+- [x] T049 [US4] Create dashboard page with task list in phase-2-web/frontend/app/dashboard/page.tsx
+- [x] T050 [US4] Implement getTasks Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Dashboard shows all user's tasks with titles and status
@@ -216,10 +216,10 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 5
 
-- [ ] T051 [US5] Implement PUT /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T051 [US5] Implement PUT /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
 - [ ] T052 [P] [US5] Create Modal UI component for dialogs in phase-2-web/frontend/components/ui/Modal.tsx
-- [ ] T053 [US5] Add edit functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
-- [ ] T054 [US5] Implement updateTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T053 [US5] Add edit functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [x] T054 [US5] Implement updateTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Edit title saves and displays new title
@@ -239,10 +239,10 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 6
 
-- [ ] T055 [US6] Implement DELETE /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T055 [US6] Implement DELETE /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
 - [ ] T056 [P] [US6] Create DeleteConfirmDialog component in phase-2-web/frontend/components/tasks/DeleteConfirmDialog.tsx
-- [ ] T057 [US6] Add delete functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
-- [ ] T058 [US6] Implement deleteTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T057 [US6] Add delete functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [x] T058 [US6] Implement deleteTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Delete + confirm permanently removes task
@@ -261,9 +261,9 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Implementation for User Story 7
 
-- [ ] T059 [US7] Implement PATCH /api/v1/tasks/{task_id}/complete endpoint in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T060 [US7] Add completion toggle to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
-- [ ] T061 [US7] Implement toggleComplete Server Action in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T059 [US7] Implement PATCH /api/v1/tasks/{task_id}/complete endpoint in phase-2-web/backend/app/api/v1/tasks.py
+- [x] T060 [US7] Add completion toggle to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
+- [x] T061 [US7] Implement toggleComplete Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
 - [ ] Click checkbox toggles pending -> completed
@@ -280,22 +280,22 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 ### Loading & Feedback
 
-- [ ] T062 [P] Add loading spinner to Button component in phase-2-web/frontend/components/ui/Button.tsx
-- [ ] T063 [P] Add skeleton loader to TaskList component in phase-2-web/frontend/components/tasks/TaskList.tsx
-- [ ] T064 [P] Create Toast notification component in phase-2-web/frontend/components/ui/Toast.tsx
-- [ ] T065 Implement toast notifications for CRUD operations in phase-2-web/frontend/app/actions/tasks.ts
+- [x] T062 [P] Add loading spinner to Button component in phase-2-web/frontend/components/ui/Button.tsx
+- [x] T063 [P] Add skeleton loader to TaskList component in phase-2-web/frontend/components/ui/Skeleton.tsx
+- [x] T064 [P] Create Toast notification component in phase-2-web/frontend/components/ui/Toast.tsx
+- [x] T065 Implement toast notifications for CRUD operations in phase-2-web/frontend/app/actions/tasks.ts
 
 ### Validation & Error Handling
 
-- [ ] T066 [P] Add client-side form validation to RegisterForm in phase-2-web/frontend/components/auth/RegisterForm.tsx
-- [ ] T067 [P] Add client-side form validation to LoginForm in phase-2-web/frontend/components/auth/LoginForm.tsx
-- [ ] T068 [P] Add client-side form validation to TaskForm in phase-2-web/frontend/components/tasks/TaskForm.tsx
+- [x] T066 [P] Add client-side form validation to RegisterForm in phase-2-web/frontend/components/auth/RegisterForm.tsx
+- [x] T067 [P] Add client-side form validation to LoginForm in phase-2-web/frontend/components/auth/LoginForm.tsx
+- [x] T068 [P] Add client-side form validation to TaskForm in phase-2-web/frontend/components/tasks/TaskForm.tsx
 
 ### Final Integration
 
-- [ ] T069 Wire all components to Server Actions in phase-2-web/frontend/app/(dashboard)/page.tsx
-- [ ] T070 Add root layout with global styles in phase-2-web/frontend/app/layout.tsx
-- [ ] T071 Add landing page redirect logic in phase-2-web/frontend/app/page.tsx
+- [x] T069 Wire all components to Server Actions in phase-2-web/frontend/app/dashboard/page.tsx
+- [x] T070 Add root layout with global styles in phase-2-web/frontend/app/layout.tsx
+- [x] T071 Add landing page redirect logic in phase-2-web/frontend/app/page.tsx
 
 ---
 
