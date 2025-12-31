@@ -8,11 +8,11 @@ import sys
 import traceback
 
 try:
-    from app.main import app
+    from app.main import app as application
 
-    # Vercel expects a variable named 'app' or a handler function
-    # Our FastAPI app is already named 'app', so we just need to expose it
-    handler = app
+    # Vercel's @vercel/python expects 'app' to be the ASGI application
+    # Re-export it with the correct name
+    app = application
 
     # Log successful import for debugging
     print("✅ FastAPI app imported successfully", file=sys.stderr)
