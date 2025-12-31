@@ -120,13 +120,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 - [x] T032 [US1] Implement register Server Action in phase-2-web/frontend/app/actions/auth.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Valid email/password creates account, redirects to login with success message
-- [ ] Duplicate email shows "An account with this email already exists"
-- [ ] Password < 8 chars shows "Password must be at least 8 characters"
-- [ ] Invalid email format shows "Please enter a valid email address"
-- [ ] Empty fields show validation errors
+- [x] Valid email/password creates account, redirects to login with success message ✅
+- [x] Duplicate email shows "An account with this email already exists" ✅
+- [x] Password < 8 chars shows "Password must be at least 8 characters" ✅
+- [x] Invalid email format shows "Please enter a valid email address" ✅
+- [x] Empty fields show validation errors ✅
 
-**Checkpoint**: User Story 1 complete - users can register accounts
+**Checkpoint**: User Story 1 complete - users can register accounts ✅ VERIFIED
 
 ---
 
@@ -147,13 +147,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 - [x] T039 [US2] Implement logout Server Action (clears cookie) in phase-2-web/frontend/app/actions/auth.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Valid credentials authenticate and redirect to dashboard
-- [ ] Invalid password shows "Invalid email or password" (no indication which is wrong)
-- [ ] Non-existent email shows same error (prevents enumeration)
-- [ ] Logged-in user accessing /login redirects to dashboard
-- [ ] Logout terminates session and redirects to login
+- [x] Valid credentials authenticate and redirect to dashboard ✅
+- [x] Invalid password shows "Invalid email or password" (no indication which is wrong) ✅
+- [x] Non-existent email shows same error (prevents enumeration) ✅
+- [x] Logged-in user accessing /login redirects to dashboard ✅
+- [x] Logout terminates session and redirects to login ✅
 
-**Checkpoint**: User Story 2 complete - users can login/logout
+**Checkpoint**: User Story 2 complete - users can login/logout ✅ VERIFIED
 
 ---
 
@@ -171,13 +171,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 - [x] T043 [US3] Implement createTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Add Task with title creates task with status "pending"
-- [ ] Title + description both saved correctly
-- [ ] Empty title shows "Title is required"
-- [ ] Title > 200 chars shows "Title must not exceed 200 characters"
-- [ ] Success notification appears, task list refreshes
+- [x] Add Task with title creates task with status "pending" ✅
+- [x] Title + description both saved correctly ✅
+- [x] Empty title shows "Title is required" ✅
+- [x] Title > 200 chars shows "Title must not exceed 200 characters" ✅
+- [x] Success notification appears, task list refreshes ✅
 
-**Checkpoint**: User Story 3 complete - users can create tasks
+**Checkpoint**: User Story 3 complete - users can create tasks ✅ VERIFIED
 
 ---
 
@@ -198,13 +198,13 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 - [x] T050 [US4] Implement getTasks Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Dashboard shows all user's tasks with titles and status
-- [ ] Empty state shows "No tasks yet. Create your first task!"
-- [ ] Completed tasks visually distinct (strikethrough, checkbox checked)
-- [ ] User A cannot see User B's tasks (multi-tenancy)
-- [ ] Tasks in reverse chronological order (newest first)
+- [x] Dashboard shows all user's tasks with titles and status ✅
+- [x] Empty state shows "No tasks yet. Create your first task!" ✅
+- [x] Completed tasks visually distinct (strikethrough, checkbox checked) ✅
+- [x] User A cannot see User B's tasks (multi-tenancy) ✅
+- [x] Tasks in reverse chronological order (newest first) ✅
 
-**Checkpoint**: User Story 4 complete - users can view their tasks
+**Checkpoint**: User Story 4 complete - users can view their tasks ✅ VERIFIED
 
 ---
 
@@ -217,17 +217,17 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 ### Implementation for User Story 5
 
 - [x] T051 [US5] Implement PUT /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T052 [P] [US5] Create Modal UI component for dialogs in phase-2-web/frontend/components/ui/Modal.tsx
+- [x] T052 [P] [US5] Create Modal UI component for dialogs in phase-2-web/frontend/components/ui/Modal.tsx (implemented inline in TaskItem.tsx per Smallest Viable Diff)
 - [x] T053 [US5] Add edit functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
 - [x] T054 [US5] Implement updateTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Edit title saves and displays new title
-- [ ] Edit description only leaves title unchanged
-- [ ] Empty title on save shows validation error
-- [ ] updated_at timestamp refreshed on save
+- [x] Edit title saves and displays new title ✅
+- [x] Edit description only leaves title unchanged ✅
+- [x] Empty title on save shows validation error ✅
+- [x] updated_at timestamp refreshed on save ✅
 
-**Checkpoint**: User Story 5 complete - users can edit tasks
+**Checkpoint**: User Story 5 complete - users can edit tasks ✅ VERIFIED
 
 ---
 
@@ -240,16 +240,16 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 ### Implementation for User Story 6
 
 - [x] T055 [US6] Implement DELETE /api/v1/tasks/{task_id} endpoint in phase-2-web/backend/app/api/v1/tasks.py
-- [ ] T056 [P] [US6] Create DeleteConfirmDialog component in phase-2-web/frontend/components/tasks/DeleteConfirmDialog.tsx
+- [x] T056 [P] [US6] Create DeleteConfirmDialog component in phase-2-web/frontend/components/tasks/DeleteConfirmDialog.tsx (implemented inline in TaskItem.tsx per Smallest Viable Diff)
 - [x] T057 [US6] Add delete functionality to TaskItem component in phase-2-web/frontend/components/tasks/TaskItem.tsx
 - [x] T058 [US6] Implement deleteTask Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Delete + confirm permanently removes task
-- [ ] Cancel in confirmation dialog does NOT delete task
-- [ ] Deleted task does not reappear after refresh
+- [x] Delete + confirm permanently removes task ✅
+- [x] Cancel in confirmation dialog does NOT delete task ✅
+- [x] Deleted task does not reappear after refresh ✅
 
-**Checkpoint**: User Story 6 complete - users can delete tasks
+**Checkpoint**: User Story 6 complete - users can delete tasks ✅ VERIFIED
 
 ---
 
@@ -266,11 +266,11 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 - [x] T061 [US7] Implement toggleComplete Server Action in phase-2-web/frontend/app/actions/tasks.ts
 
 **Acceptance Criteria** (from spec.md):
-- [ ] Click checkbox toggles pending -> completed
-- [ ] Click again toggles completed -> pending
-- [ ] Status persists after page refresh
+- [x] Click checkbox toggles pending -> completed ✅
+- [x] Click again toggles completed -> pending ✅
+- [x] Status persists after page refresh ✅
 
-**Checkpoint**: User Story 7 complete - users can mark tasks complete
+**Checkpoint**: User Story 7 complete - users can mark tasks complete ✅ VERIFIED
 
 ---
 
@@ -303,15 +303,15 @@ cd phase-2-web/frontend && pnpm tsc --noEmit
 
 **Purpose**: Verify all acceptance criteria pass
 
-- [ ] T072 Run all User Story 1 acceptance scenarios (5 scenarios)
-- [ ] T073 Run all User Story 2 acceptance scenarios (5 scenarios)
-- [ ] T074 Run all User Story 3 acceptance scenarios (5 scenarios)
-- [ ] T075 Run all User Story 4 acceptance scenarios (5 scenarios)
-- [ ] T076 Run all User Story 5 acceptance scenarios (4 scenarios)
-- [ ] T077 Run all User Story 6 acceptance scenarios (3 scenarios)
-- [ ] T078 Run all User Story 7 acceptance scenarios (3 scenarios)
-- [ ] T079 Create PHR for Phase 2 implementation in history/prompts/phase-2-web/
-- [ ] T080 Update root CLAUDE.md with Phase 2 completion status
+- [x] T072 Run all User Story 1 acceptance scenarios (5 scenarios) ✅ ALL PASS
+- [x] T073 Run all User Story 2 acceptance scenarios (5 scenarios) ✅ ALL PASS
+- [x] T074 Run all User Story 3 acceptance scenarios (5 scenarios) ✅ ALL PASS
+- [x] T075 Run all User Story 4 acceptance scenarios (5 scenarios) ✅ ALL PASS
+- [x] T076 Run all User Story 5 acceptance scenarios (4 scenarios) ✅ ALL PASS
+- [x] T077 Run all User Story 6 acceptance scenarios (3 scenarios) ✅ ALL PASS
+- [x] T078 Run all User Story 7 acceptance scenarios (3 scenarios) ✅ ALL PASS
+- [x] T079 Create PHR for Phase 2 implementation in history/prompts/phase-2-web/
+- [x] T080 Update root CLAUDE.md with Phase 2 completion status
 
 ---
 
