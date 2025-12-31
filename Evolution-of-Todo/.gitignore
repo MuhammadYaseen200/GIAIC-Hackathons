@@ -29,6 +29,7 @@ env/
 # UV package manager
 .uv/
 uv.lock
+*.dev
 
 # Testing
 .pytest_cache/
@@ -79,3 +80,9 @@ todo_dev.db
 .specify_backup/
 *.backup
 nul
+
+# Deployment files with sensitive credentials
+vercel-env-setup.txt
+vercel-deployment-*.txt
+deployment-example-output.txt
+*-deployment-record.txt

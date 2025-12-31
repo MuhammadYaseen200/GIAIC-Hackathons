@@ -420,7 +420,8 @@ T046, T047 → Parallel (TaskList, TaskItem)
 | 9: US7 Complete | T059-T061 | 0 | 3 |
 | 10: Polish | T062-T071 | 0 | 10 |
 | 11: Validation | T072-T080 | 9 | 0 |
-| **Total** | **80** | **59** | **21** |
+| 12: Production Deployment | T081-T089 | 6 | 3 |
+| **Total** | **89** | **65** | **24** |
 
 **Critical Path**: T001 → T008 → T011 → T012 → T015 → T017 → T020 → T022 → T027 → T033 → T040 → T044 → T049 → T072
 
@@ -438,12 +439,206 @@ T046, T047 → Parallel (TaskList, TaskItem)
 
 ---
 
+## Phase 12: Production Deployment 🚀
+
+**Purpose**: Deploy Phase 2 Full-Stack Application to Vercel with Neon DB
+
+**Milestone**: M7 Production
+
+### T081: Create Vercel Configuration for FastAPI Serverless [P1] ✅
+
+**Files**:
+- `phase-2-web/backend/vercel.json`
+- `phase-2-web/backend/api/index.py`
+- `phase-2-web/backend/requirements.txt`
+
+**DoD**:
+- [x] vercel.json configured with @vercel/python runtime
+- [x] api/index.py exposes FastAPI app as handler
+- [x] requirements.txt extracted from pyproject.toml
+
+**Verification**:
+```bash
+cd phase-2-web/backend
+npx vercel deploy
+```
+
+---
+
+### T082: Document Environment Variables [P1] ✅
+
+**Files**:
+- `phase-2-web/DEPLOYMENT.md`
+- `phase-2-web/.env.example`
+
+**DoD**:
+- [x] DEPLOYMENT.md lists all required variables
+- [x] .env.example updated with Neon DB format
+- [x] SSL parameter documented (ssl=require for asyncpg)
+
+**Verification**: Review DEPLOYMENT.md for completeness
+
+---
+
+### T083: Run Alembic Migrations on Neon DB [P1] ✅
+
+**Files**:
+- Neon DB schema (remote)
+
+**DoD**:
+- [x] `user` table created with correct schema
+- [x] `task` table created with user_id foreign key
+- [x] SSL connection issue resolved (ssl=require)
+
+**Verification**:
+```bash
+DATABASE_URL="postgresql+asyncpg://...?ssl=require" uv run alembic upgrade head
+```
+
+**Result**: ✅ Tables created successfully
+
+---
+
+### T084: Deploy Backend to Vercel [P1] ✅
+
+**Files**:
+- Vercel deployment (remote)
+
+**DoD**:
+- [x] Backend deployed to: https://backend-r16dl2hxm-muhammadyaseen200s-projects.vercel.app
+- [x] Health endpoint accessible
+
+**Verification**:
+```bash
+curl https://backend-r16dl2hxm-muhammadyaseen200s-projects.vercel.app/health
+```
+
+**Status**: ✅ Deployed (awaiting environment variable configuration)
+
+---
+
+### T085: Deploy Frontend to Vercel [P1] ✅
+
+**Files**:
+- Vercel deployment (remote)
+
+**DoD**:
+- [x] Frontend deployed to: https://frontend-k77768se5-muhammadyaseen200s-projects.vercel.app
+- [x] UI renders correctly
+
+**Verification**: Visit URL in browser
+
+**Status**: ✅ Deployed and working
+
+---
+
+### T086: Create PHR for Deployment Session [P1] ✅
+
+**Files**:
+- `history/prompts/phase-2-web/PHR-011-vercel-deployment.md`
+
+**DoD**:
+- [x] PHR documents Vercel configuration
+- [x] Neon DB migration steps recorded
+- [x] SSL parameter fix documented
+
+**Verification**: Review PHR-011
+
+---
+
+### T087: Create Deployment Automation Scripts [P2] ✅
+
+**Files**:
+- `phase-2-web/vercel-env-setup.txt`
+- `phase-2-web/deploy-to-vercel.ps1`
+- `phase-2-web/deploy-to-vercel.sh`
+- `phase-2-web/QUICK-START.md`
+- `phase-2-web/VERCEL-AUTOMATION-GUIDE.md`
+
+**DoD**:
+- [x] Cross-platform scripts (PowerShell + Bash)
+- [x] Auto-generate JWT secret
+- [x] Set environment variables via Vercel CLI
+- [x] Deploy both services automatically
+
+**Verification**: Review automation documentation
+
+---
+
+### T088: Set Environment Variables in Vercel Dashboard [P1] ⏳ USER ACTION REQUIRED
+
+**Files**:
+- Vercel dashboard (remote)
+
+**DoD**:
+- [ ] Backend variables set: DATABASE_URL, SECRET_KEY, CORS_ORIGINS
+- [ ] Frontend variables set: NEXT_PUBLIC_API_URL, BACKEND_URL
+
+**Verification**:
+1. Go to https://vercel.com/muhammadyaseen200s-projects/backend/settings/environment-variables
+2. Add all backend variables from vercel-env-setup.txt
+3. Go to https://vercel.com/muhammadyaseen200s-projects/frontend/settings/environment-variables
+4. Add all frontend variables from vercel-env-setup.txt
+
+**Alternative**: Use automated script:
+```bash
+# Windows
+.\deploy-to-vercel.ps1 -DatabaseUrl "postgresql+asyncpg://..."
+
+# Linux/macOS
+./deploy-to-vercel.sh --database-url "postgresql+asyncpg://..."
+```
+
+---
+
+### T089: Redeploy Services with Environment Variables [P2] ⏳ PENDING
+
+**Files**:
+- Vercel deployment (remote)
+
+**DoD**:
+- [ ] Backend redeployed with environment variables
+- [ ] Frontend redeployed with updated backend URL
+- [ ] Production deployment fully functional
+
+**Verification**:
+```bash
+# Redeploy backend
+cd phase-2-web/backend && npx vercel --prod
+
+# Redeploy frontend
+cd phase-2-web/frontend && npx vercel --prod
+```
+
+---
+
+### T090: Test Production Deployment End-to-End [P2] ⏳ PENDING
+
+**Files**:
+- Production environment (remote)
+
+**DoD**:
+- [ ] Register new user on production frontend
+- [ ] Create tasks via production UI
+- [ ] Verify all CRUD operations work
+- [ ] Check CORS allows frontend to call backend
+
+**Verification**:
+1. Visit https://frontend-k77768se5-muhammadyaseen200s-projects.vercel.app
+2. Register account: test@example.com
+3. Create 3 tasks
+4. Update, complete, delete tasks
+5. Verify no CORS errors in browser console
+
+---
+
 ## Document History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-29 | Task Orchestrator | Initial layer-based breakdown |
 | 2.0.0 | 2025-12-29 | Task Orchestrator | Reorganized by user story per /sp.tasks command |
+| 3.0.0 | 2025-12-31 | Backend Builder + DevOps RAG Engineer | Added Phase 12 Production Deployment (T081-T090) |
 
 ---
 
