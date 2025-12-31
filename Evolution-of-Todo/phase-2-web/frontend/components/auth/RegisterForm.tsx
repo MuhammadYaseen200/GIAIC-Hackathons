@@ -1,0 +1,83 @@
+"use client";
+
+/**
+ * Registration form component.
+ *
+ * Uses Next.js Server Actions with useActionState for progressive enhancement.
+ * Form works even with JavaScript disabled (falls back to server-side handling).
+ *
+ * Accessibility:
+ * - Proper form semantics with fieldset
+ * - Error messages associated with inputs
+ * - Loading state prevents double submission
+ * - Success message announced to screen readers
+ */
+
+import { useActionState } from "react";
+import { register } from "@/app/actions/auth";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import type { FormState } from "@/types";
+
+const initialState: FormState = {
+  success: false,
+  message: "",
+};
+
+export default function RegisterForm() {
+  // useActionState returns [state, formAction, isPending]
+  // isPending tracks the form submission state, replacing the need for useFormStatus
+  const [state, formAction, isPending] = useActionState(register, initialState);
+
+  return (
+    <form action={formAction} className="space-y-4">
+      {/* Success message */}
+      {state.success && (
+        <div
+          className="p-4 bg-green-50 border border-green-200 rounded text-green-800"
+          role="alert"
+        >
+          {state.message}
+        </div>
+      )}
+
+      {/* Error message */}
+      {!state.success && state.message && (
+        <div
+          className="p-4 bg-red-50 border border-red-200 rounded text-red-800"
+          role="alert"
+        >
+          {state.message}
+        </div>
+      )}
+
+      {/* Email input */}
+      <Input
+        type="email"
+        name="email"
+        label="Email"
+        placeholder="you@example.com"
+        required
+        autoComplete="email"
+        error={state.errors?.email?.[0]}
+      />
+
+      {/* Password input */}
+      <Input
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="At least 8 characters"
+        required
+        autoComplete="new-password"
+        minLength={8}
+        error={state.errors?.password?.[0]}
+      />
+
+      {/* Submit button - isPending from useActionState tracks loading state */}
+      <Button type="submit" variant="primary" size="md" loading={isPending} className="w-full">
+        {isPending ? "Creating account..." : "Create Account"}
+      </Button>
+    </form>
+  );
+}

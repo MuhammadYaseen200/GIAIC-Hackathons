@@ -51,7 +51,22 @@ Thumbs.db
 # Environment
 .env
 .env.local
+.env.production
+.env.development
 *.local
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Database
+*.sql.backup
+*.dump
+pgdata/
+*.db
+*.sqlite
+*.sqlite3
+todo_dev.db
 
 # Logs
 *.log
@@ -59,3 +74,8 @@ Thumbs.db
 # Temporary
 *.tmp
 *.temp
+
+# Backup directories
+.specify_backup/
+*.backup
+nul
