@@ -50,3 +50,4 @@ alembic/versions/*.pyc
 *.db
 *.sqlite
 *.sqlite3
+.vercel
