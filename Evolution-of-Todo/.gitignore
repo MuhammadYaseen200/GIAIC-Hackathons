@@ -29,6 +29,7 @@ env/
 # UV package manager
 .uv/
 uv.lock
+*.dev
 
 # Testing
 .pytest_cache/
