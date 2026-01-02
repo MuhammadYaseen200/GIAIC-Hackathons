@@ -1,9 +1,14 @@
 """Task model for todo items."""
 
-from datetime import UTC, datetime
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
+
+
+def utc_now() -> datetime:
+    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
+    return datetime.utcnow()
 
 
 class Task(SQLModel, table=True):
@@ -46,11 +51,11 @@ class Task(SQLModel, table=True):
         description="Task completion status",
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(UTC),
+        default_factory=utc_now,
         description="Task creation timestamp (UTC)",
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(UTC),
-        sa_column_kwargs={"onupdate": lambda: datetime.now(UTC)},
+        default_factory=utc_now,
+        sa_column_kwargs={"onupdate": utc_now},
         description="Last update timestamp (UTC)",
     )

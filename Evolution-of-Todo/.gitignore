@@ -45,6 +45,9 @@ htmlcov/
 *.swo
 *~
 
+# Claude Code settings (contains command history with credentials)
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db

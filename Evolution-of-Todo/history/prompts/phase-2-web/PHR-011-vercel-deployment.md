@@ -112,8 +112,8 @@ Updated `.env.example` with correct Neon URL template.
 **Security:**
 
 - ✅ `.env` properly gitignored
-- ✅ Old Neon password (`npg_xva07KIUDYiE`) confirmed rotated
-- ✅ New password (`npg_uZGLS78grEpH`) only in local `.env` (not committed)
+- ✅ Neon password rotated (old credential invalidated)
+- ✅ Password only in local `.env` (not committed)
 - ✅ Deployment guide created for setting production env vars in Vercel dashboard
 
 **Git Commits:**

@@ -5,36 +5,19 @@ Main application module that:
 - Configures CORS middleware from settings
 - Includes the v1 API router
 - Provides health check endpoint
-- Auto-creates database tables on startup (development mode)
-"""
 
-from contextlib import asynccontextmanager
+Note: Database tables are managed via Alembic migrations, not auto-created on startup.
+This ensures serverless compatibility (Vercel, AWS Lambda, etc).
+"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.core.database import create_db_and_tables
 
-# Import models to register them with SQLModel metadata before table creation
+# Import models to register them with SQLModel metadata
 from app.models import Task, User  # noqa: F401
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Application lifespan event handler.
-
-    On startup:
-    - Creates database tables if they don't exist (development mode).
-
-    On shutdown:
-    - Cleanup resources if needed.
-    """
-    # Startup: Create database tables
-    await create_db_and_tables()
-    yield
-    # Shutdown: Cleanup if needed (currently none)
 
 
 app = FastAPI(
@@ -44,7 +27,6 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
-    lifespan=lifespan,
 )
 
 # CORS configuration from settings

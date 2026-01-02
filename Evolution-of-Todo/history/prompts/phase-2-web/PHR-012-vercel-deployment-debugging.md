@@ -182,8 +182,8 @@ except Exception as e:
 **Actions Taken**:
 
 1. **Identified Sensitive Files**:
-   - `vercel-env-setup.txt`: Contained actual Neon password (`npg_uZGLS78grEpH`)
-   - `deployment-example-output.txt`: Contained JWT secret (`VLjd3Abyx1ktwPBT8ktebimN2SorM9VXFDqyCTPae8Q`)
+   - `vercel-env-setup.txt`: Contained actual Neon password (ROTATED)
+   - `deployment-example-output.txt`: Contained JWT secret (ROTATED)
    - Both files had account-specific deployment URLs
 
 2. **Updated .gitignore**:
