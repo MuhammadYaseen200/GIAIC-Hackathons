@@ -53,3 +53,5 @@ alembic/versions/*.pyc
 *.sqlite
 *.sqlite3
 .vercel
+pyproject.toml.bak
+uv.lock.bak
