@@ -8,13 +8,18 @@ Provides business logic for:
 Ported from Phase 1 with database persistence and multi-tenancy support.
 """
 
-from datetime import UTC, datetime
+from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
 from app.models.task import Task
+
+
+def utc_now() -> datetime:
+    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
+    return datetime.utcnow()
 
 
 class TaskService:
@@ -121,7 +126,7 @@ class TaskService:
             task.title = title.strip()
         if description is not None:
             task.description = description.strip()
-        task.updated_at = datetime.now(UTC)
+        task.updated_at = utc_now()
 
         self.session.add(task)
         await self.session.flush()
@@ -161,7 +166,7 @@ class TaskService:
             return None
 
         task.completed = not task.completed
-        task.updated_at = datetime.now(UTC)
+        task.updated_at = utc_now()
 
         self.session.add(task)
         await self.session.flush()

@@ -1,9 +1,14 @@
 """User model for authentication and authorization."""
 
-from datetime import UTC, datetime
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
+
+
+def utc_now() -> datetime:
+    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
+    return datetime.utcnow()
 
 
 class User(SQLModel, table=True):
@@ -33,6 +38,6 @@ class User(SQLModel, table=True):
         description="Bcrypt-hashed password",
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(UTC),
+        default_factory=utc_now,
         description="Account creation timestamp (UTC)",
     )

@@ -1,5 +1,36 @@
 # Phase 2 Vercel Deployment Guide
 
+## Automated Deployment (RECOMMENDED)
+
+**NEW:** Use the automated deployment scripts for one-command setup.
+
+### Quick Start
+
+```bash
+# Windows (PowerShell)
+.\deploy-to-vercel.ps1 -DatabaseUrl "postgresql+asyncpg://user:pass@host/db?ssl=require"
+
+# Linux/macOS (Bash)
+./deploy-to-vercel.sh --database-url "postgresql+asyncpg://user:pass@host/db?ssl=require"
+```
+
+**What it does:**
+- Generates secure JWT secret automatically
+- Sets all environment variables via Vercel CLI
+- Deploys both backend and frontend to production
+- Creates timestamped deployment record
+
+**Documentation:**
+- Quick Start: `QUICK-START.md`
+- Full Guide: `VERCEL-AUTOMATION-GUIDE.md`
+- Example Output: `deployment-example-output.txt`
+
+---
+
+## Manual Deployment (Alternative)
+
+If you prefer manual setup, follow the instructions below.
+
 ## Deployment Status
 
 | Service | URL | Status |
@@ -19,7 +50,7 @@ Add the following variables:
 
 | Variable | Value | Notes |
 |----------|-------|-------|
-| `DATABASE_URL` | `postgresql+asyncpg://neondb_owner:npg_uZGLS78grEpH@ep-weathered-resonance-adok3vmj-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require` | Your Neon DB connection string |
+| `DATABASE_URL` | `postgresql+asyncpg://neondb_owner:<YOUR_PASSWORD>@ep-weathered-resonance-adok3vmj-pooler.c-2.us-east-1.aws.neon.tech/neondb?ssl=require` | Your Neon DB connection string |
 | `SECRET_KEY` | `[Generate with: python -c "import secrets; print(secrets.token_urlsafe(32))"]` | JWT signing secret |
 | `CORS_ORIGINS` | `["https://frontend-k77768se5-muhammadyaseen200s-projects.vercel.app"]` | Frontend URL |
 
@@ -68,7 +99,7 @@ npx vercel --prod
 cd phase-2-web/backend
 
 # Set DATABASE_URL to Neon
-export DATABASE_URL="postgresql+asyncpg://neondb_owner:npg_uZGLS78grEpH@ep-weathered-resonance-adok3vmj-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+export DATABASE_URL="postgresql+asyncpg://neondb_owner:<YOUR_PASSWORD>@ep-weathered-resonance-adok3vmj-pooler.c-2.us-east-1.aws.neon.tech/neondb?ssl=require"
 
 # Run migrations
 uv run alembic upgrade head
@@ -122,7 +153,7 @@ open https://frontend-k77768se5-muhammadyaseen200s-projects.vercel.app
 **Fix:**
 ```bash
 # Local migration against Neon
-export DATABASE_URL="postgresql+asyncpg://neondb_owner:npg_uZGLS78grEpH@..."
+export DATABASE_URL="postgresql+asyncpg://neondb_owner:<YOUR_PASSWORD>@..."
 uv run alembic upgrade head
 ```
 
@@ -131,8 +162,8 @@ uv run alembic upgrade head
 ## Security Notes
 
 - ✅ `.env` is gitignored (not committed)
-- ✅ Old Neon password (`npg_xva07KIUDYiE`) was rotated
-- ✅ New password (`npg_uZGLS78grEpH`) only in Vercel environment variables
+- ✅ Neon password rotated (stored ONLY in Vercel environment variables)
+- ✅ No credentials in git-tracked files
 - ⚠️ Backend deployment protection enabled (requires Vercel auth)
 
 ---
