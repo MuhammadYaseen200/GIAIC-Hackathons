@@ -55,3 +55,8 @@ alembic/versions/*.pyc
 .vercel
 pyproject.toml.bak
 uv.lock.bak
+
+.env*.local
+
+# Node.js (for any tooling)
+node_modules/
