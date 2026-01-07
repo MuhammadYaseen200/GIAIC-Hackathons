@@ -44,6 +44,12 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3002",
     ]
 
+    # Phase 3: AI Configuration (per ADR-009: Hybrid AI Engine)
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.0-flash"
+    AGENT_MAX_TURNS: int = 10
+    AGENT_TIMEOUT_SECONDS: int = 30
+
 
 @lru_cache
 def get_settings() -> Settings:

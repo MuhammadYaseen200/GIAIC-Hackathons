@@ -86,6 +86,9 @@ export async function createTask(
 
   const title = formData.get("title") as string;
   const description = (formData.get("description") as string) || "";
+  const priority = formData.get("priority") as "high" | "medium" | "low" || "medium";
+  const tagsInput = formData.get("tags") as string || "";
+  const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
 
   // Client-side validation
   if (!title || title.trim().length === 0) {
@@ -111,7 +114,12 @@ export async function createTask(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title: title.trim(), description: description.trim() }),
+      body: JSON.stringify({
+        title: title.trim(),
+        description: description.trim(),
+        priority,
+        tags
+      }),
     });
 
     const data = await response.json();
@@ -262,10 +270,15 @@ export async function updateTask(
 
   const title = formData.get("title") as string | null;
   const description = formData.get("description") as string | null;
+  const priority = formData.get("priority") as "high" | "medium" | "low" | null;
+  const tagsInput = formData.get("tags") as string | null;
+  const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : null;
 
-  const updateData: Record<string, string> = {};
+  const updateData: Record<string, any> = {};
   if (title !== null) updateData.title = title.trim();
   if (description !== null) updateData.description = description.trim();
+  if (priority !== null) updateData.priority = priority;
+  if (tags !== null) updateData.tags = tags;
 
   if (Object.keys(updateData).length === 0) {
     return {

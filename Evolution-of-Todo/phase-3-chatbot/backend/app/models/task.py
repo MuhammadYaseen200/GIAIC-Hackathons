@@ -1,14 +1,29 @@
 """Task model for todo items."""
 
 from datetime import datetime
+from enum import Enum
+from typing import Any
 from uuid import UUID, uuid4
 
+from sqlalchemy import JSON
 from sqlmodel import Field, SQLModel
 
 
 def utc_now() -> datetime:
     """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
     return datetime.utcnow()
+
+
+class Priority(str, Enum):
+    """Task priority levels.
+
+    Values defined by the project constitution (Intermediate Level Features).
+    Uses lowercase enum names to match PostgreSQL enum values.
+    """
+
+    high = "high"
+    medium = "medium"
+    low = "low"
 
 
 class Task(SQLModel, table=True):
@@ -20,6 +35,8 @@ class Task(SQLModel, table=True):
         title: Task title (1-200 characters, required).
         description: Task description (max 1000 chars, default empty).
         completed: Whether task is completed (default False).
+        priority: Task priority level (high/medium/low, default medium).
+        tags: Task categorization labels (max 10 tags, each max 50 chars).
         created_at: Timestamp when task was created (UTC, auto-generated).
         updated_at: Timestamp when task was last updated (UTC, auto-update).
     """
@@ -49,6 +66,15 @@ class Task(SQLModel, table=True):
     completed: bool = Field(
         default=False,
         description="Task completion status",
+    )
+    priority: Priority = Field(
+        default=Priority.medium,
+        description="Task priority level (high/medium/low)",
+    )
+    tags: list[str] = Field(
+        default_factory=list,
+        sa_type=JSON,
+        description="Task categorization labels (max 10 tags, each max 50 chars)",
     )
     created_at: datetime = Field(
         default_factory=utc_now,

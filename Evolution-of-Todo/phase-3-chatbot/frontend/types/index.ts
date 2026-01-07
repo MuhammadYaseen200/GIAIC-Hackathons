@@ -57,6 +57,8 @@ export interface Task {
   title: string; // 1-200 chars
   description: string; // 0-1000 chars
   completed: boolean;
+  priority: "high" | "medium" | "low"; // Task priority level
+  tags: string[]; // Array of tag strings
   created_at: string; // ISO 8601
   updated_at: string; // ISO 8601
 }
@@ -67,6 +69,8 @@ export interface Task {
 export interface TaskCreateRequest {
   title: string; // Required
   description?: string; // Optional
+  priority?: "high" | "medium" | "low"; // Optional priority
+  tags?: string[]; // Optional tags array
 }
 
 /**
@@ -75,6 +79,8 @@ export interface TaskCreateRequest {
 export interface TaskUpdateRequest {
   title?: string; // Optional, but at least one field required
   description?: string; // Optional
+  priority?: "high" | "medium" | "low"; // Optional priority
+  tags?: string[]; // Optional tags array
 }
 
 /**

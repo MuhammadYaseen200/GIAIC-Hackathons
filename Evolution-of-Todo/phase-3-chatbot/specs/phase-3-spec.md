@@ -172,6 +172,98 @@ As an authenticated user, I want my conversation history to persist across page 
 
 ---
 
+### User Story 308 - Set Task Priority via Chat (Priority: P1)
+
+As an authenticated user, I want to set priority levels on my tasks via chat so that I can organize tasks by importance without navigating the UI.
+
+**Why this priority**: Priority is a core organizational feature that enhances task management significantly.
+
+**Independent Test**: Can be tested by creating a task with "Add high priority task: Submit report" and verifying the priority is set correctly.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am in the chat, **When** I type "Add a high priority task called Submit report", **Then** a task is created with priority "high" and the AI confirms "I've added 'Submit report' with HIGH priority"
+2. **Given** I have an existing task, **When** I type "Set the priority of 'Submit report' to low", **Then** the task priority is updated and confirmed
+3. **Given** I type "Create task: Buy groceries with medium priority", **Then** a task is created with priority "medium"
+4. **Given** I create a task without specifying priority, **When** the task is created, **Then** it defaults to priority "medium"
+5. **Given** I type "Show my high priority tasks", **Then** the AI filters and displays only high priority tasks
+6. **Given** I type an invalid priority like "urgent", **When** I submit, **Then** the AI clarifies "Priority can be high, medium, or low. Which would you like?"
+
+---
+
+### User Story 309 - Tag Tasks via Chat (Priority: P1)
+
+As an authenticated user, I want to add tags to my tasks via chat so that I can categorize and filter tasks by context (Work, Home, etc.).
+
+**Why this priority**: Tags provide essential categorization for task organization without complex folder structures.
+
+**Independent Test**: Can be tested by creating a task with "Add task: Email client tagged as Work" and verifying the tag is applied.
+
+**Acceptance Scenarios**:
+
+1. **Given** I am in the chat, **When** I type "Add task 'Email client' with tag Work", **Then** a task is created with the "Work" tag and confirmed
+2. **Given** I have an existing task, **When** I type "Add tags Home, Errands to 'Buy groceries'", **Then** the task is updated with both tags
+3. **Given** I type "Remove tag Work from 'Email client'", **Then** the tag is removed and confirmed
+4. **Given** I type "Show my Work tasks", **Then** the AI filters and displays only tasks tagged "Work"
+5. **Given** I type "What tags do I have?", **Then** the AI lists all unique tags used across my tasks
+6. **Given** a task has multiple tags, **When** I list tasks, **Then** all tags are displayed for each task
+
+---
+
+### User Story 310 - Search Tasks via Chat (Priority: P1)
+
+As an authenticated user, I want to search my tasks by keyword via chat so that I can quickly find specific tasks.
+
+**Why this priority**: Search is essential when users have many tasks and need to find specific items quickly.
+
+**Independent Test**: Can be tested by having multiple tasks and typing "Search for grocery" to find matching tasks.
+
+**Acceptance Scenarios**:
+
+1. **Given** I have tasks containing "grocery" in title or description, **When** I type "Search for grocery", **Then** the AI lists all matching tasks
+2. **Given** I type "Find tasks about project", **Then** the AI searches both titles and descriptions for "project"
+3. **Given** no tasks match my search, **When** I search for "nonexistent", **Then** the AI responds "No tasks found matching 'nonexistent'"
+4. **Given** I type "Search for high priority work tasks", **Then** the AI combines keyword search with priority and tag filters
+5. **Given** partial matches exist, **When** I search for "buy", **Then** tasks like "Buy groceries" and "Buy milk" are returned
+
+---
+
+### User Story 311 - Sort Tasks via Chat (Priority: P2)
+
+As an authenticated user, I want to request sorted task lists via chat so that I can view tasks in meaningful order.
+
+**Why this priority**: Sorting enhances readability but is less critical than core CRUD and filtering operations.
+
+**Independent Test**: Can be tested by asking "Show my tasks sorted by priority" and verifying correct ordering.
+
+**Acceptance Scenarios**:
+
+1. **Given** I type "Show my tasks sorted by priority", **Then** tasks are listed in order: high, medium, low
+2. **Given** I type "List tasks by creation date", **Then** tasks are listed newest first (or oldest first if specified)
+3. **Given** I type "Show pending tasks sorted by priority", **Then** the AI filters by status AND sorts by priority
+4. **Given** I type "Sort my tasks by name", **Then** tasks are listed alphabetically by title
+5. **Given** I don't specify sort order, **When** I ask for tasks sorted by priority, **Then** high priority comes first (descending)
+
+---
+
+### User Story 312 - Filter Tasks via Chat (Priority: P1)
+
+As an authenticated user, I want to filter tasks by multiple criteria via chat so that I can view specific subsets of my tasks.
+
+**Why this priority**: Filtering is core to task management with priorities and tags.
+
+**Independent Test**: Can be tested by asking "Show my pending high priority Work tasks" and verifying correct filtering.
+
+**Acceptance Scenarios**:
+
+1. **Given** I type "Show my pending tasks", **Then** only incomplete tasks are displayed
+2. **Given** I type "List completed high priority tasks", **Then** tasks matching both criteria are shown
+3. **Given** I type "Show Work tasks that are pending", **Then** tasks with "Work" tag and pending status are listed
+4. **Given** I type "Find high priority tasks tagged Home", **Then** both priority and tag filters are applied
+5. **Given** no tasks match my filter criteria, **When** I filter, **Then** the AI responds "No tasks match your criteria"
+
+---
+
 ### User Story 307 - Error Handling and Fallback (Priority: P1)
 
 As an authenticated user, I want the AI to provide helpful feedback when it cannot fulfill my request so that I can correct my approach.
@@ -251,6 +343,37 @@ As an authenticated user, I want the AI to provide helpful feedback when it cann
 - **FR-321**: System MUST validate task data according to Phase II constraints (title 1-200 chars, description 0-1000 chars)
 - **FR-322**: System MUST prevent task creation if user has reached 1000 task limit
 
+### Functional Requirements - Priority Management
+
+- **FR-329**: AI MUST support setting priority on task creation (high, medium, low)
+- **FR-330**: AI MUST support updating task priority after creation
+- **FR-331**: AI MUST default to "medium" priority when not specified
+- **FR-332**: AI MUST filter tasks by priority when requested
+- **FR-333**: AI MUST display priority in task listings
+
+### Functional Requirements - Tag Management
+
+- **FR-334**: AI MUST support adding tags during task creation
+- **FR-335**: AI MUST support adding/removing tags on existing tasks
+- **FR-336**: AI MUST filter tasks by tag when requested
+- **FR-337**: AI MUST support multiple tags per task (up to 10)
+- **FR-338**: AI MUST list available tags when requested
+- **FR-339**: AI MUST display tags in task listings
+
+### Functional Requirements - Search and Filter
+
+- **FR-340**: AI MUST support keyword search across title and description
+- **FR-341**: AI MUST support combining filters (status + priority + tag + keyword)
+- **FR-342**: AI MUST provide clear messaging when no results match filters
+- **FR-343**: Search MUST be case-insensitive
+
+### Functional Requirements - Sorting
+
+- **FR-344**: AI MUST support sorting by priority (high first by default)
+- **FR-345**: AI MUST support sorting by creation date
+- **FR-346**: AI MUST support sorting alphabetically by title
+- **FR-347**: AI MUST support combining sort with filters
+
 ### Functional Requirements - Conversation Management
 
 - **FR-323**: System MUST persist conversation history to database
@@ -263,6 +386,22 @@ As an authenticated user, I want the AI to provide helpful feedback when it cann
 ---
 
 ## 5. Key Entities
+
+### Task Entity (Extended from Phase II)
+
+The existing Task entity is extended with priority and tags fields.
+
+| Attribute | Type | Constraints | Description |
+|-----------|------|-------------|-------------|
+| `id` | UUID | Primary Key, Auto-generated | Unique task identifier |
+| `user_id` | UUID | Foreign Key (User.id), Required | Task owner |
+| `title` | String | Required, 1-200 chars | Task title |
+| `description` | String | Optional, 0-1000 chars | Task description |
+| `completed` | Boolean | Default: false | Completion status |
+| `priority` | Enum | Values: "high", "medium", "low", Default: "medium" | Task priority level |
+| `tags` | Array[String] | Optional, Max 10 tags, Max 50 chars each | Task categorization labels |
+| `created_at` | Timestamp | Auto-generated (UTC) | Task creation time |
+| `updated_at` | Timestamp | Auto-updated (UTC) | Last update time |
 
 ### Message Entity
 
@@ -292,6 +431,7 @@ Represents a chat session for a user.
 ### Entity Relationships
 
 ```
+User (1) ----< (N) Task
 User (1) ----< (N) Conversation (1) ----< (N) Message
 ```
 
@@ -329,13 +469,26 @@ interface ChatMessageResponse {
 }
 
 interface ToolCall {
-  name: "add_task" | "list_tasks" | "complete_task" | "delete_task" | "update_task";
+  name: "add_task" | "list_tasks" | "complete_task" | "delete_task" | "update_task" | "search_tasks" | "update_priority" | "add_tags" | "remove_tags" | "list_tags";
   arguments: Record<string, unknown>;
   result: {
     success: boolean;
     data?: unknown;
     error?: string;
   };
+}
+
+type Priority = "high" | "medium" | "low";
+
+interface TaskWithMetadata {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  priority: Priority;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
 }
 ```
 
@@ -572,12 +725,13 @@ Phase II:                              Phase III:
 - Multi-language support (Urdu, etc.)
 - Proactive AI reminders
 - Conversation analytics
+- Due date reminders (scheduled notifications)
+- Recurring tasks
 
 ### Deferred to Phase V
 
 - Integration with external calendars
 - Bulk operations via AI
-- Advanced task features (priorities, due dates) via chat
 - Shared team conversations
 
 ### Never in Scope
@@ -644,6 +798,47 @@ The AI must recognize these natural language patterns and map them to task opera
 - "Change [title] to [new title]"
 - "Update [title] description to [new description]"
 - "Edit [title]"
+
+### Priority Patterns
+
+- "Add a high priority task [title]"
+- "Set priority of [title] to low"
+- "Change [title] to medium priority"
+- "Make [title] high priority"
+- "Show my high priority tasks"
+- "List urgent tasks" (maps to high priority)
+
+### Tag Patterns
+
+- "Add task [title] with tag Work"
+- "Tag [title] as Home"
+- "Add tags Work, Urgent to [title]"
+- "Remove tag Work from [title]"
+- "Show my Work tasks"
+- "List tasks tagged Home"
+- "What tags do I have?"
+
+### Search Patterns
+
+- "Search for [keyword]"
+- "Find tasks about [keyword]"
+- "Look for [keyword] in my tasks"
+- "Show tasks containing [keyword]"
+
+### Sort Patterns
+
+- "Show tasks sorted by priority"
+- "List tasks by creation date"
+- "Sort my tasks by name"
+- "Show oldest tasks first"
+- "List tasks newest first"
+
+### Filter Patterns
+
+- "Show pending high priority tasks"
+- "List completed Work tasks"
+- "Find high priority tasks tagged Home"
+- "Show all medium priority pending tasks"
 
 ---
 
@@ -716,26 +911,62 @@ The AI must recognize these natural language patterns and map them to task opera
 - [ ] New Conversation clears history
 - [ ] Old messages removed at 100 message limit
 
+### Priority Tests
+
+- [ ] "Add high priority task X" sets priority correctly
+- [ ] "Set priority of X to low" updates priority
+- [ ] "Show high priority tasks" filters correctly
+- [ ] Tasks without priority default to medium
+- [ ] Invalid priority prompts clarification
+
+### Tag Tests
+
+- [ ] "Add task X with tag Work" creates tagged task
+- [ ] "Add tags Home, Errands to X" adds multiple tags
+- [ ] "Remove tag Work from X" removes tag
+- [ ] "Show Work tasks" filters by tag
+- [ ] "What tags do I have?" lists unique tags
+- [ ] Tags displayed in task listings
+
+### Search Tests
+
+- [ ] "Search for grocery" finds matching tasks
+- [ ] Search is case-insensitive
+- [ ] "Find tasks about project" searches title and description
+- [ ] No results shows helpful message
+- [ ] Combined search with filters works
+
+### Sort Tests
+
+- [ ] "Show tasks sorted by priority" orders correctly
+- [ ] "List tasks by creation date" orders by date
+- [ ] "Sort by name" orders alphabetically
+- [ ] Sorting combined with filters works
+
 ---
 
 ## Approval
 
-**Specification Status**: Draft - Ready for Review
+**Specification Status**: Ready for Implementation
 
-- [x] All 7 user stories have acceptance scenarios
-- [x] Functional requirements cover chat + AI + task integration
+- [x] All 12 user stories have acceptance scenarios (7 core + 5 intermediate features)
+- [x] Functional requirements cover chat + AI + task integration + priority + tags + search + sort
 - [x] Data contracts defined (TypeScript types)
 - [x] Success criteria are measurable
 - [x] Constraints and out-of-scope clearly defined
 - [x] Migration from Phase II documented
 - [x] Non-functional requirements include accessibility
+- [x] Task entity extended with priority and tags fields
+
+**Scope Summary (Phase 3)**:
+- Core Chat (US-301 to US-307): Add, List, Complete, Delete, Update tasks via chat
+- Intermediate Features (US-308 to US-312): Priority, Tags, Search, Sort, Filter
 
 **Next Steps**:
-1. Upon approval, proceed to architectural planning (`specs/architecture.md`)
-2. Create chat API endpoint specification (`specs/api/chat-endpoints.md`)
-3. Create AI tool specification (`specs/api/ai-tools.md`)
-4. Create chat UI component specification (`specs/ui/chat-panel.md`)
+1. Execute plan.md implementation layers
+2. Create database migration for priority/tags fields
+3. Implement MCP tools with extended schema
 
 ---
 
-**Version**: 1.0.0 | **Author**: spec-architect | **Phase**: III
+**Version**: 2.0.0 | **Author**: spec-architect | **Phase**: III | **Updated**: 2026-01-04

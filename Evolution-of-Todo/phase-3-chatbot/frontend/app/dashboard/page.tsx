@@ -4,8 +4,7 @@
  */
 
 import { getTasks } from "@/app/actions/tasks";
-import { TaskForm } from "@/components/tasks/TaskForm";
-import { TaskList } from "@/components/tasks/TaskList";
+import TaskManager from "@/components/tasks/TaskManager";
 
 export const dynamic = "force-dynamic";
 
@@ -22,11 +21,8 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Task Creation Form */}
-      <TaskForm />
-
-      {/* Task List */}
-      <TaskList tasks={tasks} />
+      {/* Task Manager with forms, toolbar and list */}
+      <TaskManager initialTasks={tasks} />
     </div>
   );
 }

@@ -5,6 +5,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 import { ToastProvider } from "@/components/ui/Toast";
 
@@ -33,10 +34,22 @@ export default async function DashboardLayout({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo/Brand */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-6">
               <h1 className="text-xl font-bold text-gray-900">
                 Todo App
               </h1>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Tasks
+              </Link>
+              <Link
+                href="/dashboard/chat"
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Chat
+              </Link>
             </div>
 
             {/* Logout Button */}

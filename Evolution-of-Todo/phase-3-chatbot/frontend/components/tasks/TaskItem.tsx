@@ -6,9 +6,11 @@
  */
 
 import { useState, useTransition } from "react";
-import { toggleTaskComplete, deleteTask } from "@/app/actions/tasks";
+import { toggleTaskComplete, deleteTask, updateTask } from "@/app/actions/tasks";
 import { Card, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 import type { Task } from "@/types";
 import { showSuccess, showError } from "@/components/ui/Toast";
 
@@ -19,6 +21,11 @@ interface TaskItemProps {
 export function TaskItem({ task }: TaskItemProps) {
   const [isPending, startTransition] = useTransition();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(task.title);
+  const [editDescription, setEditDescription] = useState(task.description);
+  const [editPriority, setEditPriority] = useState(task.priority);
+  const [editTags, setEditTags] = useState(task.tags.join(', '));
 
   const handleToggle = () => {
     startTransition(async () => {
@@ -42,6 +49,36 @@ export function TaskItem({ task }: TaskItemProps) {
         setShowDeleteDialog(false);
       } else {
         showError("Failed to delete task", result.message);
+      }
+    });
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditTitle(task.title);
+    setEditDescription(task.description);
+    setEditPriority(task.priority);
+    setEditTags(task.tags.join(', '));
+  };
+
+  const handleSaveEdit = () => {
+    const formData = new FormData();
+    formData.append('title', editTitle);
+    formData.append('description', editDescription);
+    formData.append('priority', editPriority);
+    formData.append('tags', editTags);
+
+    startTransition(async () => {
+      const result = await updateTask(task.id, null, formData);
+      if (result.success) {
+        showSuccess("Task updated", editTitle);
+        setIsEditing(false);
+      } else {
+        showError("Failed to update task", result.message);
       }
     });
   };
@@ -88,49 +125,156 @@ export function TaskItem({ task }: TaskItemProps) {
 
             {/* Task Content */}
             <div className="flex-1 min-w-0">
-              <h3
-                className={`font-medium text-gray-900 ${
-                  task.completed ? "line-through text-gray-500" : ""
-                }`}
-              >
-                {task.title}
-              </h3>
-              {task.description && (
-                <p
-                  className={`mt-1 text-sm ${
-                    task.completed ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  {task.description}
-                </p>
+              {isEditing ? (
+                // Edit Mode
+                <div className="space-y-3">
+                  <Input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    className="w-full font-medium text-gray-900"
+                  />
+                  <textarea
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full text-sm text-gray-600 p-2 border rounded"
+                    rows={2}
+                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={editPriority}
+                      onChange={(e) => setEditPriority(e.target.value as "high" | "medium" | "low")}
+                      className="text-xs"
+                    >
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </Select>
+                    <Input
+                      type="text"
+                      value={editTags}
+                      onChange={(e) => setEditTags(e.target.value)}
+                      placeholder="Tags (comma-separated)"
+                      className="flex-1 text-xs"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={handleSaveEdit}
+                      disabled={isPending}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={handleCancelEdit}
+                      disabled={isPending}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                // Display Mode
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3
+                      className={`font-medium text-gray-900 ${
+                        task.completed ? "line-through text-gray-500" : ""
+                      }`}
+                    >
+                      {task.title}
+                    </h3>
+                    {/* Priority Badge */}
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                      task.priority === 'high'
+                        ? 'bg-red-100 text-red-800'
+                        : task.priority === 'medium'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                    </span>
+                  </div>
+                  {task.description && (
+                    <p
+                      className={`mt-1 text-sm ${
+                        task.completed ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    >
+                      {task.description}
+                    </p>
+                  )}
+                  {/* Tags Pills */}
+                  {task.tags && task.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {task.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <p className="mt-2 text-xs text-gray-400">
+                    {new Date(task.created_at).toLocaleDateString()}
+                  </p>
+                </>
               )}
-              <p className="mt-2 text-xs text-gray-400">
-                {new Date(task.created_at).toLocaleDateString()}
-              </p>
             </div>
 
-            {/* Delete Button */}
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setShowDeleteDialog(true)}
-              disabled={isPending}
-              aria-label="Delete task"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Edit and Delete Buttons */}
+            <div className="flex flex-col gap-1">
+              {!isEditing && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleEdit}
+                  disabled={isPending}
+                  aria-label="Edit task"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </Button>
+              )}
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setShowDeleteDialog(true)}
+                disabled={isPending || isEditing}
+                aria-label="Delete task"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </Button>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
