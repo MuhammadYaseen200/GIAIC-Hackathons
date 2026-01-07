@@ -23,3 +23,13 @@ bcrypt>=4.0.0,<4.1.0
 python-multipart>=0.0.17
 httpx>=0.28.0
 email-validator>=2.0.0
+
+# Phase 3: AI Chatbot
+# MCP Server SDK (per ADR-010: MCP Service Wrapping)
+mcp>=1.0.0
+
+# OpenAI Agents SDK (per ADR-009: Hybrid AI Engine)
+openai-agents>=0.1.0
+
+# Gemini Python SDK (fallback adapter, per ADR-009)
+google-generativeai>=0.8.0

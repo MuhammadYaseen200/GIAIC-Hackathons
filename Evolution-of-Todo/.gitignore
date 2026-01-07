@@ -81,7 +81,12 @@ todo_dev.db
 
 # Backup directories
 .specify_backup/
+.claude.backup/
+.claude.session_backup/
 *.backup
+*.resume_backup
+*.session_backup
+*.phase*_backup
 nul
 
 # Deployment files with sensitive credentials
