@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat:*)",
+      "Bash(ss:*)",
+      "Bash(mcp list:*)",
+      "Bash(mkdir:*)",
+      "Bash(pip3 install:*)",
+      "Bash(timeout 5 uvicorn:*)",
+      "Bash(curl:*)",
+      "Bash(pip3 list:*)",
+      "Bash(uvicorn:*)",
+      "Bash(python3:*)",
+      "Bash(tee:*)",
+      "Bash(gh auth:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
