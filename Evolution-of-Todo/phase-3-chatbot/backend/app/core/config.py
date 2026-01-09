@@ -42,6 +42,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3002",
+        "https://frontend-8hn2z4156-muhammadyaseen200s-projects.vercel.app",
     ]
 
     # Phase 3: AI Configuration (per ADR-009: Hybrid AI Engine)

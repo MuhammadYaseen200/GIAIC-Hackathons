@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "phase-3-chatbot/backend/api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "phase-3-chatbot/frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "phase-3-chatbot/backend/api/index.py" },
+    { "src": "/health", "dest": "phase-3-chatbot/backend/api/index.py" },
+    { "src": "/docs", "dest": "phase-3-chatbot/backend/api/index.py" },
+    { "src": "/openapi.json", "dest": "phase-3-chatbot/backend/api/index.py" },
+    { "src": "/(.*)", "dest": "phase-3-chatbot/frontend/$1" }
+  ]
+}
