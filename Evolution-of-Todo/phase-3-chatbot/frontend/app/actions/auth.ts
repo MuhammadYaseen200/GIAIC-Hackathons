@@ -17,7 +17,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/types";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = process.env.BACKEND_URL;
+
+if (!BACKEND_URL && process.env.NODE_ENV === "production") {
+  console.warn("BACKEND_URL is not defined in production environment");
+}
+
 const COOKIE_NAME = "auth-token";
 
 /**
