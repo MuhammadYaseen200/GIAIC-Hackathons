@@ -5,8 +5,9 @@ and messages to our PostgreSQL database via SQLModel.
 """
 
 import json
+from datetime import datetime
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid5, NAMESPACE_DNS
 
 from chatkit.store import Store, default_generate_id, StoreItemType, NotFoundError
 from chatkit.types import (
@@ -17,6 +18,42 @@ from chatkit.types import (
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.conversation import Conversation
+
+# Namespace for generating deterministic UUIDs from ChatKit string IDs
+CHATKIT_NAMESPACE = UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+
+
+def string_to_uuid(string_id: str) -> UUID:
+    """Convert a string ID to a deterministic UUID.
+
+    If the string is already a valid UUID, parse it directly.
+    Otherwise, generate a UUID v5 from the string using our namespace.
+    """
+    try:
+        # Try to parse as UUID directly
+        return UUID(string_id)
+    except (ValueError, AttributeError):
+        # Generate deterministic UUID from string
+        return uuid5(CHATKIT_NAMESPACE, string_id)
+
+
+def serialize_for_json(obj: Any) -> Any:
+    """Recursively convert an object to JSON-serializable format.
+
+    Handles datetime objects, UUIDs, and nested structures.
+    """
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    elif isinstance(obj, UUID):
+        return str(obj)
+    elif isinstance(obj, dict):
+        return {k: serialize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [serialize_for_json(item) for item in obj]
+    elif hasattr(obj, "model_dump"):
+        return serialize_for_json(obj.model_dump())
+    else:
+        return obj
 
 
 class ChatContext:
@@ -34,8 +71,11 @@ class DatabaseStore(Store[ChatContext]):
         """Load a thread's metadata by id."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -56,8 +96,11 @@ class DatabaseStore(Store[ChatContext]):
         """Persist thread metadata."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database operations
+        db_id = string_to_uuid(thread.id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread.id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -67,9 +110,9 @@ class DatabaseStore(Store[ChatContext]):
             conversation.title = thread.title
             context.db.add(conversation)
         else:
-            # Create new conversation
+            # Create new conversation with converted UUID
             conversation = Conversation(
-                id=thread.id,
+                id=db_id,
                 user_id=context.user_id,
                 title=thread.title,
                 messages=[],
@@ -89,8 +132,11 @@ class DatabaseStore(Store[ChatContext]):
         """Load a page of thread items."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -128,15 +174,22 @@ class DatabaseStore(Store[ChatContext]):
         self,
         after: str | None,
         limit: int,
+        order: str,
         context: ChatContext,
     ) -> Page[ThreadMetadata]:
         """Load a page of threads for the user."""
         from sqlmodel import select
 
+        # Determine ordering based on 'order' parameter
+        if order == "asc":
+            order_clause = Conversation.updated_at.asc()
+        else:
+            order_clause = Conversation.updated_at.desc()
+
         statement = (
             select(Conversation)
             .where(Conversation.user_id == context.user_id)
-            .order_by(Conversation.updated_at.desc())
+            .order_by(order_clause)
             .limit(limit + 1)
         )
 
@@ -172,8 +225,11 @@ class DatabaseStore(Store[ChatContext]):
         """Add an item to a thread."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -183,11 +239,8 @@ class DatabaseStore(Store[ChatContext]):
             raise NotFoundError(f"Thread {thread_id} not found")
 
         messages = conversation.messages or []
-        # Convert Pydantic model to dict if needed
-        if hasattr(item, "model_dump"):
-            item_dict = item.model_dump()
-        else:
-            item_dict = dict(item) if isinstance(item, dict) else item
+        # Convert Pydantic model to dict and serialize datetime/UUID objects
+        item_dict = serialize_for_json(item)
         messages.append(item_dict)
         conversation.messages = messages
         context.db.add(conversation)
@@ -202,8 +255,11 @@ class DatabaseStore(Store[ChatContext]):
         """Update an existing item in a thread."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -218,10 +274,8 @@ class DatabaseStore(Store[ChatContext]):
         for i, msg in enumerate(messages):
             msg_id = msg.get("id") if isinstance(msg, dict) else getattr(msg, "id", None)
             if msg_id == item_id:
-                if hasattr(item, "model_dump"):
-                    messages[i] = item.model_dump()
-                else:
-                    messages[i] = dict(item) if isinstance(item, dict) else item
+                # Serialize to handle datetime/UUID objects
+                messages[i] = serialize_for_json(item)
                 break
 
         conversation.messages = messages
@@ -237,8 +291,11 @@ class DatabaseStore(Store[ChatContext]):
         """Load a single item from a thread."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -258,8 +315,11 @@ class DatabaseStore(Store[ChatContext]):
         """Delete a thread."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)
@@ -278,8 +338,11 @@ class DatabaseStore(Store[ChatContext]):
         """Delete an item from a thread."""
         from sqlmodel import select
 
+        # Convert string ID to UUID for database query
+        db_id = string_to_uuid(thread_id)
+
         statement = select(Conversation).where(
-            Conversation.id == thread_id,
+            Conversation.id == db_id,
             Conversation.user_id == context.user_id,
         )
         result = await context.db.execute(statement)

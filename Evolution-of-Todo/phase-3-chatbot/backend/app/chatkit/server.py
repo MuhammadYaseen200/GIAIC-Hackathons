@@ -177,10 +177,12 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
         try:
             thread_items = await self.store.load_thread_items(
                 thread_id=thread.id,
+                after=None,
                 limit=50,
+                order="asc",
                 context=context,
             )
-            for item in thread_items.data:
+            for item in thread_items.items:
                 if hasattr(item, "type"):
                     if item.type == "user_message":
                         text_parts = []

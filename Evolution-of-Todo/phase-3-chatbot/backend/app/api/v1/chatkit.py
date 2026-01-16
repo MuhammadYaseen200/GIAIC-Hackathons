@@ -5,6 +5,7 @@ This module provides the FastAPI endpoint for ChatKit integration.
 
 import logging
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
@@ -15,6 +16,7 @@ from app.core.database import get_session
 from app.chatkit.server import TodoChatKitServer
 from app.chatkit.store import ChatContext, DatabaseStore
 from app.models.user import User
+from app.models.task import Priority
 from app.services.task_service import TaskService
 
 logger = logging.getLogger(__name__)
@@ -32,7 +34,13 @@ async def add_task_handler(context: ChatContext, **kwargs):
     service = TaskService(context.db)
     title = kwargs.get("title", "Untitled Task")
     description = kwargs.get("description")
-    priority = kwargs.get("priority", "medium")
+    priority_str = kwargs.get("priority", "medium")
+
+    # Convert string priority to Priority enum
+    try:
+        priority = Priority(priority_str.lower())
+    except ValueError:
+        priority = Priority.medium
     tags = kwargs.get("tags", [])
 
     task = await service.create_task(
@@ -48,11 +56,18 @@ async def add_task_handler(context: ChatContext, **kwargs):
 async def list_tasks_handler(context: ChatContext, **kwargs):
     """Handle list_tasks tool call."""
     service = TaskService(context.db)
-    status = kwargs.get("status", "all")
+    status_filter = kwargs.get("status", "all")
 
-    tasks = await service.get_tasks(
+    # Use search_tasks for filtering support
+    is_completed = None
+    if status_filter == "completed":
+        is_completed = True
+    elif status_filter == "pending":
+        is_completed = False
+
+    tasks = await service.search_tasks(
         user_id=context.user_id,
-        status=None if status == "all" else status,
+        status=is_completed,
     )
     return {
         "success": True,
@@ -73,7 +88,14 @@ async def list_tasks_handler(context: ChatContext, **kwargs):
 async def complete_task_handler(context: ChatContext, **kwargs):
     """Handle complete_task tool call."""
     service = TaskService(context.db)
-    task_id = kwargs.get("task_id")
+    task_id_str = kwargs.get("task_id")
+    if not task_id_str:
+        return {"success": False, "error": "task_id is required"}
+
+    try:
+        task_id = UUID(task_id_str)
+    except ValueError:
+        return {"success": False, "error": "Invalid task_id format"}
 
     task = await service.toggle_complete(user_id=context.user_id, task_id=task_id)
     if task:
@@ -84,7 +106,14 @@ async def complete_task_handler(context: ChatContext, **kwargs):
 async def delete_task_handler(context: ChatContext, **kwargs):
     """Handle delete_task tool call."""
     service = TaskService(context.db)
-    task_id = kwargs.get("task_id")
+    task_id_str = kwargs.get("task_id")
+    if not task_id_str:
+        return {"success": False, "error": "task_id is required"}
+
+    try:
+        task_id = UUID(task_id_str)
+    except ValueError:
+        return {"success": False, "error": "Invalid task_id format"}
 
     result = await service.delete_task(user_id=context.user_id, task_id=task_id)
     if result:
@@ -95,7 +124,14 @@ async def delete_task_handler(context: ChatContext, **kwargs):
 async def update_task_handler(context: ChatContext, **kwargs):
     """Handle update_task tool call."""
     service = TaskService(context.db)
-    task_id = kwargs.get("task_id")
+    task_id_str = kwargs.get("task_id")
+    if not task_id_str:
+        return {"success": False, "error": "task_id is required"}
+
+    try:
+        task_id = UUID(task_id_str)
+    except ValueError:
+        return {"success": False, "error": "Invalid task_id format"}
 
     update_data = {}
     if "title" in kwargs:
@@ -103,7 +139,10 @@ async def update_task_handler(context: ChatContext, **kwargs):
     if "description" in kwargs:
         update_data["description"] = kwargs["description"]
     if "priority" in kwargs:
-        update_data["priority"] = kwargs["priority"]
+        try:
+            update_data["priority"] = Priority(kwargs["priority"].lower())
+        except ValueError:
+            pass
 
     task = await service.update_task(
         user_id=context.user_id,
@@ -123,12 +162,13 @@ server.register_tool_handler("delete_task", delete_task_handler)
 server.register_tool_handler("update_task", update_task_handler)
 
 
+@router.api_route("/", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 @router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def chatkit_handler(
     request: Request,
-    path: str,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_session)],
+    path: str = "",
 ):
     """Handle all ChatKit API requests.
 
