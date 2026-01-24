@@ -162,6 +162,12 @@ server.register_tool_handler("delete_task", delete_task_handler)
 server.register_tool_handler("update_task", update_task_handler)
 
 
+@router.get("/health")
+async def chatkit_health():
+    """Simple health check for ChatKit router."""
+    return {"status": "healthy", "message": "ChatKit router is working"}
+
+
 @router.api_route("/", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 @router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def chatkit_handler(
@@ -185,15 +191,29 @@ async def chatkit_handler(
     body = await request.body()
 
     # Process the request through ChatKitServer
-    result = await server.process(body, context)
+    try:
+        result = await server.process(body, context)
+    except Exception as e:
+        logger.error(f"ChatKit processing error: {type(e).__name__}: {e}", exc_info=True)
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"message": f"{type(e).__name__}: {str(e)}"}}
+        )
 
     if isinstance(result, StreamingResult):
         # Streaming response - return as SSE
+        # IMPORTANT: StreamingResult already yields properly formatted SSE bytes
+        # in the format: b"data: {json}\n\n"
+        # We just need to decode and yield, NOT re-format
         async def generate():
             async for event in result:
-                # Convert event to proper SSE format
-                event_data = event.json() if hasattr(event, 'json') else str(event)
-                yield f"data: {event_data}\n\n"
+                # StreamingResult yields bytes that are already SSE-formatted
+                if isinstance(event, bytes):
+                    yield event.decode('utf-8')
+                else:
+                    # Fallback for non-bytes (shouldn't happen with ChatKit)
+                    yield str(event)
 
         return StreamingResponse(
             generate(),

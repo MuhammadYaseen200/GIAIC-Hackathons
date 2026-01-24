@@ -1179,12 +1179,54 @@ The following decisions may warrant Architecture Decision Records:
 
 ---
 
+## 15. Maintenance: OpenRouter Migration (2026-01-22)
+
+### Background
+
+The original Gemini API integration (ADR-009) hit rate limits (HTTP 429) blocking chat functionality. A maintenance update migrates to OpenRouter, an OpenAI-compatible API aggregator.
+
+### Decision
+
+**Provider Change**: Direct Gemini API -> OpenRouter (with Gemini model via OpenRouter)
+
+| Aspect | Before | After |
+|--------|--------|-------|
+| Base URL | `generativelanguage.googleapis.com/v1beta/openai` | `openrouter.ai/api/v1` |
+| API Key | `GEMINI_API_KEY` | `OPENROUTER_API_KEY` |
+| Model | `gemini-2.0-flash` | `google/gemini-2.0-flash-exp:free` |
+
+### Impact
+
+- **Backend Only**: Frontend unchanged
+- **MCP Tools**: Unchanged (same response format)
+- **Architecture**: Unchanged (still OpenAI-compatible SDK)
+
+### Specification
+
+See: `specs/features/openrouter-integration.md`
+
+### Tasks
+
+| Task ID | Description | Status |
+|---------|-------------|--------|
+| T-401 | Update Config with OpenRouter Settings | Pending |
+| T-402 | Secure OpenRouter API Key in .env | Pending |
+| T-403 | Update .env.example | Pending |
+| T-404 | Migrate Client to OpenRouter | Pending |
+| T-405 | Update Model Reference | Pending |
+| T-406 | Test OpenRouter Connection | Pending |
+| T-407 | Run CRUD Matrix Tests | Pending |
+| T-408 | Create ADR-013 | Pending |
+
+---
+
 ## Document History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2026-01-04 | @modular-ai-architect | Initial Phase 3 Master Plan |
 | 2.0.0 | 2026-01-04 | @spec-architect | Added Intermediate Features (Priority, Tags, Search, Sort) |
+| 2.1.0 | 2026-01-22 | @lead-architect | Added Section 15: OpenRouter Migration |
 
 ---
 

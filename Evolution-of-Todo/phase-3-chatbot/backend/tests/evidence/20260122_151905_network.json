@@ -1,0 +1,748 @@
+[
+  {
+    "type": "request",
+    "timestamp": 494477.944234,
+    "url": "http://localhost:3000/register",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494482.860229,
+    "url": "http://localhost:3000/register",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.929276,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077074514",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.937184,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077074514",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.939928,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077074514",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.940865,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.941198,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.942755,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/register/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494482.942936,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.026146,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077074514",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.098979,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077074514",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be535e77a\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:17:53 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494483.13176,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077074514",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.44812,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.449401,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.450013,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/register/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"414c9-19be535e77d\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:17:53 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.800781,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494483.98011,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077074514",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494485.147602,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "222",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=CO1X%2BApPWTtEtRxZE4yeld8UCHbD%2BrH0wfCgiVOjjrjHTlkFmA9LS35MuJpmSBQ0o1DkAdZjn3NhIBSYfKQ%2FIhtvzO2v3oArCDioA3JJRjizrxYL9kep4uAJ%2Fz500WzA4VdIdfdLSpmA\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:17:56 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "56d371ba-701e-00da-7af4-8ab4a0000000",
+      "cf-ray": "9c1e4df2cba4408f-SIN",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494485.815088,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494486.284518,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/register",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494486.691219,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494487.69243,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:59 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494516.455657,
+    "url": "http://localhost:3000/login",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.661686,
+    "url": "http://localhost:3000/login",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.739848,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077109224",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.740487,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077109224",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.740765,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077109224",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.741043,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.741302,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.741576,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/login/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.741857,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.742873,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "222",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=CO1X%2BApPWTtEtRxZE4yeld8UCHbD%2BrH0wfCgiVOjjrjHTlkFmA9LS35MuJpmSBQ0o1DkAdZjn3NhIBSYfKQ%2FIhtvzO2v3oArCDioA3JJRjizrxYL9kep4uAJ%2Fz500WzA4VdIdfdLSpmA\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:17:56 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "56d371ba-701e-00da-7af4-8ab4a0000000",
+      "cf-ray": "9c1e4df2cba4408f-SIN",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.809412,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077109224",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494517.821483,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077109224",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.821813,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:17:55 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.898769,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077109224",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be535e77a\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:17:53 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494517.927697,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494518.078117,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494518.097434,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/login/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"40f8a-19be5300e2d\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494518.676679,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077109224",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:30 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494519.688071,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494519.797013,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:32 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494520.1098,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494520.168397,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:32 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 494520.491574,
+    "url": "http://localhost:3000/login",
+    "method": "POST",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "next-action": "6049aa4a86c29fe1f73622705b6ab9977006fc434d",
+      "Referer": "http://localhost:3000/login",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22(auth)%22%2C%7B%22children%22%3A%5B%22login%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "Accept": "text/x-component",
+      "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundarymLBA1ASOXJdZd5Em"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 494521.015983,
+    "url": "http://localhost:3000/login",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "x-action-revalidated": "[[],0,0]",
+      "Content-Encoding": "gzip",
+      "Connection": "keep-alive",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:18:33 GMT",
+      "Content-Type": "text/x-component",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    }
+  }
+]

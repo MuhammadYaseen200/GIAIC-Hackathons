@@ -7,8 +7,10 @@
 
 import type { ApiResponse, ErrorResponse } from "@/types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1`
+// Defensive: trim and validate the API URL to prevent malformed env vars
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim().split(' ')[0] || '';
+const API_BASE = rawApiUrl
+  ? `${rawApiUrl}/api/v1`
   : "/api/v1";
 
 /**

@@ -1,16 +1,18 @@
-"""ChatKit Server implementation with Gemini AI backend.
+"""ChatKit Server implementation with OpenRouter AI backend.
 
 This module provides the ChatKitServer that handles user messages
-and generates AI responses using Google Gemini.
+and generates AI responses using OpenRouter API (OpenAI-compatible).
 """
 
 import json
 import logging
 from collections.abc import AsyncIterator
+from datetime import datetime, timezone
 
 from chatkit.server import ChatKitServer
 from chatkit.store import default_generate_id
 from chatkit.types import (
+    AssistantMessageContent,
     AssistantMessageContentPartAdded,
     AssistantMessageContentPartDone,
     AssistantMessageContentPartTextDelta,
@@ -28,10 +30,14 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Gemini client via OpenAI-compatible endpoint
-gemini_client = AsyncOpenAI(
-    api_key=settings.GEMINI_API_KEY,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+# OpenRouter client via OpenAI-compatible endpoint
+openrouter_client = AsyncOpenAI(
+    api_key=settings.OPENROUTER_API_KEY,
+    base_url=settings.OPENROUTER_BASE_URL,
+    default_headers={
+        "HTTP-Referer": settings.OPENROUTER_SITE_URL,
+        "X-Title": settings.OPENROUTER_APP_NAME,
+    },
 )
 
 # Tool schemas for task management
@@ -182,22 +188,30 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
                 order="asc",
                 context=context,
             )
-            for item in thread_items.items:
-                if hasattr(item, "type"):
-                    if item.type == "user_message":
-                        text_parts = []
-                        for part in getattr(item, "content", []):
-                            if hasattr(part, "type") and part.type == "input_text":
-                                text_parts.append(getattr(part, "text", ""))
-                        if text_parts:
-                            messages.append({"role": "user", "content": " ".join(text_parts)})
-                    elif item.type == "assistant_message":
-                        text_parts = []
-                        for part in getattr(item, "content", []):
-                            if hasattr(part, "type") and part.type == "text":
-                                text_parts.append(getattr(part, "text", ""))
-                        if text_parts:
-                            messages.append({"role": "assistant", "content": " ".join(text_parts)})
+            for item in thread_items.data:
+                # Handle both dict and object access for items from database
+                item_type = item.get("type") if isinstance(item, dict) else getattr(item, "type", None)
+                item_content = item.get("content", []) if isinstance(item, dict) else getattr(item, "content", [])
+
+                if item_type == "user_message":
+                    text_parts = []
+                    for part in item_content:
+                        part_type = part.get("type") if isinstance(part, dict) else getattr(part, "type", None)
+                        part_text = part.get("text") if isinstance(part, dict) else getattr(part, "text", "")
+                        if part_type == "input_text" and part_text:
+                            text_parts.append(part_text)
+                    if text_parts:
+                        messages.append({"role": "user", "content": " ".join(text_parts)})
+                elif item_type == "assistant_message":
+                    text_parts = []
+                    for part in item_content:
+                        part_type = part.get("type") if isinstance(part, dict) else getattr(part, "type", None)
+                        part_text = part.get("text") if isinstance(part, dict) else getattr(part, "text", "")
+                        # Handle both 'text' and 'output_text' types
+                        if part_type in ("text", "output_text") and part_text:
+                            text_parts.append(part_text)
+                    if text_parts:
+                        messages.append({"role": "assistant", "content": " ".join(text_parts)})
         except Exception as e:
             logger.warning(f"Could not load thread history: {e}")
 
@@ -215,23 +229,25 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
             return
 
         try:
-            # Call Gemini API
-            response = await gemini_client.chat.completions.create(
-                model=settings.GEMINI_MODEL,
+            # Call OpenRouter API
+            response = await openrouter_client.chat.completions.create(
+                model=settings.OPENROUTER_MODEL,
                 messages=messages,
                 tools=TOOL_SCHEMAS,
                 timeout=settings.AGENT_TIMEOUT_SECONDS,
                 stream=True,
             )
 
-            # Generate a message ID
+            # Generate a message ID and timestamp
             msg_id = default_generate_id("message")
+            created_at = datetime.now(timezone.utc)
 
             # Start the assistant message
+            # Note: AssistantMessageItem requires thread_id and created_at
             assistant_item = AssistantMessageItem(
                 id=msg_id,
-                type="assistant_message",
-                status="in_progress",
+                thread_id=thread.id,
+                created_at=created_at,
                 content=[],
             )
 
@@ -251,15 +267,15 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
                 # Handle text content
                 if delta.content:
                     if not part_added:
+                        # Use AssistantMessageContent with correct type='output_text'
                         yield AssistantMessageContentPartAdded(
-                            item_id=msg_id,
-                            part={"type": "text", "text": ""},
+                            content_index=0,
+                            content=AssistantMessageContent(text=""),
                         )
                         part_added = True
 
                     current_text += delta.content
                     yield AssistantMessageContentPartTextDelta(
-                        item_id=msg_id,
                         content_index=0,
                         delta=delta.content,
                     )
@@ -300,14 +316,13 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
 
                     if not part_added:
                         yield AssistantMessageContentPartAdded(
-                            item_id=msg_id,
-                            part={"type": "text", "text": ""},
+                            content_index=0,
+                            content=AssistantMessageContent(text=""),
                         )
                         part_added = True
 
                     current_text += tool_result_text
                     yield AssistantMessageContentPartTextDelta(
-                        item_id=msg_id,
                         content_index=0,
                         delta=tool_result_text,
                     )
@@ -315,18 +330,18 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
             # Complete the text part
             if current_text and part_added:
                 yield AssistantMessageContentPartDone(
-                    item_id=msg_id,
                     content_index=0,
-                    part={"type": "text", "text": current_text},
+                    content=AssistantMessageContent(text=current_text),
                 )
 
             # Complete the message
+            final_text = current_text or "I'm not sure how to help with that."
             yield ThreadItemDoneEvent(
                 item=AssistantMessageItem(
                     id=msg_id,
-                    type="assistant_message",
-                    status="completed",
-                    content=[{"type": "text", "text": current_text or "I'm not sure how to help with that."}],
+                    thread_id=thread.id,
+                    created_at=created_at,
+                    content=[AssistantMessageContent(text=final_text)],
                 )
             )
 
@@ -334,12 +349,13 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
             logger.exception("Error generating response")
             # Yield error message
             error_msg_id = default_generate_id("message")
+            error_created_at = datetime.now(timezone.utc)
 
             error_item = AssistantMessageItem(
                 id=error_msg_id,
-                type="assistant_message",
-                status="completed",
-                content=[{"type": "text", "text": f"I apologize, but I encountered an error: {str(e)}"}],
+                thread_id=thread.id,
+                created_at=error_created_at,
+                content=[AssistantMessageContent(text=f"I apologize, but I encountered an error: {str(e)}")],
             )
             yield ThreadItemAddedEvent(item=error_item)
             yield ThreadItemDoneEvent(item=error_item)

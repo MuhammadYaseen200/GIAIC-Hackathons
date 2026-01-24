@@ -246,14 +246,39 @@ hackathon-todo/
 
 ## Deadlines
 
-| Phase | Due Date |
-|-------|----------|
-| Phase I | Dec 7, 2025 |
-| Phase II | Dec 14, 2025 |
-| Phase III | Dec 21, 2025 |
-| Phase IV | Jan 4, 2026 |
-| Phase V | Jan 18, 2026 |
+| Phase | Due Date | Status |
+|-------|----------|--------|
+| Phase I | Dec 7, 2025 | ✅ COMPLETE |
+| Phase II | Dec 14, 2025 | ✅ COMPLETE |
+| Phase III | Dec 21, 2025 | PENDING |
+| Phase IV | Jan 4, 2026 | PENDING |
+| Phase V | Jan 18, 2026 | PENDING |
 
 ---
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-27
+## Phase Completion Log
+
+### Phase I: Console App ✅
+- **Completed**: Dec 7, 2025
+- **Deliverables**: Python CLI with in-memory task storage
+- **Location**: `phase-1-console/`
+
+### Phase II: Full-Stack Web ✅
+- **Completed**: Dec 31, 2025
+- **Deliverables**:
+  - FastAPI backend with JWT auth (`phase-2-web/backend/`)
+  - Next.js 15 frontend with App Router (`phase-2-web/frontend/`)
+  - SQLite database (dev), PostgreSQL ready (prod)
+  - 7 User Stories implemented (Register, Login, Add/View/Update/Delete/Complete Tasks)
+  - Toast notifications, loading states, error boundaries
+- **ADRs**: ADR-004 to ADR-007
+- **Tasks**: 80 tasks, all complete
+
+### Phase III: AI Chatbot (NEXT)
+- **Status**: Ready to specify
+- **Scope**: MCP Server wrapping Phase 2 REST API, OpenAI Agents SDK integration
+- **Brownfield**: Port REST endpoints to MCP Tools
+
+---
+
+**Version**: 1.1.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-31

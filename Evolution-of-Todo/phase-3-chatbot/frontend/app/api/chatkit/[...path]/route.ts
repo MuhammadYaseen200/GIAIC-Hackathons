@@ -1,7 +1,9 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000"
+// Defensive: trim and extract only the first part (before any spaces)
+// This prevents "URL BACKEND_URL=..." concatenation bugs from malformed env vars
+const BACKEND_URL = (process.env.BACKEND_URL || "http://localhost:8000").trim().split(' ')[0]
 
 /**
  * Proxy handler for ChatKit API requests.
@@ -38,14 +40,33 @@ async function proxyRequest(request: NextRequest, path: string) {
     body,
   })
 
-  // Get response body
+  const contentType = response.headers.get("Content-Type") || "application/json"
+
+  // Check if this is an SSE streaming response
+  if (contentType.includes("text/event-stream") && response.body) {
+    // For SSE: Stream the response directly without buffering
+    // This is critical for real-time chat streaming to work
+    return new NextResponse(response.body, {
+      status: response.status,
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    })
+  }
+
+  // For non-streaming responses: buffer and return normally
   const responseBody = await response.text()
 
   // Return response with CORS headers for the ChatKit iframe
   return new NextResponse(responseBody, {
     status: response.status,
     headers: {
-      "Content-Type": response.headers.get("Content-Type") || "application/json",
+      "Content-Type": contentType,
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",

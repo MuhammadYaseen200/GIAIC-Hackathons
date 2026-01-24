@@ -11,6 +11,7 @@ from uuid import UUID, uuid5, NAMESPACE_DNS
 
 from chatkit.store import Store, default_generate_id, StoreItemType, NotFoundError
 from chatkit.types import (
+    ActiveStatus,
     Page,
     ThreadItem,
     ThreadMetadata,
@@ -87,7 +88,7 @@ class DatabaseStore(Store[ChatContext]):
         return ThreadMetadata(
             id=str(conversation.id),
             title=conversation.title or "New Chat",
-            status="ready",
+            status=ActiveStatus(),
             created_at=conversation.created_at,
             updated_at=conversation.updated_at,
         )
@@ -143,7 +144,7 @@ class DatabaseStore(Store[ChatContext]):
         conversation = result.scalar_one_or_none()
 
         if not conversation:
-            return Page(items=[], has_more=False)
+            return Page(data=[], has_more=False)
 
         # Convert stored messages to ThreadItems
         items: list[ThreadItem] = []
@@ -168,7 +169,7 @@ class DatabaseStore(Store[ChatContext]):
         has_more = len(items) > limit
         items = items[:limit]
 
-        return Page(items=items, has_more=has_more)
+        return Page(data=items, has_more=has_more)
 
     async def load_threads(
         self,
@@ -207,14 +208,14 @@ class DatabaseStore(Store[ChatContext]):
             ThreadMetadata(
                 id=str(conv.id),
                 title=conv.title or "New Chat",
-                status="ready",
+                status=ActiveStatus(),
                 created_at=conv.created_at,
                 updated_at=conv.updated_at,
             )
             for conv in conversations
         ]
 
-        return Page(items=threads, has_more=has_more)
+        return Page(data=threads, has_more=has_more)
 
     async def add_thread_item(
         self,
