@@ -1,0 +1,57 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - heading "Todo App" [level=1] [ref=e7]
+          - link "Tasks" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Chat" [ref=e9] [cursor=pointer]:
+            - /url: /dashboard/chat
+        - button "Sign Out" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+          - text: Sign Out
+    - main [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - heading "Dashboard" [level=1] [ref=e18]
+          - paragraph [ref=e19]: Manage your tasks and stay organized.
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - heading "Add New Task" [level=3] [ref=e23]
+            - generic [ref=e25]:
+              - textbox "What needs to be done?" [ref=e28]
+              - textbox "Add a description (optional)" [ref=e30]
+              - generic [ref=e31]:
+                - generic [ref=e32]: Priority
+                - combobox "Priority" [ref=e33]:
+                  - option "High"
+                  - option "Medium" [selected]
+                  - option "Low"
+              - generic [ref=e34]:
+                - generic [ref=e35]: Tags (comma-separated)
+                - textbox "e.g., work, urgent, personal" [ref=e37]
+              - button "Add Task" [ref=e38] [cursor=pointer]
+          - generic [ref=e40]:
+            - textbox "Search tasks..." [ref=e43]
+            - combobox [ref=e45]:
+              - option "All Tasks" [selected]
+              - option "Pending"
+              - option "Completed"
+            - combobox [ref=e47]:
+              - option "All Priorities" [selected]
+              - option "High"
+              - option "Medium"
+              - option "Low"
+          - generic [ref=e48]:
+            - img [ref=e50]
+            - heading "No tasks found" [level=3] [ref=e52]
+            - paragraph [ref=e53]: Add your first task using the form above.
+  - button "Open Next.js Dev Tools" [ref=e59] [cursor=pointer]:
+    - img [ref=e60]
+  - alert [ref=e63]
+```

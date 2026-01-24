@@ -1,0 +1,1741 @@
+[
+  {
+    "type": "request",
+    "timestamp": 495255.190945,
+    "url": "http://localhost:3000/",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495256.319992,
+    "url": "http://localhost:3000/dashboard",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495256.432954,
+    "url": "http://localhost:3000/login?redirect=%2Fdashboard",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.139092,
+    "url": "http://localhost:3000/login?redirect=%2Fdashboard",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.23665,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077849081",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.239938,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077849081",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.241913,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077849081",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.242481,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.242805,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.24313,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/login/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.243364,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.332156,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077849081",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495257.4012,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077849081",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.665268,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077849081",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be53bc4ee\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:24:18 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.670939,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.672385,
+    "url": "http://localhost:3000/_next/static/chunks/app/(auth)/login/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"40f8a-19be5300e2d\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.67435,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.675522,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "103",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=pZYKQu2wFcq2pcXXkn9BozuIsP82mhTnhcskIRfH0E%2B%2BnVjQ54LScuq7C2B8QL%2F%2Fqc0XLzKNEDGIz0ytnKsYq2%2FaGVwuUHbDSRMj%2FeKc6CUASx%2B68WHb6ewI%2FPvtyuSk34IdjglMGCxO\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "3f89a09d-201e-00e0-7ef4-8aa303000000",
+      "cf-ray": "9c1e60d2096f21e6-KHI",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495257.879277,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:50 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495258.556123,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077849081",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495260.15008,
+    "url": "http://localhost:3000/login?redirect=%2Fdashboard",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495260.140433,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495260.225476,
+    "url": "http://localhost:3000/dashboard",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495260.390681,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/login?redirect=%2Fdashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495260.450372,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:52 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495260.598281,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:52 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.531553,
+    "url": "http://localhost:3000/dashboard",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:30:53 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js",
+      "link": "</_next/static/css/app/layout.css?v=1769077853263>; rel=preload; as=\"style\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.55962,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077853263",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.703847,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077853263",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.704193,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077853263",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.704488,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.704782,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.70505,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.705312,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.705602,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.706037,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "103",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=pZYKQu2wFcq2pcXXkn9BozuIsP82mhTnhcskIRfH0E%2B%2BnVjQ54LScuq7C2B8QL%2F%2Fqc0XLzKNEDGIz0ytnKsYq2%2FaGVwuUHbDSRMj%2FeKc6CUASx%2B68WHb6ewI%2FPvtyuSk34IdjglMGCxO\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "3f89a09d-201e-00e0-7ef4-8aa303000000",
+      "cf-ray": "9c1e60d2096f21e6-KHI",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.827066,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077853263",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495261.843997,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077853263",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.84435,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:50 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.942047,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077853263",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be53bc4ee\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:24:18 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495261.977795,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495262.038284,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"12a43-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495262.066324,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495262.137012,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"6b30d-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495262.17857,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495262.288904,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"7cc7b-19be53b17af\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495263.228868,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077853263",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:54 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495264.418303,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495264.596687,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:57 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495264.687841,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495264.706447,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:57 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495266.515536,
+    "url": "http://localhost:3000/dashboard",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.287657,
+    "url": "http://localhost:3000/dashboard",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js",
+      "link": "</_next/static/css/app/layout.css?v=1769077859078>; rel=preload; as=\"style\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.312208,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077859078",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.39492,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077859078",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.395307,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077859078",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.395591,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.395861,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.396174,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.396439,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.396737,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.39728,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "103",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=pZYKQu2wFcq2pcXXkn9BozuIsP82mhTnhcskIRfH0E%2B%2BnVjQ54LScuq7C2B8QL%2F%2Fqc0XLzKNEDGIz0ytnKsYq2%2FaGVwuUHbDSRMj%2FeKc6CUASx%2B68WHb6ewI%2FPvtyuSk34IdjglMGCxO\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "3f89a09d-201e-00e0-7ef4-8aa303000000",
+      "cf-ray": "9c1e60d2096f21e6-KHI",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.468595,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077859078",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495267.484871,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077859078",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.521439,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:50 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.539172,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077859078",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be53bc4ee\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:24:18 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.65864,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.662593,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"12a43-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.692226,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495267.886718,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"6b30d-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:00 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495268.014108,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495268.228616,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"7cc7b-19be53b17af\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:00 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495269.473597,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077859078",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:59 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495270.572109,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495270.691709,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:03 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495270.796933,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495270.814113,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:03 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495272.587251,
+    "url": "http://localhost:3000/dashboard/chat",
+    "method": "GET",
+    "headers": {
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.158152,
+    "url": "http://localhost:3000/dashboard/chat",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "Content-Encoding": "gzip",
+      "Content-Type": "text/html; charset=utf-8",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Keep-Alive": "timeout=5",
+      "Transfer-Encoding": "chunked",
+      "Vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+      "X-Powered-By": "Next.js",
+      "link": "</_next/static/css/app/layout.css?v=1769077865233>; rel=preload; as=\"style\""
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.169761,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077865233",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.20843,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077865233",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.208831,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077865233",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.209124,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.209412,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.209687,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/chat/page.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.209951,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.210272,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.210672,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.211104,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/chatkit.js",
+    "status": 200,
+    "headers": {
+      "content-md5": "zQA3p32cUbNHyQPl1ADRNg==",
+      "access-control-expose-headers": "content-length",
+      "x-ms-version": "2009-09-19",
+      "x-ms-lease-status": "unlocked",
+      "cf-cache-status": "HIT",
+      "age": "103",
+      "content-encoding": "br",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=pZYKQu2wFcq2pcXXkn9BozuIsP82mhTnhcskIRfH0E%2B%2BnVjQ54LScuq7C2B8QL%2F%2Fqc0XLzKNEDGIz0ytnKsYq2%2FaGVwuUHbDSRMj%2FeKc6CUASx%2B68WHb6ewI%2FPvtyuSk34IdjglMGCxO\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "x-content-type-options": "nosniff",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "date": "Thu, 22 Jan 2026 10:30:49 GMT",
+      "content-type": "application/javascript",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "vary": "Accept-Encoding",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "cache-control": "public, max-age=300, stale-while-revalidate=60, must-revalidate",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "x-ms-request-id": "3f89a09d-201e-00e0-7ef4-8aa303000000",
+      "cf-ray": "9c1e60d2096f21e6-KHI",
+      "access-control-allow-origin": "*",
+      "x-ms-blob-type": "BlockBlob",
+      "server": "cloudflare"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.229828,
+    "url": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077865233",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"830a-19be52fe791\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "text/css; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495273.241306,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "method": "GET",
+    "headers": {
+      "Origin": "http://localhost:3000",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/_next/static/css/app/layout.css?v=1769077865233",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.241652,
+    "url": "http://localhost:3000/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+    "status": 200,
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "ETag": "W/\"bd30-19be52fe775\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "48432",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:30:50 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "font/woff2"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.321064,
+    "url": "http://localhost:3000/_next/static/chunks/webpack.js?v=1769077865233",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"22610-19be53bc4ee\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:24:18 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.420009,
+    "url": "http://localhost:3000/_next/static/chunks/app/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"145fb-19be5300e27\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:30 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.437148,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/error.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"12a43-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.441819,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/chat/page.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"15e1a-19be53b455b\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:45 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.456613,
+    "url": "http://localhost:3000/_next/static/chunks/app-pages-internals.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"4380c-19be52fe776\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495273.578644,
+    "url": "http://localhost:3000/_next/static/chunks/app/dashboard/layout.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"6b30d-19be53b17ae\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:23:33 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495274.443805,
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1769077865233",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"75d3a9-19be52fe77c\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:05 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495275.434836,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495275.595472,
+    "url": "http://localhost:3000/icon.svg?5dafb81e71b23d43",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "cache-control": "no-cache, no-store",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:07 GMT",
+      "content-type": "image/svg+xml",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "Connection": "keep-alive"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495275.753776,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "method": "GET",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495275.772522,
+    "url": "http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_pnpm_next_15_5_9__playwright_tes_17a660639e146d79b5b5b6c1adb1-8ed478.js",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Cache-Control": "no-store, must-revalidate",
+      "Content-Encoding": "gzip",
+      "ETag": "W/\"1b2b-19be52fe778\"",
+      "Connection": "keep-alive",
+      "Accept-Ranges": "bytes",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:08 GMT",
+      "Last-Modified": "Thu, 22 Jan 2026 10:11:20 GMT",
+      "Content-Type": "application/javascript; charset=UTF-8",
+      "Vary": "Accept-Encoding"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495275.915632,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/index-8cU9Wwk52_.html",
+    "method": "GET",
+    "headers": {
+      "Referer": "http://localhost:3000/",
+      "Upgrade-Insecure-Requests": "1",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495277.805397,
+    "url": "https://cdn.platform.openai.com/deployments/chatkit/index-8cU9Wwk52_.html",
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "content-length",
+      "age": "64419",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cache-control": "public, max-age=86400",
+      "cf-cache-status": "HIT",
+      "cf-ray": "9c1e614d59094095-SIN",
+      "content-encoding": "br",
+      "content-md5": "kD8Jgpq9T/AOafk/ydzIEw==",
+      "content-security-policy": "default-src 'none'; connect-src 'self' https://chatgpt.com https://sentinel.openai.com https://*.oaiusercontent.com https://api.openai.com https://eu.api.openai.com https://browser-intake-datadoghq.com; frame-src 'self' https://chatgpt.com https://sentinel.openai.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://chatgpt.com https://sentinel.openai.com; font-src 'self' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:",
+      "content-security-policy-report-only": "default-src 'none'; connect-src 'self' https://chatgpt.com https://sentinel.openai.com https://*.oaiusercontent.com https://api.openai.com https://eu.api.openai.com https://browser-intake-datadoghq.com; frame-src 'self' https://chatgpt.com https://sentinel.openai.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://chatgpt.com https://sentinel.openai.com; font-src 'self' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:",
+      "content-type": "text/html",
+      "date": "Thu, 22 Jan 2026 10:31:09 GMT",
+      "expires": "Fri, 23 Jan 2026 10:31:09 GMT",
+      "last-modified": "Wed, 21 Jan 2026 16:33:34 GMT",
+      "nel": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "origin-agent-cluster": "?1",
+      "report-to": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=EYyQuRZYpTfyMFJ9slF4isS9f5BUk%2BVDg%2FPnNzOuH0m20ai4aFNa7wscQemE2eSCTn9Z%2BhlitIdWHpzNSgZlj9CniYDql6hfYpLQHCARz7UFXgTiks%2BDzpX%2BcqCWDqWywFRmlq0FOYrO\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "vary": "Accept-Encoding",
+      "x-content-type-options": "nosniff",
+      "x-ms-blob-type": "BlockBlob",
+      "x-ms-lease-status": "unlocked",
+      "x-ms-request-id": "b7a8779e-b01e-0006-11f4-8a1325000000",
+      "x-ms-version": "2009-09-19"
+    }
+  },
+  {
+    "type": "request",
+    "timestamp": 495285.024392,
+    "url": "http://localhost:3000/api/chatkit",
+    "method": "POST",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "chatkit-frame-instance-id": "260ffeea-64d8-4e52-8d59-d6046c4d16b4",
+      "Referer": "http://localhost:3000/dashboard/chat",
+      "Accept-Language": "en",
+      "sec-ch-ua": "\"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+      "sec-ch-ua-mobile": "?0",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "Content-Type": "application/json"
+    }
+  },
+  {
+    "type": "response",
+    "timestamp": 495285.349233,
+    "url": "http://localhost:3000/api/chatkit",
+    "status": 200,
+    "headers": {
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "access-control-allow-methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "access-control-allow-origin": "*",
+      "Keep-Alive": "timeout=5",
+      "Date": "Thu, 22 Jan 2026 10:31:17 GMT",
+      "content-type": "application/json",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+      "access-control-allow-headers": "Content-Type, Authorization"
+    }
+  }
+]

@@ -56,6 +56,10 @@ class Conversation(SQLModel, table=True):
         index=True,
         description="Owner user ID (multi-tenancy key)",
     )
+    title: str | None = Field(
+        default=None,
+        description="Conversation title for display in thread list",
+    )
     messages: list[dict[str, Any]] = Field(
         default_factory=list,
         sa_type=JSON,

@@ -46,6 +46,8 @@ htmlcov/
 *~
 
 # Claude Code settings (contains command history with credentials)
+.claude/
+
 .claude/settings.local.json
 
 # OS

@@ -46,10 +46,18 @@ class Settings(BaseSettings):
     ]
 
     # Phase 3: AI Configuration (per ADR-009: Hybrid AI Engine)
+    # Legacy Gemini settings (kept for backward compatibility)
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-2.0-flash"
     AGENT_MAX_TURNS: int = 10
     AGENT_TIMEOUT_SECONDS: int = 30
+
+    # OpenRouter Configuration (primary AI provider)
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_MODEL: str = "google/gemini-2.0-flash-exp:free"
+    OPENROUTER_SITE_URL: str = "http://localhost:3000"
+    OPENROUTER_APP_NAME: str = "Evolution of Todo - Phase 3"
 
 
 @lru_cache
