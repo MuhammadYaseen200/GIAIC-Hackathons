@@ -1,284 +1,148 @@
-# Evolution of Todo Constitution
+# Claude Code Context
 
-## Project Overview
+@AGENTS.md
 
-**Mission**: Master Spec-Driven Development & Cloud-Native AI through iterative evolution from a Python console app to a fully-featured, Kubernetes-deployed AI chatbot.
+## Claude-Specific Notes
 
-**Constraint**: No manual code writing. All code must be generated via Claude Code from approved specifications.
+### Workflow
 
----
+- Prefer Claude Code's **explore → plan → code** workflow for non-trivial tasks
+- Use `/clear` between unrelated tasks to avoid stale context
+- Use `/compact` to summarize and free up context while keeping important information
+- Use isolated subagents for security reviews and large refactors
 
-## Core Principles
+### Spec-Kit Plus Integration
 
-### I. Spec-Driven Development (NON-NEGOTIABLE)
+Claude Code has native integration with Spec-Kit Plus commands:
 
-Every line of code must trace back to an approved specification. The workflow is immutable:
+- `/sp.constitution` - Update project principles and governance
+- `/sp.specify` - Create feature specifications
+- `/sp.clarify` - Ask targeted clarification questions (MANDATORY for unknowns)
+- `/sp.plan` - Generate implementation plan
+- `/sp.tasks` - Break plan into atomic tasks
+- `/sp.implement` - Execute tasks with loop-controller validation
+- `/sp.git.commit_pr` - Autonomous git workflows
+- `/sp.adr` - Create Architectural Decision Records
+- `/sp.phr` - Create Prompt History Records
 
-1. **Specify** → Define WHAT (requirements, journeys, acceptance criteria)
-2. **Plan** → Define HOW (architecture, components, interfaces)
-3. **Tasks** → Break into ATOMIC, testable work units
-4. **Implement** → Generate code ONLY for approved tasks
+### Agent Delegation
 
-**Violation Response**: If code is proposed without a referenced Task ID, HALT and request specification.
+When you need specialized capabilities, delegate to these agents using the Task tool:
 
-### II. Iterative Evolution (The Brownfield Protocol)
+**Command Team** (Always Active):
+- `imperator` - Strategic decisions, phase transitions, agent delegation
+- `lead-architect` - Constitution updates, architectural vision
+- `loop-controller` - Workflow enforcement (SPEC → IMPLEMENT → TEST → QA)
+- `qa-overseer` - Quality certification, test verification
+- `path-warden` - File placement validation
 
-Each phase builds on the previous. We evolve, not rewrite.
+**Build Team** (Task-Specific):
+- `spec-architect` - Specification writing, clarification questions
+- `modular-ai-architect` - AI system design, RAG, MCP servers
+- `backend-builder` - Python, FastAPI, SQLModel, MCP implementation
+- `ux-frontend-developer` - Next.js, React, Tailwind, ChatKit UI
+- `devops-rag-engineer` - Docker, K8s, Helm, Kafka, Dapr
+- `docusaurus-librarian` - ADR/PHR archival, documentation
 
-- **Phase I → II**: In-memory logic moves to `backend/app/services/`
-- **Phase II → III**: REST API becomes MCP Tool provider
-- **Phase III → IV**: App containerized, Helm charts created
-- **Phase IV → V**: Monolith decoupled via Kafka/Dapr events
+**Support Team** (On-Demand):
+- `content-builder` - MDX documentation, tutorials
+- `enterprise-grade-validator` - Production security/reliability audits
+- `agent-specialization-architect` - Creating new specialized agents
 
-**Pre-Phase Checklist**:
-- [ ] Backup `CLAUDE.md` and current specs
-- [ ] Verify previous phase acceptance criteria pass
-- [ ] Create migration spec before touching code
+### Skills to Use
 
-### III. Test-First Mindset
+**Always Use (A-Priority)**:
+- `building-mcp-servers` - MCP construction patterns
+- `scaffolding-openai-agents` - Agent SDK integration
+- `streaming-llm-responses` - SSE/streaming patterns
+- `building-chat-interfaces` - ChatKit/chat UI patterns
+- `deployment-preflight-check` - Pre-deployment validation
+- `security-scan` - Static security analysis
+- `env-validator` - Environment variable validation
+- `spec-driven-development` - SDD workflow enforcement
 
-While not enforcing strict TDD, every feature must have:
+**Situational Use (B-Priority)**:
+- `skill-creator` - When creating new reusable patterns
+- `systematic-debugging` - When encountering complex bugs
+- `configuring-better-auth` - Auth setup/modifications
+- `scaffolding-fastapi-dapr` - Backend microservice setup
 
-1. **Acceptance Criteria** defined in spec BEFORE implementation
-2. **Verification Steps** documented for manual testing
-3. **Automated Tests** where tooling permits (pytest, Jest)
+### MCP Servers
 
-### IV. Smallest Viable Diff
+**Always Use**:
+- `filesystem` - File operations
+- `postgres` - Neon database queries
+- `context7` - Documentation lookup
+- `code-search` - Codebase exploration
 
-- Implement ONLY what the task specifies
-- No "while I'm here" refactoring
-- No premature optimization
-- No feature creep within phases
+**High Priority**:
+- `github` - Issue/PR management
 
-### V. Intelligence Capture (PHR & ADR)
+**Phase-Specific**:
+- `playwright` - UI testing (development)
+- `vercel` - Deployment management (deployment)
+- `docker` - Container operations (Phase IV+)
 
-Every significant interaction is recorded:
+### Claude-Specific Best Practices
 
-- **PHR (Prompt History Record)**: Created after EVERY implementation session
-- **ADR (Architectural Decision Record)**: Created for decisions with long-term impact (framework choices, data models, API contracts)
+1. **Context Management**:
+   - Use `@file` references to include relevant files
+   - Use `/context` to visualize token usage
+   - Use `/compact` when approaching context limits
 
----
+2. **Task Tracking**:
+   - Create tasks with `TaskCreate` for multi-step work
+   - Update task status with `TaskUpdate` as you progress
+   - Use `TaskList` to see all current tasks
 
-## Technology Stack (Immutable)
+3. **Error Handling**:
+   - When encountering errors, use `systematic-debugging` skill
+   - Document failures in PHR for learning
+   - Create Skills for repeatable debugging patterns
 
-### Phase I: Console App
-| Layer | Technology |
-|-------|------------|
-| Runtime | Python 3.13+ |
-| Package Manager | UV |
-| AI Tooling | Claude Code, Spec-Kit Plus |
+4. **Quality Gates**:
+   - NEVER claim "implementation complete" without passing tests
+   - Use `qa-overseer` agent for final certification
+   - Attach test output to PHR when claiming completion
 
-### Phase II: Full-Stack Web
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 16+ (App Router) |
-| Backend | Python FastAPI |
-| ORM | SQLModel |
-| Database | Neon Serverless PostgreSQL |
-| Authentication | Better Auth (JWT) |
+### Phase 3 Lessons (CRITICAL)
 
-### Phase III: AI Chatbot
-| Layer | Technology |
-|-------|------------|
-| Chat UI | OpenAI ChatKit |
-| AI Framework | OpenAI Agents SDK |
-| MCP Server | Official MCP SDK (Python) |
-| State | Stateless API + DB persistence |
+Based on 34-day overrun analysis:
 
-### Phase IV: Local Kubernetes
-| Layer | Technology |
-|-------|------------|
-| Containers | Docker (Docker Desktop) |
-| Orchestration | Kubernetes (Minikube) |
-| Package Manager | Helm Charts |
-| AIOps | kubectl-ai, Kagent, Gordon (Docker AI) |
+❌ **NEVER** skip `/sp.clarify` for unknowns (ChatKit, OpenRouter, K8s, etc.)
+❌ **NEVER** declare "complete" without green tests
+❌ **NEVER** maintain parallel architectures
+❌ **NEVER** skip environment validation
+❌ **NEVER** work in wrong directory (see Directory Safety Rule in @AGENTS.md)
 
-### Phase V: Cloud Deployment
-| Layer | Technology |
-|-------|------------|
-| Cloud Platform | DigitalOcean DOKS / Azure AKS / GCP GKE |
-| Event Streaming | Kafka (Redpanda/Strimzi) |
-| Distributed Runtime | Dapr |
-| CI/CD | GitHub Actions |
+✅ **ALWAYS** create Skills for repeated patterns
+✅ **ALWAYS** delete dead code immediately
+✅ **ALWAYS** enforce strict types (Pydantic/TypeScript)
+✅ **ALWAYS** log external interactions
+✅ **ALWAYS** validate working directory is `E:\M.Y\GIAIC-Hackathons\Evolution-of-Todo` before ANY operation
 
----
+### Current Context
 
-## Feature Progression (Scope Boundaries)
+**Branch**: `004-phase3-chatbot`
+**Phase**: Phase III - AI Chatbot (PAUSED at 31% QA-verified)
+**Status**: Blocked on HTTP 500 session creation error
+**Retrospective**: See `PHASE_3_RETROSPECTIVE.md`
 
-### Basic Level (Phases I-III Core)
-- [x] Add Task
-- [x] Delete Task
-- [x] Update Task
-- [x] View Task List
-- [x] Mark as Complete
+**Blockers**:
+- HTTP 500 session creation error
+- Missing `specs/api/mcp-tools.md`
+- Missing ADR-013 (OpenRouter migration)
+- Missing ADR-014 (Custom ChatKit server)
+- 0/5 E2E tests passing
 
-### Intermediate Level (Phase V)
-- [ ] Priorities (high/medium/low)
-- [ ] Tags/Categories
-- [ ] Search & Filter
-- [ ] Sort Tasks
-
-### Advanced Level (Phase V)
-- [ ] Recurring Tasks
-- [ ] Due Dates & Time Reminders
-
-### Bonus Features
-- [ ] Multi-language Support (Urdu)
-- [ ] Voice Commands
-- [ ] Reusable Intelligence (Subagents/Skills)
-- [ ] Cloud-Native Blueprints
-
----
-
-## API Design Principles
-
-### REST Endpoints (Phase II+)
-```
-GET    /api/{user_id}/tasks           → List all tasks
-POST   /api/{user_id}/tasks           → Create task
-GET    /api/{user_id}/tasks/{id}      → Get task details
-PUT    /api/{user_id}/tasks/{id}      → Update task
-DELETE /api/{user_id}/tasks/{id}      → Delete task
-PATCH  /api/{user_id}/tasks/{id}/complete → Toggle completion
-```
-
-### MCP Tools (Phase III+)
-```
-add_task(user_id, title, description?) → {task_id, status, title}
-list_tasks(user_id, status?) → [{id, title, completed, ...}]
-complete_task(user_id, task_id) → {task_id, status, title}
-delete_task(user_id, task_id) → {task_id, status, title}
-update_task(user_id, task_id, title?, description?) → {task_id, status, title}
-```
-
-### Chat Endpoint (Phase III+)
-```
-POST /api/{user_id}/chat
-  Body: { conversation_id?, message }
-  Response: { conversation_id, response, tool_calls[] }
-```
+**Next Steps**:
+- Option A: Fix HTTP 500 blocker, complete Phase 3
+- Option B: Freeze Phase 3, document technical debt, proceed to Phase 4
 
 ---
 
-## Security Principles
+For complete project instructions, see `@AGENTS.md`.
 
-1. **No Hardcoded Secrets**: All credentials via `.env` files
-2. **JWT Verification**: Backend validates Better Auth tokens
-3. **User Isolation**: All queries scoped to authenticated `user_id`
-4. **HTTPS Only**: Production endpoints must use TLS
+For principles and governance, see `.specify/memory/constitution.md`.
 
----
-
-## Monorepo Structure
-
-```
-hackathon-todo/
-├── .specify/                    # Spec-Kit configuration
-│   ├── memory/
-│   │   └── constitution.md     # THIS FILE
-│   └── templates/              # PHR, ADR, Spec templates
-├── specs/                       # Specifications
-│   ├── overview.md
-│   ├── architecture.md
-│   ├── features/               # Feature specs
-│   ├── api/                    # API specs
-│   └── database/               # Schema specs
-├── history/                     # Records
-│   ├── prompts/                # PHR files
-│   │   ├── constitution/
-│   │   ├── general/
-│   │   └── <feature-name>/
-│   └── adr/                    # ADR files
-├── frontend/                    # Next.js app (Phase II+)
-│   └── CLAUDE.md
-├── backend/                     # FastAPI app (Phase II+)
-│   └── CLAUDE.md
-├── src/                         # Python console app (Phase I)
-├── k8s/                         # Kubernetes manifests (Phase IV+)
-├── docker-compose.yml
-├── CLAUDE.md                    # Root instructions
-└── README.md
-```
-
----
-
-## Quality Gates
-
-### Per-Phase Acceptance
-| Phase | Gate |
-|-------|------|
-| I | All 5 basic features work in console |
-| II | REST API returns correct data; Auth works |
-| III | Chatbot executes MCP tools; State persists |
-| IV | Helm charts deploy successfully on Minikube |
-| V | Full system runs on DOKS with Kafka/Dapr |
-
-### Per-Feature Acceptance
-- [ ] Spec exists in `specs/features/`
-- [ ] Plan exists with architectural decisions
-- [ ] Tasks exist with atomic steps
-- [ ] Implementation matches spec exactly
-- [ ] Manual verification steps pass
-
----
-
-## Agent Orchestration
-
-| Agent | Role | Model |
-|-------|------|-------|
-| lead-architect | Strategy, constitution, phase transitions | Opus |
-| spec-architect | Writing/refining specifications | Opus |
-| backend-builder | Python, FastAPI, MCP implementation | Opus |
-| ux-frontend-developer | Next.js, Tailwind, Better Auth | Sonnet |
-| devops-rag-engineer | Docker, K8s, Helm, Kafka, Dapr | Sonnet |
-| qa-overseer | Acceptance criteria validation | Opus |
-
----
-
-## Governance
-
-1. **Constitution Supremacy**: This document supersedes all other practices
-2. **Amendments**: Require documented rationale, PHR creation, and explicit approval
-3. **Spec Hierarchy**: Constitution > Specify > Plan > Tasks
-4. **Backtracking**: Moving to a previous phase requires a new spec iteration
-
----
-
-## Deadlines
-
-| Phase | Due Date | Status |
-|-------|----------|--------|
-| Phase I | Dec 7, 2025 | ✅ COMPLETE |
-| Phase II | Dec 14, 2025 | ✅ COMPLETE |
-| Phase III | Dec 21, 2025 | PENDING |
-| Phase IV | Jan 4, 2026 | PENDING |
-| Phase V | Jan 18, 2026 | PENDING |
-
----
-
-## Phase Completion Log
-
-### Phase I: Console App ✅
-- **Completed**: Dec 7, 2025
-- **Deliverables**: Python CLI with in-memory task storage
-- **Location**: `phase-1-console/`
-
-### Phase II: Full-Stack Web ✅
-- **Completed**: Dec 31, 2025
-- **Deliverables**:
-  - FastAPI backend with JWT auth (`phase-2-web/backend/`)
-  - Next.js 15 frontend with App Router (`phase-2-web/frontend/`)
-  - SQLite database (dev), PostgreSQL ready (prod)
-  - 7 User Stories implemented (Register, Login, Add/View/Update/Delete/Complete Tasks)
-  - Toast notifications, loading states, error boundaries
-- **ADRs**: ADR-004 to ADR-007
-- **Tasks**: 80 tasks, all complete
-
-### Phase III: AI Chatbot (NEXT)
-- **Status**: Ready to specify
-- **Scope**: MCP Server wrapping Phase 2 REST API, OpenAI Agents SDK integration
-- **Brownfield**: Port REST endpoints to MCP Tools
-
----
-
-**Version**: 1.1.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-31
+For Phase 3 learnings, see `PHASE_3_RETROSPECTIVE.md`.

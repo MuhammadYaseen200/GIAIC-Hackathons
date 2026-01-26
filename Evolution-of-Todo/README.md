@@ -21,6 +21,27 @@ git checkout 001-core-crud
 # (Phase I implementation pending /sp.plan and /sp.implement)
 ```
 
+## Development Environment Setup
+
+Before starting development, ensure your environment is properly configured:
+
+```bash
+# Run full environment setup (recommended daily)
+./scripts/dev-env-setup.sh
+
+# Run with full cleanup (when dependencies need reinstall)
+./scripts/dev-env-setup.sh --full
+```
+
+This automated setup performs 5 critical operations:
+1. **Environment Validation** - Verifies Python, Node.js, tools, and environment variables
+2. **Governance Sync** - Ensures AGENTS.md and CLAUDE.md are synchronized
+3. **Cache Cleanup** - Cleans build caches (`.next/`, `__pycache__/`, etc.)
+4. **Server Lifecycle** - Restarts frontend and backend development servers
+5. **Browser Tools** - Validates Playwright MCP and debugging tools
+
+For detailed documentation, see [specs/001-dev-env-setup/quickstart.md](specs/001-dev-env-setup/quickstart.md)
+
 ## Features (Phase I)
 
 - [x] Add Task (title required, description optional)
