@@ -1,0 +1,161 @@
+# Implementation Plan: Development Environment Readiness
+
+**Branch**: `001-dev-env-setup` | **Date**: 2026-01-26 | **Spec**: [spec.md](./spec.md)
+**Type**: Operational Maintenance (Micro-Spec)
+**Input**: Operational specification from `/specs/001-dev-env-setup/spec.md`
+
+## Summary
+
+Create automation scripts and validation workflows to ensure development environment is clean, properly configured, and ready for Phase 3/4 work. This includes governance file verification, cache cleanup, server lifecycle management, browser MCP validation, and comprehensive environment validation with fail-fast behavior.
+
+**Key Decision**: Implement as **command-line automation scripts** (not web/mobile application) for repeatable developer operations.
+
+## Technical Context
+
+**Language/Version**: Bash (Git Bash/WSL on Windows), PowerShell (native Windows)
+**Primary Dependencies**:
+- **Process Management**: `netstat`, `taskkill` (Windows), `lsof`, `kill` (Unix)
+- **File Operations**: Standard shell utilities (`rm`, `find`, `cat`, `grep`)
+- **Validation**: Python 3.13+ (for environment validation script)
+
+**Storage**: N/A (operations only, no data persistence)
+**Testing**: Manual verification against acceptance criteria (AC-001 through AC-005)
+**Target Platform**: Windows 10/11 with Git Bash, PowerShell, WSL compatibility
+**Project Type**: Automation scripts (not application development)
+**Performance Goals**: Complete all 5 acceptance criteria in under 5 minutes
+**Constraints**:
+- Must be idempotent (safe to run multiple times)
+- Must fail-fast on validation errors (block operations)
+- Must preserve lock files (pnpm-lock.yaml, uv.lock) during cleanup
+
+**Scale/Scope**: Single developer environment (localhost), not production/CI/CD
+
+## Constitution Check
+
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+
+### ✅ Principle I: Spec-Driven Development
+- **Status**: PASS
+- **Evidence**: Spec exists at `specs/001-dev-env-setup/spec.md` with 5 acceptance criteria
+- **Traceability**: This plan references spec AC-001 through AC-005
+
+### ✅ Principle II: Iterative Evolution
+- **Status**: PASS
+- **Evidence**: This is operational maintenance to prepare environment for Phase 3/4 work
+- **Rationale**: Supports Brownfield Protocol by ensuring clean foundation before Phase 4
+
+### ✅ Principle III: Test-First Mindset
+- **Status**: PASS
+- **Evidence**: Each acceptance criterion (AC-001 to AC-005) has explicit verification steps
+
+### ✅ Principle IV: Smallest Viable Diff
+- **Status**: PASS
+- **Evidence**: Micro-spec exception applies; implementing ONLY what spec defines
+
+### ✅ Principle V: Intelligence Capture
+- **Status**: PENDING (will create PHR after implementation)
+
+### ✅ Principle VI: AAIF Standards & Interoperability
+- **Status**: PASS
+- **MCP Usage**: Playwright MCP for browser tool validation (AC-004)
+
+### ✅ Principle VII: Mandatory Clarification Gate
+- **Status**: PASS
+- **Evidence**: `/sp.clarify` completed with 5 questions answered
+
+### ✅ Principle VIII: Process Failure Prevention
+- **Status**: PASS
+- **Evidence**: Implements environment validation script (AC-005), cache cleanup (AC-002), fail-fast validation
+
+**Constitution Check Result**: ✅ **ALL GATES PASS**
+
+## Project Structure
+
+### Documentation (this feature)
+
+```
+specs/001-dev-env-setup/
+├── spec.md           # Operational specification (completed)
+├── plan.md          # This file (current)
+├── research.md       # Phase 0 output (script patterns, best practices)
+├── quickstart.md     # Phase 1 output (how to use scripts)
+└── checklists/
+    └── requirements.md  # Spec quality checklist (completed)
+```
+
+### Source Code (repository root)
+
+```
+scripts/
+├── dev-env-setup.sh           # Main orchestration script
+├── verify-env.sh              # AC-005: Environment validation
+├── sync-governance.sh         # AC-001: Governance file sync check
+├── clean-caches.sh            # AC-002: Cache cleanup
+├── restart-servers.sh         # AC-003: Server lifecycle management
+└── validate-browser-mcps.sh   # AC-004: Browser MCP validation
+```
+
+**Structure Decision**: Single `scripts/` directory for operational automation.
+
+---
+
+## Phase 0: Research & Best Practices
+
+### Research Tasks
+
+1. **Cross-Platform Process Management** - Process killing patterns (Windows/Unix)
+2. **Idempotent File Operations** - Safe directory removal patterns
+3. **Environment Validation Patterns** - Configuration error detection
+4. **Exit Code Conventions** - Standard success/error codes
+5. **Browser MCP Validation** - MCP registry queries and health checks
+
+**Deliverable**: `research.md` with 5 sections
+
+---
+
+## Phase 1: Script Design & Contracts
+
+### Data Model: N/A (Operations only)
+
+### API Contracts: N/A (Command-line tools)
+
+### Quickstart Guide
+
+Document how developers use the scripts with examples and troubleshooting.
+
+**Deliverable**: `quickstart.md`
+
+---
+
+## Phase 2: Task Preview
+
+Tasks will be generated by `/sp.tasks`:
+
+- **T-001 to T-005**: Environment validation script (AC-005)
+- **T-006 to T-010**: Governance synchronization check (AC-001)
+- **T-011 to T-015**: Cache cleanup script (AC-002)
+- **T-016 to T-022**: Server lifecycle management (AC-003)
+- **T-023 to T-027**: Browser MCP validation (AC-004)
+- **T-028 to T-031**: Main orchestration script
+- **T-032 to T-036**: Documentation and testing
+
+**Total**: ~36 tasks (8-12 hours implementation)
+
+---
+
+## Notes for Phase 3 Resume
+
+**User Intent**: "After when you create plan, task and implement our updates in project we will move to re-resume our phase 3"
+
+**Transition Strategy**:
+1. Complete this feature (001-dev-env-setup) fully
+2. Use scripts to prepare clean environment for Phase 3:
+   ```bash
+   ./scripts/dev-env-setup.sh
+   ```
+3. Phase 3 blockers to address:
+   - HTTP 500 session creation error
+   - 0/5 E2E tests passing
+   - Missing specs/ADRs
+
+**Status**: ✅ Ready for `/sp.tasks` command
