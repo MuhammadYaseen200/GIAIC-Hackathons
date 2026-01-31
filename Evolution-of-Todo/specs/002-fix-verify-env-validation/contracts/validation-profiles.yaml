@@ -1,0 +1,278 @@
+# Validation Profiles Contract
+# Defines the validation rules for each project phase
+
+version: "1.0"
+feature: "002-fix-verify-env-validation"
+date: "2026-01-27"
+
+profiles:
+  phase_2:
+    phase_id: 2
+    phase_name: "Phase 2 Web"
+    description: "Full-stack web application with PostgreSQL and NextAuth"
+
+    required_variables:
+      - name: DATABASE_URL
+        format: "postgresql+asyncpg://user:password@host:port/database"
+        example: "postgresql+asyncpg://user:pass@localhost:5432/todo_db"
+        validation:
+          - scheme_must_be: ["postgresql", "postgres"]
+          - must_have_netloc: true
+        fix_hint: "Add DATABASE_URL to .env file with PostgreSQL connection string"
+
+      - name: SECRET_KEY
+        format: "string (32+ characters, hex recommended)"
+        example: "4UCedWq7LD7y3Rg-euQgJ8ZPqTzrgRyp14GhXIJAKx8"
+        validation:
+          - min_length: 32
+        fix_hint: "Generate with: openssl rand -hex 32"
+
+      - name: NEXTAUTH_SECRET
+        format: "string (32+ characters)"
+        example: "your-nextauth-secret-here"
+        validation:
+          - min_length: 32
+        fix_hint: "Generate with: openssl rand -hex 32"
+
+    optional_variables: []
+
+    exit_codes:
+      success: 0
+      validation_failure: 2
+      execution_error: 1
+
+  phase_3:
+    phase_id: 3
+    phase_name: "Phase 3 Chatbot"
+    description: "AI chatbot with OpenRouter, SQLite/PostgreSQL, and custom JWT"
+
+    required_variables:
+      - name: DATABASE_URL
+        format: "sqlite+aiosqlite:///<path> OR postgresql+asyncpg://user:password@host:port/database"
+        example_sqlite: "sqlite+aiosqlite:///./todo_app.db"
+        example_postgres: "postgresql+asyncpg://user:pass@localhost:5432/todo_db"
+        validation:
+          - scheme_must_be: ["sqlite", "postgresql", "postgres"]
+        fix_hint: "Add DATABASE_URL to .env file (SQLite for dev, PostgreSQL for prod)"
+
+      - name: OPENROUTER_API_KEY
+        format: "sk-or-v1-<hex>"
+        example: "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"
+        validation:
+          - starts_with: "sk-or-v1-"
+          - min_length: 50
+        fix_hint: "Get API key from https://openrouter.ai/keys"
+
+      - name: SECRET_KEY
+        format: "string (32+ characters, hex recommended)"
+        example: "4UCedWq7LD7y3Rg-euQgJ8ZPqTzrgRyp14GhXIJAKx8"
+        validation:
+          - min_length: 32
+        fix_hint: "Generate with: openssl rand -hex 32"
+
+    optional_variables:
+      - name: NEXTAUTH_SECRET
+        reason: "Optional - Phase 3 uses custom JWT, not NextAuth"
+        format: "string (32+ characters)"
+
+      - name: GEMINI_API_KEY
+        reason: "Optional - Legacy AI provider, OpenRouter is primary"
+        format: "string"
+        example: "AIzaSy..."
+
+    exit_codes:
+      success: 0
+      validation_failure: 2
+      execution_error: 1
+
+  generic:
+    phase_id: null
+    phase_name: "Generic"
+    description: "Generic validation for unknown projects (DATABASE_URL only)"
+
+    required_variables:
+      - name: DATABASE_URL
+        format: "Any valid database connection URL"
+        examples:
+          - "sqlite:///./app.db"
+          - "sqlite+aiosqlite:///./app.db"
+          - "postgresql://user:pass@localhost:5432/db"
+          - "postgresql+asyncpg://user:pass@localhost:5432/db"
+          - "mysql://user:pass@localhost:3306/db"
+          - "mariadb://user:pass@localhost:3306/db"
+        validation:
+          - is_valid_url: true
+        fix_hint: "Add DATABASE_URL to .env file with your database connection string"
+
+    optional_variables: []
+
+    notes:
+      - "Generic mode validates only DATABASE_URL presence and format"
+      - "All other variables are ignored in generic mode"
+      - "Maximizes reusability for projects with different tech stacks"
+
+    exit_codes:
+      success: 0
+      validation_failure: 2
+      execution_error: 1
+
+# CLI Arguments
+cli_arguments:
+  - name: --phase
+    type: integer
+    required: false
+    choices: [2, 3]
+    description: "Manually override phase detection"
+    behavior: "If provided, skip auto-detection and use specified phase profile"
+    examples:
+      - "./scripts/verify-env.py --phase 3"
+      - "./scripts/verify-env.py --phase 2"
+
+# Phase Detection Algorithm
+phase_detection:
+  method: "directory_structure"
+  algorithm:
+    steps:
+      - "Check for --phase CLI argument (highest priority)"
+      - "If --phase provided, use that profile"
+      - "If no --phase, scan for phase directories in project root"
+      - "Check directories in descending order: phase-3-chatbot, phase-2-web, phase-1-console"
+      - "Return highest phase number found"
+      - "If no phase directories, use generic profile"
+
+  examples:
+    - input: "phase-3-chatbot/ exists"
+      output: "phase_id: 3"
+
+    - input: "phase-2-web/ exists, phase-3-chatbot/ exists"
+      output: "phase_id: 3 (highest phase wins)"
+
+    - input: "No phase directories"
+      output: "phase_id: null (generic mode)"
+
+    - input: "--phase 2 provided, phase-3-chatbot/ exists"
+      output: "phase_id: 2 (manual override wins)"
+
+# Output Format
+output_format:
+  console:
+    encoding: "UTF-8"
+    format: "Plain text with ANSI colors/emojis"
+    sections:
+      - banner: "============================================================"
+      - title: "ENVIRONMENT VALIDATION"
+      - phase_info: "Detected Phase: X | Using Phase X profile"
+      - progress: "[N/M] Checking [category]... ✓/✗"
+      - summary: "✅ VALIDATION PASSED" or "❌ VALIDATION FAILED"
+      - errors: "Issues found (N): 1. [var] Error: [msg] | Fix: [hint]"
+      - footer: "============================================================"
+
+  exit_codes:
+    0: "All validations passed"
+    1: "Script execution error (Python exception, etc.)"
+    2: "Validation failures detected (fail-fast per ADR-013)"
+    3: "Reserved for future: Wrong directory detected (Directory Safety Rule)"
+
+# Dependencies
+dependencies:
+  required:
+    - python: "3.13+"
+    - stdlib: ["os", "sys", "subprocess", "argparse", "pathlib", "urllib.parse", "re"]
+
+  optional:
+    - python-dotenv:
+        purpose: "Automatic .env file loading"
+        fallback: "Use os.getenv() if not available"
+        install: "pip install python-dotenv"
+
+# Backward Compatibility
+backward_compatibility:
+  phase_2_projects:
+    guarantee: "Must continue working without changes"
+    validation: "Run on actual Phase 2 branch, verify PostgreSQL + NextAuth checks"
+
+  phase_3_projects:
+    guarantee: "Must pass validation with SQLite + custom JWT"
+    validation: "Run on Phase 3 branch, verify exit code 0"
+
+  migration_path:
+    - "No migration required - auto-detection handles phase differences"
+    - "Users can manually override with --phase flag if needed"
+
+# Extension Points
+extension_points:
+  - location: "VALIDATION_PROFILES dict"
+    purpose: "Add new phase profiles (Phase 4, Phase 5, etc.)"
+    example: |
+      VALIDATION_PROFILES[4] = {
+          'name': 'Phase 4 Kubernetes',
+          'required': ['DATABASE_URL', 'KUBERNETES_CONFIG', ...],
+          'optional': [...],
+          'database_formats': ['postgresql'],
+      }
+
+  - location: "detect_phase() function"
+    purpose: "Add phase directory detection for new phases"
+    example: |
+      if (Path.cwd() / 'phase-4-k8s').exists():
+          return 4
+
+  - location: "parse_args() function"
+    purpose: "Update --phase choices for new phases"
+    example: |
+      parser.add_argument('--phase', type=int, choices=[2, 3, 4, 5], ...)
+
+# Testing Strategy
+testing:
+  acceptance_criteria:
+    - id: "AC-001"
+      description: "Phase 3 validation passes"
+      test_command: "cd phase-3-chatbot && ../scripts/verify-env.py"
+      expected_exit_code: 0
+      expected_output_contains: ["Detected Phase: 3", "VALIDATION PASSED"]
+
+    - id: "AC-002"
+      description: "Phase 2 still works"
+      test_command: "cd phase-2-web && ../scripts/verify-env.py"
+      expected_exit_code: 0 or 2 (depending on .env)
+      expected_output_contains: ["Detected Phase: 2", "NEXTAUTH_SECRET"]
+
+    - id: "AC-003"
+      description: "Clear phase detection"
+      test_command: "./scripts/verify-env.py"
+      expected_output_contains: ["Detected Phase:"]
+
+    - id: "AC-004"
+      description: "Database format flexibility"
+      test_cases:
+        - env: "DATABASE_URL=sqlite+aiosqlite:///./todo.db"
+          expected: "Accept (Phase 3)"
+        - env: "DATABASE_URL=postgresql+asyncpg://localhost/db"
+          expected: "Accept (Phase 2 and Phase 3)"
+
+    - id: "AC-005"
+      description: "Dotenv loading works"
+      test_command: "Create .env, run validator"
+      expected: "Load variables from .env file"
+
+    - id: "AC-006"
+      description: "Automation unblocked"
+      test_command: "./scripts/dev-env-setup.sh"
+      expected: "Step 1/5 passes, continues to steps 2-5"
+
+  edge_cases:
+    - name: "Multiple phases present"
+      setup: "Both phase-2-web/ and phase-3-chatbot/ exist"
+      expected: "Use highest phase (3), show info message"
+
+    - name: "No phase directories"
+      setup: "Clean directory, no phase-X folders"
+      expected: "Generic mode, validate DATABASE_URL only"
+
+    - name: "python-dotenv not installed"
+      setup: "pip uninstall python-dotenv"
+      expected: "Show warning, continue with os.getenv()"
+
+    - name: "CLI flag override"
+      setup: "--phase 2 flag provided"
+      expected: "Use Phase 2 profile regardless of detected directories"
