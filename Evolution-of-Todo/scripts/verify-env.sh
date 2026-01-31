@@ -15,6 +15,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source common utilities
 source "$SCRIPT_DIR/_common.sh"
 
+# Load .env file if it exists (ensures vars available even without python-dotenv)
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+if [ -f "$PROJECT_ROOT/.env" ]; then
+    # Export variables from .env, skipping comments and empty lines
+    set -a
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip comments and empty lines
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        # Only export if line contains '=' (is a variable assignment)
+        [[ "$line" == *=* ]] && eval "export $line" 2>/dev/null || true
+    done < "$PROJECT_ROOT/.env"
+    set +a
+fi
+
 # Main execution
 info "Running environment validation..."
 echo ""

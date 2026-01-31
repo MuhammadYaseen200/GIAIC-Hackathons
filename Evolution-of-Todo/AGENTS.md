@@ -34,7 +34,7 @@ Defines the project's non-negotiables: architecture values, security rules, tech
 
 Agents must check this before proposing solutions.
 
-**Current Version**: 2.0.0
+**Current Version**: 2.1.0
 
 **Key Principles**:
 - Spec-Driven Development (NON-NEGOTIABLE)
@@ -484,6 +484,103 @@ Agents MUST NOT:
 - Modify `ai-control/` directory without explicit instruction
 - **Work in incorrect directory** (see Directory Safety Rule below)
 
+### Phase Execution Gate (MANDATORY)
+
+**Rule**: Phase transitions require EXPLICIT user approval. No agent may auto-execute the next phase.
+
+**Operational Workflow**:
+
+1. **Phase Completion**:
+   - Complete all tasks for current phase
+   - Mark all tasks as [X] in tasks.md
+   - Run acceptance tests
+   - Verify exit codes (0 = success)
+
+2. **STOP and Report**:
+   - Display: "Phase N Complete"
+   - Show completion summary:
+     ```
+     Phase N: [Phase Name]
+     Status: COMPLETE
+     Tasks: [X/X completed]
+     Acceptance Criteria: [X/X passing]
+     Warnings: [list any issues]
+
+     OPTIONS:
+     A. Proceed to Phase N+1
+     B. Pause and review
+
+     What would you like to do?
+     ```
+
+3. **WAIT for User Input**:
+   - DO NOT proceed until user responds
+   - Valid proceed signals: "proceed", "A", "next", "continue", "yes"
+   - Valid pause signals: "pause", "B", "review", "stop", "no"
+
+4. **Execute User Decision**:
+   - If proceed: Begin Phase N+1 workflow
+   - If pause: End session, preserve state
+
+**Example Violation**:
+```
+WRONG:
+Phase 1 complete → Auto-start Phase 2
+
+CORRECT:
+Phase 1 complete → Report to user → Wait for approval → User says "proceed" → Start Phase 2
+```
+
+**Enforcement**: loop-controller validates phase transitions include user approval checkpoint.
+
+---
+
+### Specialized Agent Usage Enforcement (MANDATORY)
+
+**Rule**: Domain-specific tasks MUST use appropriate specialized agents.
+
+**Implementation Workflow**:
+
+1. **Task Analysis**:
+   - Identify task domain (backend, frontend, infra, etc.)
+   - Match task to required specialist agent
+   - Verify specialist agent available
+
+2. **Delegation**:
+   - Use Task tool to launch specialist agent
+   - Provide complete context (spec, plan, tasks)
+   - Specify expected deliverables
+
+3. **Validation**:
+   - Validator agent reviews output
+   - Checks compliance with spec
+   - Verifies code quality
+
+4. **Certification**:
+   - qa-overseer certifies if quality gate
+   - User approves final deliverable
+
+**Example Workflows**:
+
+**Backend Implementation**:
+```
+loop-controller → backend-builder (implement) → qa-overseer (certify) → User (approve)
+```
+
+**File Creation**:
+```
+backend-builder (create file) → path-warden (verify placement) → loop-controller (validate)
+```
+
+**Architecture Decision**:
+```
+User (request) → lead-architect (design) → spec-architect (document) → User (approve)
+```
+
+**Enforcement**: If task executed without required specialist, loop-controller BLOCKS and requires review.
+
+---
+
 ### Directory Safety Rule (MANDATORY)
 
 **Working Directory Requirement**: ALL operations MUST be performed in:
@@ -516,7 +613,13 @@ E:\M.Y\GIAIC-Hackathons\Evolution-of-Todo
    - Validate deletion completed successfully
    - Log recovery actions in PHR
 
-4. **Integration Points**:
+4. **Phase Execution Integration**:
+   - Validate directory BEFORE each phase starts
+   - Re-validate directory after phase completion
+   - If directory changed mid-phase: HALT, report violation
+   - Phase transitions MUST occur in correct directory
+
+5. **Integration Points**:
    - ALL automation scripts (`scripts/*.sh`, `scripts/*.py`) MUST include directory validation
    - Spec-Kit commands (`/sp.specify`, `/sp.plan`, `/sp.tasks`, `/sp.implement`) MUST validate directory first
    - File creation operations MUST verify correct directory before Write/Edit
@@ -525,7 +628,9 @@ E:\M.Y\GIAIC-Hackathons\Evolution-of-Todo
 - `0`: Success
 - `1`: Warnings (non-critical)
 - `2`: Environment validation failure
-- `3`: Wrong directory detected (NEW)
+- `3`: Wrong directory detected
+- `4`: (Reserved)
+- `5`: Unauthorized phase progression (NEW)
 
 If a conflict arises between spec files, the **Constitution > AGENTS.md > Specify > Plan > Tasks** hierarchy applies.
 
@@ -624,7 +729,11 @@ This ensures predictable, deterministic development.
 
 ## Version History
 
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Created**: 2026-01-25
-**Last Updated**: 2026-01-25
+**Last Updated**: 2026-01-27
 **Next Review**: Before Phase 4 kickoff
+
+**Changelog**:
+- 1.1.0 (2026-01-27): Added Phase Execution Gate, Specialized Agent Enforcement, Enhanced Directory Safety Rule, Exit Code 5
+- 1.0.0 (2026-01-25): Initial release

@@ -10,12 +10,25 @@ Exit Codes:
     1 - Script execution error
 """
 
+import argparse
 import os
 import sys
 import subprocess
 import re
 from urllib.parse import urlparse
 from pathlib import Path
+
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    # Load from root .env file
+    root_dir = Path(__file__).parent.parent
+    env_path = root_dir / '.env'
+    if env_path.exists():
+        load_dotenv(env_path)
+except ImportError:
+    # python-dotenv not available, expect env vars to be set externally
+    print("Warning: python-dotenv not found - .env file will not be auto-loaded. Install with: pip install python-dotenv")
 
 # Fix Windows console encoding for Unicode characters
 if sys.platform == 'win32':
@@ -24,6 +37,132 @@ if sys.platform == 'win32':
         sys.stderr.reconfigure(encoding='utf-8')
     except AttributeError:
         pass
+
+
+# =============================================================================
+# VALIDATION PROFILES
+# =============================================================================
+# Phase-aware validation profiles
+# Each profile defines required/optional environment variables and allowed
+# database formats for a specific project phase or generic mode (phase=None).
+#
+# Profile Structure:
+#   - name: Human-readable profile name
+#   - required: List of environment variables that MUST be present
+#   - optional: List of environment variables that MAY be present
+#                (no error if missing)
+#   - database_formats: List of allowed DATABASE_URL base schemes
+#                       (e.g., ['sqlite', 'postgresql'])
+#                       Empty list [] means accept any valid URL scheme
+#                       (generic mode)
+#   - description: Brief description of this phase's technology stack
+#
+# Profiles:
+#   - Phase 2 (Web): Full-stack web app with PostgreSQL and NextAuth
+#   - Phase 3 (Chatbot): AI chatbot with OpenRouter, SQLite/PostgreSQL,
+#                         custom JWT
+#   - Generic (None): Fallback for unknown projects (DATABASE_URL only)
+#
+# Extension: To add a new phase, add a new entry to VALIDATION_PROFILES,
+#            update detect_phase(), and update parse_args() --phase choices.
+#            See specs/002-fix-verify-env-validation/contracts/
+#            validation-profiles.yaml for the full contract definition.
+# =============================================================================
+
+VALIDATION_PROFILES = {
+    2: {
+        'name': 'Phase 2 Web',
+        'required': ['DATABASE_URL', 'SECRET_KEY', 'NEXTAUTH_SECRET'],
+        'optional': [],
+        'database_formats': ['postgresql', 'postgres'],
+        'description': 'Full-stack web application with PostgreSQL and NextAuth'
+    },
+    3: {
+        'name': 'Phase 3 Chatbot',
+        'required': ['DATABASE_URL', 'OPENROUTER_API_KEY', 'SECRET_KEY'],
+        'optional': ['NEXTAUTH_SECRET', 'GEMINI_API_KEY'],
+        'database_formats': ['sqlite', 'postgresql', 'postgres'],
+        'description': 'AI chatbot with OpenRouter, SQLite/PostgreSQL, and custom JWT'
+    },
+    None: {
+        'name': 'Generic',
+        'required': ['DATABASE_URL'],
+        'optional': [],
+        'database_formats': [],  # Empty = accept any scheme
+        'description': 'Generic validation for unknown projects (DATABASE_URL only)'
+    }
+}
+
+
+def detect_phase():
+    """
+    Detect project phase by scanning for phase directories.
+
+    Scans the current working directory for phase-specific folders in
+    descending order (highest phase first). When multiple phase directories
+    exist, returns the highest phase number found.
+
+    Returns:
+        int or None: Phase number (1, 2, 3) or None if no phase directories
+                     found. Phase 1 (console) has minimal env requirements.
+                     Returns None for generic validation mode.
+
+    Examples:
+        detect_phase()  # In project with phase-3-chatbot/ -> returns 3
+        detect_phase()  # In project with phase-2-web/ only -> returns 2
+        detect_phase()  # In generic project (no phase dirs) -> returns None
+    """
+    # Check directories in descending order (highest phase first)
+    if (Path.cwd() / 'phase-3-chatbot').exists():
+        return 3
+    if (Path.cwd() / 'phase-2-web').exists():
+        return 2
+    if (Path.cwd() / 'phase-1-console').exists():
+        return 1  # Phase 1 has minimal requirements, but return 1 for detection
+    return None  # Generic mode - no phase directories found
+
+
+def parse_args():
+    """
+    Parse command-line arguments for the environment validator.
+
+    Supports a --phase flag that overrides automatic phase detection,
+    allowing users to force a specific validation profile regardless
+    of which phase directories exist in the project.
+
+    Returns:
+        argparse.Namespace: Parsed arguments with 'phase' attribute.
+            phase (int or None): Phase number (2 or 3) if specified
+            via --phase flag, or None if auto-detection should be used.
+
+    Examples:
+        parse_args()                  # No args -> phase=None (auto-detect)
+        parse_args(['--phase', '2'])  # Force Phase 2 validation
+        parse_args(['--phase', '3'])  # Force Phase 3 validation
+    """
+    parser = argparse.ArgumentParser(
+        description='Validate development environment configuration',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  %(prog)s                  Auto-detect phase from directory structure
+  %(prog)s --phase 2        Force Phase 2 validation profile
+  %(prog)s --phase 3        Force Phase 3 validation profile
+
+Exit Codes:
+  0  All validations passed
+  1  Script execution error
+  2  Validation failures detected
+'''
+    )
+    parser.add_argument(
+        '--phase',
+        type=int,
+        choices=[2, 3],
+        required=False,
+        help='Manually override phase detection (2=Phase 2 Web, 3=Phase 3 Chatbot)'
+    )
+    return parser.parse_args()
 
 
 def check_env_var(name, required=True):
@@ -43,16 +182,37 @@ def check_env_var(name, required=True):
     return True, None
 
 
-def check_url_format(url_str, var_name="DATABASE_URL"):
+def check_url_format(url_str, var_name="DATABASE_URL", allowed_schemes=None):
     """
     Validate URL format for database connection strings.
 
+    Parses the URL and extracts the base scheme (before '+' if present),
+    then validates against the allowed schemes list. For PostgreSQL URLs,
+    also verifies that a host/netloc is present.
+
     Args:
-        url_str: URL string to validate
-        var_name: Variable name for error messages
+        url_str (str): URL string to validate (e.g.,
+            'sqlite+aiosqlite:///./todo.db' or
+            'postgresql+asyncpg://user:pass@host:5432/db').
+        var_name (str): Variable name for error messages
+            (default: 'DATABASE_URL').
+        allowed_schemes (list or None): List of allowed URL base schemes
+            (e.g., ['sqlite', 'postgresql']). If None or empty list,
+            accept any valid URL scheme (used in generic mode).
 
     Returns:
-        tuple: (bool success, str error_message)
+        tuple: (bool success, str or None error_message).
+            Returns (True, None) on success.
+            Returns (False, 'error description') on failure.
+
+    Examples:
+        check_url_format('sqlite+aiosqlite:///./app.db',
+                         allowed_schemes=['sqlite', 'postgresql'])
+        # -> (True, None)
+
+        check_url_format('mysql://localhost/db',
+                         allowed_schemes=['postgresql'])
+        # -> (False, 'DATABASE_URL must use one of ...')
     """
     if not url_str:
         return False, f"{var_name} is empty"
@@ -60,13 +220,26 @@ def check_url_format(url_str, var_name="DATABASE_URL"):
     try:
         parsed = urlparse(url_str)
 
-        # Check for PostgreSQL URL
-        if var_name == "DATABASE_URL":
-            if parsed.scheme not in ['postgres', 'postgresql']:
-                return False, f"{var_name} must be a PostgreSQL URL (postgres:// or postgresql://)"
+        # T014: Extract base scheme (before '+' character if present)
+        # Examples:
+        #   'sqlite+aiosqlite://...' -> 'sqlite'
+        #   'postgresql+asyncpg://...' -> 'postgresql'
+        #   'postgresql://...' -> 'postgresql'
+        full_scheme = parsed.scheme
+        base_scheme = full_scheme.split('+')[0] if '+' in full_scheme else full_scheme
 
+        # T015: Validate base scheme against allowed list (if specified)
+        if allowed_schemes and len(allowed_schemes) > 0:
+            if base_scheme not in allowed_schemes:
+                # T016: Error message shows allowed formats for current phase
+                allowed_str = ', '.join(allowed_schemes)
+                return False, f"{var_name} must use one of these database formats: {allowed_str}. Found: {base_scheme}"
+
+        # For PostgreSQL URLs, require host/netloc
+        # SQLite URLs use file paths (no netloc required)
+        if base_scheme in ['postgresql', 'postgres']:
             if not parsed.netloc:
-                return False, f"{var_name} missing host/netloc"
+                return False, f"{var_name} missing host/netloc for PostgreSQL URL"
 
         return True, None
     except Exception as e:
@@ -165,8 +338,11 @@ def check_database_connectivity(database_url):
     """
     Check if database is reachable (basic connectivity test).
 
+    For PostgreSQL URLs, attempts a psycopg2 connection with timeout.
+    For SQLite URLs, checks that the parent directory exists (file-based, no network).
+
     Args:
-        database_url: PostgreSQL connection URL
+        database_url: Database connection URL (PostgreSQL or SQLite)
 
     Returns:
         tuple: (bool success, str error_message)
@@ -174,19 +350,42 @@ def check_database_connectivity(database_url):
     if not database_url:
         return False, "DATABASE_URL not set"
 
+    # T024: Skip psycopg2 connectivity for SQLite URLs (file-based, no network)
+    parsed = urlparse(database_url)
+    base_scheme = parsed.scheme.split('+')[0] if '+' in parsed.scheme else parsed.scheme
+    if base_scheme == 'sqlite':
+        # SQLite is file-based - no network connectivity check needed
+        # Verify the parent directory exists for the database file path
+        db_path_str = parsed.path
+        if db_path_str and db_path_str not in ['/', '']:
+            # Remove leading slashes for relative paths like ///./todo_app.db
+            clean_path = db_path_str.lstrip('/')
+            if clean_path.startswith('./'):
+                clean_path = clean_path[2:]
+            parent_dir = Path(clean_path).parent
+            if parent_dir != Path('.') and not parent_dir.exists():
+                return False, f"SQLite database parent directory does not exist: {parent_dir}"
+        return True, None
+
     try:
         # Try to import psycopg2 (optional - graceful fallback)
         try:
             import psycopg2
 
+            # Strip SQLAlchemy driver suffix for psycopg2 compatibility
+            # e.g., 'postgresql+asyncpg://...' -> 'postgresql://...'
+            connect_url = database_url
+            if '+' in parsed.scheme:
+                connect_url = base_scheme + '://' + database_url.split('://', 1)[1]
+
             # Attempt connection with 5-second timeout
-            conn = psycopg2.connect(database_url, connect_timeout=5)
+            conn = psycopg2.connect(connect_url, connect_timeout=5)
             conn.close()
             return True, None
 
         except ImportError:
             # psycopg2 not installed - skip database connectivity check
-            return True, "⚠ psycopg2 not installed - skipping database connectivity check"
+            return True, "psycopg2 not installed - skipping database connectivity check"
 
     except Exception as e:
         error_msg = str(e)
@@ -202,6 +401,29 @@ def main():
     errors = []
     warnings = []
 
+    # T008: Detect project phase from directory structure
+    detected_phase = detect_phase()
+
+    # T009: Parse CLI arguments - CLI flag overrides auto-detection
+    args = parse_args()
+    phase = args.phase if args.phase is not None else detected_phase
+
+    # T010: Load validation profile for this phase
+    profile = VALIDATION_PROFILES.get(phase)
+
+    if profile is None:
+        # Fallback to generic mode if phase not recognized
+        profile = VALIDATION_PROFILES[None]
+        phase = None
+
+    # T011/T012: Display phase information to user
+    if phase is not None:
+        print(f"\nDetected Phase: {phase} | Using {profile['name']} profile")
+        print(f"Description: {profile['description']}\n")
+    else:
+        print("\nGeneric validation mode (no phase detected)")
+        print("Validating DATABASE_URL only\n")
+
     print("=" * 60)
     print("ENVIRONMENT VALIDATION")
     print("=" * 60)
@@ -210,23 +432,40 @@ def main():
     # Check 1: Environment Variables
     print("[1/5] Checking environment variables...")
 
-    required_env_vars = [
-        'DATABASE_URL',
-        'OPENROUTER_API_KEY',
-        'NEXTAUTH_SECRET'
-    ]
+    # T017-T019/T021-T023: Use phase-specific required/optional vars from profile
+    required_env_vars = profile.get('required', ['DATABASE_URL'])
+    optional_env_vars = profile.get('optional', [])
 
     for var in required_env_vars:
         success, error = check_env_var(var, required=True)
         if not success:
-            errors.append((var, error, "Copy .env.example to .env and fill in values"))
+            errors.append((var, error,
+                           "Copy .env.example to .env and fill in values. "
+                           "See specs/002-fix-verify-env-validation/quickstart.md "
+                           "for setup examples"))
 
-    # Check DATABASE_URL format
+    for var in optional_env_vars:
+        success, error = check_env_var(var, required=False)
+        # Optional vars don't generate errors, just informational
+
+    # Check DATABASE_URL format with phase-specific allowed schemes
     database_url = os.getenv('DATABASE_URL')
     if database_url:
-        success, error = check_url_format(database_url, 'DATABASE_URL')
+        # Get allowed database formats from profile
+        allowed_db_formats = profile.get('database_formats', [])
+        success, error = check_url_format(database_url, 'DATABASE_URL', allowed_schemes=allowed_db_formats)
         if not success:
-            errors.append(('DATABASE_URL format', error, "Ensure DATABASE_URL is a valid PostgreSQL URL"))
+            # Build phase-specific fix message with quickstart.md reference
+            if allowed_db_formats:
+                formats_str = ', '.join(allowed_db_formats)
+                fix_msg = (f"Ensure DATABASE_URL uses one of: {formats_str}. "
+                           "See specs/002-fix-verify-env-validation/quickstart.md "
+                           "for format examples")
+            else:
+                fix_msg = ("Ensure DATABASE_URL is a valid database URL. "
+                           "See specs/002-fix-verify-env-validation/quickstart.md "
+                           "for format examples")
+            errors.append(('DATABASE_URL format', error, fix_msg))
 
     print(f"   {'✓' if len([e for e in errors if 'DATABASE_URL' in e[0] or any(v in e[0] for v in required_env_vars)]) == 0 else '✗'} Environment variables")
     print()
@@ -276,16 +515,16 @@ def main():
         db_ok, db_err = check_database_connectivity(database_url)
         if not db_ok:
             errors.append(('Database connectivity', db_err, "Check DATABASE_URL and network connection"))
-            print(f"   ✗ Database unreachable")
+            print("   ✗ Database unreachable")
         elif db_err and '⚠' in db_err:
             # Warning, not error
             warnings.append(db_err)
             print(f"   ⚠ {db_err}")
         else:
-            print(f"   ✓ Database reachable")
+            print("   ✓ Database reachable")
     else:
         errors.append(('Database connectivity', 'DATABASE_URL not set', "Set DATABASE_URL in .env file"))
-        print(f"   ✗ DATABASE_URL not set")
+        print("   ✗ DATABASE_URL not set")
 
     print()
 
@@ -327,6 +566,7 @@ def main():
             print()
 
         print("Blocking all operations until fixed (fail-fast)")
+        print("Troubleshooting: specs/002-fix-verify-env-validation/quickstart.md")
         print("=" * 60)
         sys.exit(2)  # Exit code 2 = validation failure
 

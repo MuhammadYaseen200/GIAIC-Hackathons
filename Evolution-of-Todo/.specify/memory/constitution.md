@@ -1,10 +1,34 @@
 <!--
 SYNC IMPACT REPORT - Constitution Update
-Version Change: 1.1.0 → 2.0.0 (MAJOR)
-Date: 2026-01-25
+Version Change: 2.0.0 → 2.1.0 (MINOR)
+Date: 2026-01-27
 Updated By: lead-architect, loop-controller, imperator
 
-BREAKING CHANGES:
+CHANGES IN THIS VERSION (2.1.0):
+- Added Phase Execution Gate Protocol (Principle II) - MANDATORY user approval for phase transitions
+- Added Specialized Agent Enforcement (Agent Orchestration) - MANDATORY specialist delegation
+- Added Exit Code 5: Unauthorized phase progression
+
+NEW ENFORCEMENT RULES:
+- Phase transitions require EXPLICIT user approval (no auto-execution)
+- Domain-specific tasks MUST use appropriate specialized agents
+- Generic implementation without specialist review is prohibited
+
+MODIFIED SECTIONS:
+- Principle II: Iterative Evolution → Added Phase Execution Gate Protocol after Pre-Phase Checklist
+- Agent Orchestration → Added Specialized Agent Enforcement after Command Team Workflow
+
+EXIT CODES DOCUMENTATION:
+- 0: Success
+- 1: Warnings (non-critical)
+- 2: Environment validation failure
+- 3: Wrong directory detected
+- 4: (Reserved)
+- 5: Unauthorized phase progression (NEW)
+
+---
+
+PREVIOUS VERSION (2.0.0) CHANGES:
 - Added Principle VI: AAIF Standards & Interoperability (mandatory MCP/AGENTS.md/Goose alignment)
 - Added Principle VII: Mandatory Clarification Gate (enforces /sp.clarify workflow)
 - Added Principle VIII: Process Failure Prevention (Phase 3 retrospective learnings)
@@ -12,11 +36,11 @@ BREAKING CHANGES:
 - Added Reusable Intelligence Framework (Skills/MCPs/Commands tracking)
 - Added AI Control Directory Structure (/ai-control/ behavioral constitutions)
 
-MODIFIED PRINCIPLES:
+MODIFIED PRINCIPLES (2.0.0):
 - Principle I: Spec-Driven Development → Added explicit violation detection system
 - Principle V: Intelligence Capture → Expanded to include Skills creation mandate
 
-ADDED SECTIONS:
+ADDED SECTIONS (2.0.0):
 - AAIF Compliance Layer (MCP, Goose, AGENTS.md integration)
 - Skills & MCPs Registry (always-use + optional lists)
 - Agent Roles & Responsibilities (detailed function mapping)
@@ -30,7 +54,7 @@ TEMPLATES REQUIRING UPDATES:
 ⚠ PENDING: .specify/templates/plan-template.md (add AAIF compliance checks)
 ⚠ PENDING: .specify/templates/spec-template.md (add Skills creation requirement)
 ⚠ PENDING: .specify/templates/tasks-template.md (add environment validation task type)
-✅ UPDATED: AGENTS.md (created at root)
+✅ UPDATED: AGENTS.md (created at root, updated for 2.1.0)
 ✅ UPDATED: CLAUDE.md (references @AGENTS.md)
 
 FOLLOW-UP TODOs:
@@ -91,6 +115,48 @@ Each phase builds on the previous. We evolve, not rewrite.
 - [ ] Create migration spec before touching code
 - [ ] Run environment validation script (`scripts/verify-env.sh`)
 - [ ] Establish git rollback point (tag with tests passing)
+
+**Phase Execution Gate Protocol** (MANDATORY):
+
+Phase transitions require EXPLICIT user approval. No agent may auto-execute the next phase.
+
+**Enforcement Sequence**:
+1. **Phase Completion Verification**:
+   - qa-overseer certifies all acceptance criteria pass
+   - lead-architect confirms constitution compliance
+   - loop-controller validates spec artifacts complete
+   - imperator validates no blocker bugs remain
+
+2. **User Notification** (STOP and REPORT):
+   - Display completion summary with pass/fail status
+   - List all acceptance criteria results
+   - Report any warnings or technical debt
+   - Present checkpoint: "Phase N complete. Options: (A) Proceed to Phase N+1, (B) Pause and review"
+
+3. **User Authority** (WAIT FOR EXPLICIT APPROVAL):
+   - Agent MUST WAIT for user response
+   - Valid responses: "proceed", "next phase", "continue", "A", "yes"
+   - Pause responses: "pause", "review", "wait", "stop", "B", "no"
+   - NO ASSUMPTIONS: Silence != approval
+
+4. **Phase Transition Authorization**:
+   - User grants explicit permission to proceed
+   - imperator validates prerequisites for Phase N+1
+   - loop-controller begins Phase N+1 workflow
+
+**Prohibited Actions**:
+- Auto-starting next phase without user confirmation
+- Assuming user intent to proceed
+- Bundling phase completion with next phase kickoff
+- Skipping user approval gate "for efficiency"
+
+**Violation Response**:
+- If auto-progression detected: HALT immediately
+- Display error: "Phase auto-progression violates governance. Awaiting user directive."
+- Request user decision: Proceed or rollback?
+- Log violation in PHR
+
+**Exit Code**: 5 (unauthorized phase progression)
 
 ### III. Test-First Mindset
 
@@ -349,6 +415,50 @@ Based on 34-day Phase 3 overrun analysis, these safeguards are MANDATORY:
 3. loop-controller verifies spec exists before allowing implementation
 4. qa-overseer certifies completion only when tests pass
 5. path-warden validates file placements after creation/modification
+
+**Specialized Agent Enforcement** (MANDATORY):
+
+Domain-specific tasks MUST involve appropriate specialized agents. Generic implementation without specialist review is prohibited.
+
+**Required Agent Delegation**:
+
+| Task Domain | Required Agent | Validator |
+|-------------|----------------|-----------|
+| Backend (Python, FastAPI, SQLModel) | backend-builder | loop-controller |
+| Frontend (Next.js, React, Tailwind) | ux-frontend-developer | loop-controller |
+| Architecture decisions | lead-architect | qa-overseer |
+| Specifications | spec-architect | loop-controller |
+| Security changes | enterprise-grade-validator | qa-overseer |
+| AI/ML systems | modular-ai-architect | lead-architect |
+| Infrastructure (Docker, K8s, Dapr) | devops-rag-engineer | qa-overseer |
+| File placement | path-warden | loop-controller |
+| Quality certification | qa-overseer | User (ultimate) |
+
+**Enforcement Protocol**:
+1. loop-controller identifies task domain
+2. loop-controller delegates to appropriate Build Team agent
+3. Build Team agent executes implementation
+4. Validator agent certifies work quality
+5. User approves final output
+
+**Prohibited Actions**:
+- General-purpose Claude Code implementing backend without backend-builder
+- Specifications created without spec-architect
+- Security changes without enterprise-grade-validator audit
+- File creation without path-warden verification
+- Quality claims without qa-overseer certification
+
+**Violation Response**:
+- If generic implementation detected: HALT
+- Require specialist agent review
+- If specialist unavailable: BLOCK and report to user
+
+**Agent Role Boundaries**:
+- imperator: Delegates, does NOT code
+- loop-controller: Validates, does NOT implement
+- qa-overseer: Certifies, does NOT write code
+- Build Team: Implements, does NOT self-approve
+- path-warden: Validates placement, does NOT create files
 
 ### Build Team (Task-Specific)
 
@@ -736,7 +846,7 @@ A task/feature/phase is "complete" ONLY when:
 
 ---
 
-**Version**: 2.0.0
+**Version**: 2.1.0
 **Ratified**: 2025-12-27
-**Last Amended**: 2026-01-25
+**Last Amended**: 2026-01-27
 **Next Review**: Before Phase 4 kickoff (Q1 2026)
