@@ -4,7 +4,7 @@ Stores conversation threads and messages between users and the AI assistant.
 Messages are stored as a JSON array to preserve conversation state.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -13,8 +13,8 @@ from sqlmodel import Field, SQLModel
 
 
 def utc_now() -> datetime:
-    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
-    return datetime.utcnow()
+    """Return current UTC time as timezone-aware datetime."""
+    return datetime.now(UTC)
 
 
 class MessageRole(str):

@@ -4,15 +4,11 @@ Verifies the backend can successfully communicate with OpenRouter API.
 """
 
 import asyncio
-import sys
-import httpx
 from uuid import uuid4
 
-# Fix UTF-8 encoding for Windows
-if sys.platform == "win32":
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+import httpx
+
+# Note: UTF-8 wrapping removed - it breaks pytest capture mechanism
 
 
 async def test_openrouter_connection():
@@ -41,7 +37,7 @@ async def test_openrouter_connection():
             print(f"  ⚠ Registration failed: {register_response.status_code}")
 
         # Step 2: Login
-        print(f"\n→ Logging in...")
+        print("\n→ Logging in...")
         login_response = await client.post(
             f"{BASE_URL}/auth/login",
             json={"email": email, "password": password}
@@ -55,14 +51,14 @@ async def test_openrouter_connection():
             return False
 
         # Step 3: Create ChatKit session
-        print(f"\n→ Creating ChatKit session...")
+        print("\n→ Creating ChatKit session...")
         session_response = await client.post(
             f"{BASE_URL}/chatkit/sessions",
             headers={"Authorization": f"Bearer {token}"}
         )
         if session_response.status_code == 200:
             session_data = session_response.json()
-            session_id = session_data.get("id")
+            session_id = session_data.get("data", {}).get("id")
             print(f"  ✓ Session created: {session_id}")
         else:
             print(f"  ✗ Session creation failed: {session_response.status_code}")
@@ -70,14 +66,14 @@ async def test_openrouter_connection():
             return False
 
         # Step 4: Create thread
-        print(f"\n→ Creating chat thread...")
+        print("\n→ Creating chat thread...")
         thread_response = await client.post(
             f"{BASE_URL}/chatkit/sessions/{session_id}/threads",
             headers={"Authorization": f"Bearer {token}"}
         )
         if thread_response.status_code == 200:
             thread_data = thread_response.json()
-            thread_id = thread_data.get("id")
+            thread_id = thread_data.get("data", {}).get("id")
             print(f"  ✓ Thread created: {thread_id}")
         else:
             print(f"  ✗ Thread creation failed: {thread_response.status_code}")
@@ -85,8 +81,8 @@ async def test_openrouter_connection():
             return False
 
         # Step 5: Send message to OpenRouter
-        print(f"\n→ Sending test message to OpenRouter...")
-        print(f"  Message: 'Add task: Buy Milk'")
+        print("\n→ Sending test message to OpenRouter...")
+        print("  Message: 'Add task: Buy Milk'")
 
         message_response = await client.post(
             f"{BASE_URL}/chatkit/sessions/{session_id}/threads/{thread_id}/runs",
@@ -100,11 +96,11 @@ async def test_openrouter_connection():
         )
 
         if message_response.status_code == 200:
-            print(f"  ✓ Message sent successfully (HTTP 200)")
+            print("  ✓ Message sent successfully (HTTP 200)")
 
             # Parse SSE response
             response_text = message_response.text
-            print(f"\n→ Parsing response...")
+            print("\n→ Parsing response...")
 
             lines = response_text.strip().split("\n")
             found_content = False
@@ -118,18 +114,24 @@ async def test_openrouter_connection():
                             event = json.loads(data_str)
                             event_type = event.get("type")
 
-                            if event_type == "thread.item.content.part.delta":
-                                delta = event.get("delta", "")
-                                if delta:
-                                    print(f"  ← {delta}")
-                                    found_content = True
+                            # ChatKit SDK returns complete messages in thread.item.added/done
+                            if event_type in ("thread.item.added", "thread.item.done"):
+                                item = event.get("item", {})
+                                if item.get("type") == "assistant_message":
+                                    content = item.get("content", [])
+                                    for part in content:
+                                        if part.get("type") == "output_text":
+                                            text = part.get("text", "")
+                                            if text:
+                                                print(f"  ← {text[:100]}...")
+                                                found_content = True
 
                         except json.JSONDecodeError:
                             continue
 
             if found_content:
-                print(f"\n  ✓ OpenRouter responded successfully!")
-                print(f"\n→ Verifying task creation...")
+                print("\n  ✓ OpenRouter responded successfully!")
+                print("\n→ Verifying task creation...")
 
                 # Check if task was created
                 tasks_response = await client.get(
@@ -146,13 +148,13 @@ async def test_openrouter_connection():
                         print(f"  ✓ Task created: {tasks[0]['title']}")
                         return True
                     else:
-                        print(f"  ⚠ No tasks created (AI may not have called tool)")
+                        print("  ⚠ No tasks created (AI may not have called tool)")
                         return True  # Connection works, but tool calling needs investigation
                 else:
                     print(f"  ⚠ Could not verify tasks: {tasks_response.status_code}")
                     return True  # Connection works
             else:
-                print(f"  ⚠ No content received in response")
+                print("  ⚠ No content received in response")
                 return False
 
         else:

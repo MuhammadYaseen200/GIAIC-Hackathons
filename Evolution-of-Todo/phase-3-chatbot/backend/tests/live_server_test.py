@@ -1,9 +1,8 @@
 """Phase 3 Live Server E2E Test - Tests against running server"""
 import asyncio
-import json
 import uuid
-import httpx
 
+import httpx
 
 BASE_URL = "http://localhost:8000"
 
@@ -34,7 +33,7 @@ async def live_server_test():
         try:
             resp = await client.get("/health")
             if resp.status_code == 200:
-                print(f"  [PASS] Server healthy")
+                print("  [PASS] Server healthy")
                 passed += 1
             else:
                 print(f"  [FAIL] Server unhealthy: {resp.status_code}")
@@ -69,7 +68,7 @@ async def live_server_test():
             token = data.get("data", {}).get("token")
             user_id = data.get("data", {}).get("user", {}).get("id")
             if token:
-                print(f"  [PASS] Login successful")
+                print("  [PASS] Login successful")
                 passed += 1
             else:
                 print(f"  [FAIL] No token in response: {data}")
@@ -172,7 +171,7 @@ async def live_server_test():
                 data = resp.json()
                 response_text = data.get("response") or data.get("data", {}).get("response", "")
                 conv_id = data.get("conversation_id") or data.get("data", {}).get("conversation_id")
-                print(f"  [PASS] Chat responded")
+                print("  [PASS] Chat responded")
                 print(f"  Response: {str(response_text)[:80]}...")
                 passed += 1
             elif resp.status_code == 500:
@@ -197,7 +196,7 @@ async def live_server_test():
             if resp.status_code == 200:
                 data = resp.json()
                 tool_calls = data.get("tool_calls") or data.get("data", {}).get("tool_calls", [])
-                print(f"  [PASS] Add task processed")
+                print("  [PASS] Add task processed")
                 if tool_calls:
                     print(f"  Tool calls: {len(tool_calls)}")
                 passed += 1

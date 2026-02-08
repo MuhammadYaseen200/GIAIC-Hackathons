@@ -78,7 +78,7 @@ class ChatKitTester:
 
         data = login_response.json()
         self.access_token = data["data"]["token"]
-        print(f"✓ Logged in successfully")
+        print("✓ Logged in successfully")
 
         # Create ChatKit session
         await self.create_session()
@@ -297,11 +297,11 @@ class ChatKitTester:
         fake_id = "00000000-0000-0000-0000-000000000000"
         result = await self.send_message(f"Delete task {fake_id}")
         # Should handle gracefully
-        print(f"✓ Non-existent task deletion handled")
+        print("✓ Non-existent task deletion handled")
 
         # 3. Update non-existent task
         result = await self.send_message(f"Update task {fake_id} title to New Title")
-        print(f"✓ Non-existent task update handled")
+        print("✓ Non-existent task update handled")
 
         # Cleanup
         tasks = await self.verify_tasks()

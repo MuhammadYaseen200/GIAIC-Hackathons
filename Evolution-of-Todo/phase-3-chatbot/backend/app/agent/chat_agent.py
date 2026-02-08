@@ -1,10 +1,10 @@
 """AI Agent configuration and execution for Phase 3 chatbot.
 
-Configures the OpenAI Agents SDK to use Google Gemini via OpenAI-compatible
-endpoint per ADR-009 (Hybrid AI Engine).
+Configures OpenAI-compatible client to use OpenRouter as the AI provider
+per ADR-009 (Hybrid AI Engine).
 
 This module provides:
-- Gemini model configuration via OpenAI-compatible endpoint
+- OpenRouter model configuration via OpenAI-compatible endpoint
 - run_agent function for executing chat interactions
 - Tool call processing and result handling
 """
@@ -26,13 +26,13 @@ logger = logging.getLogger(__name__)
 
 
 # =============================================================================
-# T-314: Gemini Model Configuration
+# T-314: AI Model Configuration (OpenRouter)
 # =============================================================================
 
-# Configure Gemini via OpenAI-compatible endpoint (per ADR-009)
-gemini_client = AsyncOpenAI(
-    api_key=settings.GEMINI_API_KEY,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+# Configure OpenRouter via OpenAI-compatible endpoint (per ADR-009)
+ai_client = AsyncOpenAI(
+    api_key=settings.OPENROUTER_API_KEY,
+    base_url=settings.OPENROUTER_BASE_URL,
 )
 
 
@@ -521,8 +521,8 @@ async def run_agent(
 
     try:
         # Initial call to Gemini
-        response = await gemini_client.chat.completions.create(
-            model=settings.GEMINI_MODEL,
+        response = await ai_client.chat.completions.create(
+            model=settings.OPENROUTER_MODEL,
             messages=messages,
             tools=TOOL_SCHEMAS,
             timeout=settings.AGENT_TIMEOUT_SECONDS,
@@ -577,8 +577,8 @@ async def run_agent(
                 })
 
             # Get final response after tool execution
-            final_response_obj = await gemini_client.chat.completions.create(
-                model=settings.GEMINI_MODEL,
+            final_response_obj = await ai_client.chat.completions.create(
+                model=settings.OPENROUTER_MODEL,
                 messages=messages,
                 tools=TOOL_SCHEMAS,
                 timeout=settings.AGENT_TIMEOUT_SECONDS,
@@ -598,8 +598,8 @@ async def run_agent(
     )
 
 
-async def verify_gemini_connection() -> bool:
-    """Verify that Gemini API is configured and accessible.
+async def verify_ai_connection() -> bool:
+    """Verify that OpenRouter API is configured and accessible.
 
     Returns:
         bool: True if connection is successful.
@@ -607,17 +607,17 @@ async def verify_gemini_connection() -> bool:
     Raises:
         Exception: If connection fails.
     """
-    if not settings.GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY not configured")
+    if not settings.OPENROUTER_API_KEY:
+        raise ValueError("OPENROUTER_API_KEY not configured")
 
-    response = await gemini_client.chat.completions.create(
-        model=settings.GEMINI_MODEL,
+    response = await ai_client.chat.completions.create(
+        model=settings.OPENROUTER_MODEL,
         messages=[{"role": "user", "content": "Hello"}],
         max_tokens=10,
     )
 
     if response.choices and response.choices[0].message.content:
-        logger.info("Gemini connection verified successfully")
+        logger.info("OpenRouter connection verified successfully")
         return True
 
-    raise ValueError("Gemini returned empty response")
+    raise ValueError("OpenRouter returned empty response")

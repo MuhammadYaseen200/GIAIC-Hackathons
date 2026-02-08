@@ -1,11 +1,12 @@
 """Phase 3 Full E2E Test Suite - Including Chatbot Testing"""
 import asyncio
-import json
 import uuid
-from httpx import AsyncClient, ASGITransport
-from app.main import app
-from app.core.database import async_engine
+
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
+
+from app.core.database import async_engine
+from app.main import app
 
 
 async def full_e2e_test():
@@ -59,7 +60,7 @@ async def full_e2e_test():
                 print(f"  [PASS] Login successful, user_id: {user_id[:8]}...")
                 passed += 1
             else:
-                print(f"  [FAIL] No token in response")
+                print("  [FAIL] No token in response")
                 failed += 1
                 return passed, failed
         else:
@@ -100,7 +101,7 @@ async def full_e2e_test():
                 print(f"  [PASS] Listed {len(tasks)} tasks")
                 passed += 1
             else:
-                print(f"  [PASS] Tasks response received")
+                print("  [PASS] Tasks response received")
                 passed += 1
         else:
             print(f"  [FAIL] List failed: {resp.status_code}")
@@ -163,7 +164,7 @@ async def full_e2e_test():
             if "response" in chat_resp or "data" in chat_resp:
                 response_text = chat_resp.get("response") or chat_resp.get("data", {}).get("response", "")
                 conv_id = chat_resp.get("conversation_id") or chat_resp.get("data", {}).get("conversation_id")
-                print(f"  [PASS] Chat response received")
+                print("  [PASS] Chat response received")
                 print(f"  AI Response preview: {str(response_text)[:100]}...")
                 if conv_id:
                     print(f"  Conversation ID: {conv_id[:8]}...")
@@ -189,7 +190,7 @@ async def full_e2e_test():
             chat_resp = resp.json()
             response_text = str(chat_resp.get("response") or chat_resp.get("data", {}).get("response", ""))
             tool_calls = chat_resp.get("tool_calls") or chat_resp.get("data", {}).get("tool_calls", [])
-            print(f"  [PASS] Add task command processed")
+            print("  [PASS] Add task command processed")
             print(f"  Tool calls: {len(tool_calls) if tool_calls else 'N/A'}")
             print(f"  Response: {response_text[:100]}...")
             passed += 1
@@ -205,7 +206,7 @@ async def full_e2e_test():
             "conversation_id": None
         }, headers=headers)
         if resp.status_code == 200:
-            print(f"  [PASS] List tasks command processed")
+            print("  [PASS] List tasks command processed")
             passed += 1
         else:
             print(f"  [INFO] List tasks via chat: {resp.status_code}")
@@ -334,7 +335,7 @@ async def full_e2e_test():
                 print(f"  [PASS] Chat endpoint documented ({len(paths)} total endpoints)")
                 passed += 1
             else:
-                print(f"  [FAIL] Chat endpoint not in schema")
+                print("  [FAIL] Chat endpoint not in schema")
                 failed += 1
         else:
             print(f"  [FAIL] OpenAPI fetch failed: {resp.status_code}")

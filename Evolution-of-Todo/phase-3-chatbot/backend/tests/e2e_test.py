@@ -1,11 +1,12 @@
 """Phase 3 Comprehensive E2E Test Suite"""
 import asyncio
-import json
 import uuid
-from httpx import AsyncClient, ASGITransport
-from app.main import app
-from app.core.database import async_engine
+
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
+
+from app.core.database import async_engine
+from app.main import app
 
 
 async def comprehensive_e2e_test():
@@ -207,7 +208,7 @@ async def comprehensive_e2e_test():
                 print("  [PASS] Conversations table exists")
                 passed += 1
             else:
-                print(f"  [FAIL] Conversations table missing or incomplete")
+                print("  [FAIL] Conversations table missing or incomplete")
                 failed += 1
 
         # Test 14: Priority enum values

@@ -1,14 +1,14 @@
 """User model for authentication and authorization."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
 
 
 def utc_now() -> datetime:
-    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
-    return datetime.utcnow()
+    """Return current UTC time as timezone-aware datetime."""
+    return datetime.now(UTC)
 
 
 class User(SQLModel, table=True):

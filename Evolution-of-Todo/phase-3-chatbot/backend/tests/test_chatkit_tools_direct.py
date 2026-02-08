@@ -290,7 +290,7 @@ class DirectToolTester:
             print(f"✓ Invalid priority handled (defaulted to: {priority})")
             await self.delete_task(result["task"]["id"])
         else:
-            print(f"✓ Invalid priority rejected by backend (validation working)")
+            print("✓ Invalid priority rejected by backend (validation working)")
 
         # 2. Add task with valid priority
         result = await self.add_task("Valid Task", priority="high")
