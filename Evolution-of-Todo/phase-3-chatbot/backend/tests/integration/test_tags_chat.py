@@ -9,25 +9,8 @@ ADR References:
 - ADR-011 (Task Schema Extension) - Tags field and max 10 tags constraint
 """
 
-import asyncio
-from uuid import uuid4
-
 import pytest
-import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
-
-# Test configuration
-BASE_URL = "http://localhost:8000"
-TEST_TOKEN = "test_jwt_token_for_tags_tests"
-
-
-@pytest_asyncio.fixture
-async def test_client():
-    """Create async test client with auth token."""
-    transport = ASGITransport()
-    async with AsyncClient(base_url=BASE_URL, transport=transport) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        yield client
+from httpx import AsyncClient
 
 
 class TestTagsChat:
@@ -40,13 +23,9 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 1: "Add task 'Email client' with tag Work"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add task Email client with tag Work",
             },
         )
@@ -59,7 +38,6 @@ class TestTagsChat:
         # Verify task was created with tag
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -79,14 +57,10 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 2: "Add tags Home, Errands to 'Buy groceries'"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create task with multiple tags
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add task Buy groceries with tags Home and Errands",
             },
         )
@@ -95,7 +69,6 @@ class TestTagsChat:
 
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -116,14 +89,10 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 2: Add tags to existing task.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create task first
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Taggable task", "tags": []},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code == 200:
@@ -135,7 +104,6 @@ class TestTagsChat:
                 chat_response = await test_client.post(
                     "/api/v1/chat",
                     json={
-                        "user_id": test_user_id,
                         "message": "Add tags Work, Urgent to 'Taggable task'",
                     },
                 )
@@ -145,7 +113,6 @@ class TestTagsChat:
                 # Verify tags were added
                 task_response = await test_client.get(
                     f"/api/v1/tasks/{task_id}",
-                    headers={"Authorization": f"Bearer {TEST_TOKEN}"},
                 )
 
                 if task_response.status_code == 200:
@@ -162,14 +129,10 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 3: "Remove tag Work from 'Email client'"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create task with tag
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Email client 2", "tags": ["Work", "Personal"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code == 200:
@@ -181,7 +144,6 @@ class TestTagsChat:
                 chat_response = await test_client.post(
                     "/api/v1/chat",
                     json={
-                        "user_id": test_user_id,
                         "message": "Remove tag Work from 'Email client 2'",
                     },
                 )
@@ -191,7 +153,6 @@ class TestTagsChat:
                 # Verify tag was removed
                 task_response = await test_client.get(
                     f"/api/v1/tasks/{task_id}",
-                    headers={"Authorization": f"Bearer {TEST_TOKEN}"},
                 )
 
                 if task_response.status_code == 200:
@@ -208,31 +169,24 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 4: "Show my Work tasks"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create tasks with different tags
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Work task 1", "tags": ["Work"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Work task 2", "tags": ["Work"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Home task", "tags": ["Home"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # Filter by tag via chat
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Show my Work tasks",
             },
         )
@@ -246,7 +200,6 @@ class TestTagsChat:
         # Verify tasks filtered correctly
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -262,31 +215,24 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 5: "What tags do I have?"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create tasks with various tags
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Tag task 1", "tags": ["Work", "Urgent"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Tag task 2", "tags": ["Home", "Personal"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Tag task 3", "tags": ["Work", "Project"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # List tags via chat
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "What tags do I have?",
             },
         )
@@ -310,20 +256,15 @@ class TestTagsChat:
         Test Case: US-309 - Tag Tasks via Chat
         Acceptance Scenario 6: Tags displayed in task listings.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Task with tags", "tags": ["Work", "Urgent"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # List tasks via chat
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "List my tasks",
             },
         )
@@ -345,16 +286,12 @@ class TestTagsChat:
 
         Test Case: ADR-011 constraint - Max 10 tags per task.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Try to add more than 10 tags
         many_tags = ",".join([f"Tag{i}" for i in range(12)])
 
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": f"Add task Many tags with tags {many_tags}",
             },
         )
@@ -372,55 +309,23 @@ class TestTagsChat:
 
         Test Case: Work vs work vs WORK should be same tag.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create tasks with same tag in different cases
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Task 1", "tags": ["Work"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Task 2", "tags": ["work"]},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # Filter by lowercase "work"
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Show my work tasks",
             },
         )
 
         assert response.status_code == 200
-        print(f"Case sensitivity test passed")
-
-
-# Run tests if executed directly
-async def main() -> None:
-    """Run all tag chat tests."""
-    print("Running Tags via Chat Tests...")
-
-    async with AsyncClient(base_url=BASE_URL, transport=ASGITransport()) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        test_instance = TestTagsChat()
-
-        await test_instance.test_add_task_with_single_tag(client)
-        await test_instance.test_add_multiple_tags_to_task(client)
-        await test_instance.test_add_tags_to_existing_task(client)
-        await test_instance.test_remove_tag_from_task(client)
-        await test_instance.test_filter_tasks_by_tag(client)
-        await test_instance.test_list_all_tags(client)
-        await test_instance.test_tags_displayed_in_task_listings(client)
-        await test_instance.test_max_tags_enforcement(client)
-        await test_instance.test_tag_case_sensitivity(client)
-
-    print("All tag chat tests passed!")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+        print("Case sensitivity test passed")

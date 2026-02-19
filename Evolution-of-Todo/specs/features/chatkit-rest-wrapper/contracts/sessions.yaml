@@ -1,0 +1,459 @@
+openapi: 3.1.0
+info:
+  title: ChatKit Sessions API
+  version: 1.0.0
+  description: REST API for managing chat sessions (translation layer for ChatKit JSON-RPC SDK)
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development server
+  - url: https://api.example.com/api/v1
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /chatkit/sessions:
+    post:
+      summary: Create new chat session
+      description: |
+        Creates a new chat session for the authenticated user.
+        Translates REST request to ChatKit JSON-RPC `threads.create` protocol.
+
+        **Rate Limit**: Max 10 active sessions per user.
+        **Idempotency**: Returns 200 if session already exists.
+      operationId: createSession
+      tags:
+        - Sessions
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: No body required (empty POST accepted)
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              example: {}
+      responses:
+        '200':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+              example:
+                success: true
+                data:
+                  id: "550e8400-e29b-41d4-a716-446655440000"
+                  user_id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                  created_at: "2026-02-01T12:00:00Z"
+        '401':
+          description: Unauthorized (invalid or missing JWT token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "UNAUTHORIZED"
+                  message: "Invalid or missing authentication token"
+        '429':
+          description: Too Many Requests (max 10 sessions limit reached)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "RATE_LIMIT_EXCEEDED"
+                  message: "Maximum of 10 active sessions allowed per user"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "INTERNAL_ERROR"
+                  message: "An unexpected error occurred"
+
+    get:
+      summary: List user's chat sessions
+      description: |
+        Returns all chat sessions for the authenticated user.
+        Ordered by `updated_at` descending (most recent first).
+
+        **No Pagination**: Returns all sessions (max 10 per user).
+      operationId: listSessions
+      tags:
+        - Sessions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Session list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+              example:
+                success: true
+                data:
+                  - id: "550e8400-e29b-41d4-a716-446655440000"
+                    user_id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                    title: "Discussion about tasks"
+                    created_at: "2026-02-01T12:00:00Z"
+                    updated_at: "2026-02-01T14:30:00Z"
+                    message_count: 15
+                  - id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                    user_id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                    title: null
+                    created_at: "2026-01-30T09:00:00Z"
+                    updated_at: "2026-01-30T09:15:00Z"
+                    message_count: 3
+        '401':
+          description: Unauthorized (invalid or missing JWT token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chatkit/sessions/{session_id}:
+    get:
+      summary: Get session with message history
+      description: |
+        Returns full session details including all messages.
+        Messages ordered chronologically (oldest first).
+
+        **Authorization**: User must own the session.
+      operationId: getSession
+      tags:
+        - Sessions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: UUID of the session
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Session details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionDetailResponse'
+              example:
+                success: true
+                data:
+                  id: "550e8400-e29b-41d4-a716-446655440000"
+                  user_id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                  title: "Task management discussion"
+                  created_at: "2026-02-01T12:00:00Z"
+                  updated_at: "2026-02-01T14:30:00Z"
+                  messages:
+                    - id: "msg-1"
+                      role: "user"
+                      content: "Add task: Buy milk"
+                      tool_calls: null
+                      created_at: "2026-02-01T12:01:00Z"
+                    - id: "msg-2"
+                      role: "assistant"
+                      content: "I'll add that task for you."
+                      tool_calls:
+                        - id: "call_abc123"
+                          type: "function"
+                          function:
+                            name: "add_task"
+                            arguments: "{\"title\":\"Buy milk\",\"priority\":\"high\"}"
+                      created_at: "2026-02-01T12:01:05Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden (user doesn't own this session)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "FORBIDDEN"
+                  message: "You don't have permission to access this session"
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "NOT_FOUND"
+                  message: "Session not found"
+
+    delete:
+      summary: Delete chat session
+      description: |
+        Deletes a chat session and all associated messages (CASCADE).
+
+        **Authorization**: User must own the session.
+        **Idempotency**: Returns 200 even if session already deleted.
+      operationId: deleteSession
+      tags:
+        - Sessions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: UUID of the session to delete
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Session deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+              example:
+                success: true
+                data:
+                  deleted: true
+                  session_id: "550e8400-e29b-41d4-a716-446655440000"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden (user doesn't own this session)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from `/api/v1/auth/login`
+
+  schemas:
+    SessionResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: '#/components/schemas/SessionData'
+
+    SessionData:
+      type: object
+      required:
+        - id
+        - user_id
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique session identifier
+        user_id:
+          type: string
+          format: uuid
+          description: Owner user ID
+        created_at:
+          type: string
+          format: date-time
+          description: Session creation timestamp (ISO 8601)
+
+    SessionListResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionListItem'
+
+    SessionListItem:
+      type: object
+      required:
+        - id
+        - user_id
+        - created_at
+        - updated_at
+        - message_count
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          nullable: true
+          description: Auto-generated from first message
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        message_count:
+          type: integer
+          minimum: 0
+          description: Total messages in session
+
+    SessionDetailResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          $ref: '#/components/schemas/SessionDetailData'
+
+    SessionDetailData:
+      type: object
+      required:
+        - id
+        - user_id
+        - created_at
+        - updated_at
+        - messages
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDetail'
+
+    MessageDetail:
+      type: object
+      required:
+        - id
+        - role
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [user, assistant, system, tool]
+        content:
+          type: string
+        tool_calls:
+          type: object
+          nullable: true
+          description: OpenAI tool call format
+        created_at:
+          type: string
+          format: date-time
+
+    DeleteResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          required:
+            - deleted
+            - session_id
+          properties:
+            deleted:
+              type: boolean
+            session_id:
+              type: string
+              format: uuid
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              enum:
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - NOT_FOUND
+                - RATE_LIMIT_EXCEEDED
+                - VALIDATION_ERROR
+                - INTERNAL_ERROR
+                - BAD_GATEWAY
+                - SERVICE_UNAVAILABLE
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: object
+              description: Additional error context (optional)

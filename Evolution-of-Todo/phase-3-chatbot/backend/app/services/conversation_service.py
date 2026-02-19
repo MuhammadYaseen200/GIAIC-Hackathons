@@ -7,19 +7,19 @@ Provides business logic for:
 - Conversation retrieval for AI context
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from app.models.conversation import Conversation, MessageRole
+from app.models.conversation import Conversation
 
 
 def utc_now() -> datetime:
-    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
-    return datetime.utcnow()
+    """Return current UTC time as timezone-aware datetime."""
+    return datetime.now(UTC)
 
 
 class ConversationNotFoundError(Exception):

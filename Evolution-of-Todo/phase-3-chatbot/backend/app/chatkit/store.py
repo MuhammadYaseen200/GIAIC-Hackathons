@@ -4,12 +4,11 @@ This module provides a Store implementation that persists ChatKit threads
 and messages to our PostgreSQL database via SQLModel.
 """
 
-import json
 from datetime import datetime
 from typing import Any
-from uuid import UUID, uuid5, NAMESPACE_DNS
+from uuid import UUID, uuid5
 
-from chatkit.store import Store, default_generate_id, StoreItemType, NotFoundError
+from chatkit.store import NotFoundError, Store
 from chatkit.types import (
     ActiveStatus,
     Page,

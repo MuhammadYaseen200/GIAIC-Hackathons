@@ -16,26 +16,28 @@ User Stories:
 - US-306: Conversation Persistence
 """
 
+import logging
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Request, status
 from pydantic import BaseModel, Field
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models.conversation import Conversation
-from app.models.user import User
+from app.core.rate_limit import limiter
+from app.services.conversation_service import ConversationService
+
+logger = logging.getLogger(__name__)
 
 # Try to import Layer 3 dependencies - these will be available after
 # T-314, T-315, T-316 are completed
 try:
     from app.agent.chat_agent import run_agent
+
     AGENT_AVAILABLE = True
 except ImportError:
     # Agent not yet implemented - will use placeholder
     AGENT_AVAILABLE = False
-
-from app.services.conversation_service import ConversationService
 
 # ============================================================================
 # Request/Response Schemas
@@ -72,7 +74,9 @@ class ToolCall(BaseModel):
     """
 
     name: str = Field(..., description="Name of the tool called")
-    arguments: dict[str, Any] = Field(default_factory=dict, description="Tool arguments")
+    arguments: dict[str, Any] = Field(
+        default_factory=dict, description="Tool arguments"
+    )
     result: Any = Field(None, description="Optional result from tool execution")
 
 
@@ -108,8 +112,10 @@ router = APIRouter()
     description="Send a message to the AI assistant and receive a response. "
     "Supports conversation continuation via conversation_id.",
 )
+@limiter.limit("10/minute")
 async def chat(
     request: ChatRequest,
+    http_request: Request,
     current_user: CurrentUser,
     session: SessionDep,
 ) -> ChatResponse:
@@ -162,9 +168,12 @@ async def chat(
             )
             response_text = result.response
             tool_calls = result.tool_calls
-        except Exception as e:
-            # Log error but return a helpful response
-            response_text = f"I encountered an error while processing your request: {e}"
+        except Exception:
+            logger.exception("Agent execution failed for user %s", current_user.id)
+            response_text = (
+                "I'm sorry, I encountered an error processing your request. "
+                "Please try again."
+            )
             tool_calls = []
     else:
         # Placeholder response when agent is not yet available

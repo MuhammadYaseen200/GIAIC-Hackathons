@@ -20,19 +20,14 @@ Prerequisites:
 
 import asyncio
 import json
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from playwright.async_api import async_playwright, CDPSession, Page, Browser
 import httpx
+from playwright.async_api import Browser, CDPSession, Page, async_playwright
 
-# Set UTF-8 encoding for Windows console
-if sys.platform == "win32":
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+# Note: UTF-8 wrapping removed - it breaks pytest capture mechanism
 
 # Test configuration
 FRONTEND_URL = "http://localhost:3000"
@@ -93,9 +88,9 @@ class ChatKitPlaywrightTester:
         self.page.on("console", self._on_page_console)
         self.page.on("pageerror", self._on_page_error)
 
-        print(f"✓ Browser launched")
-        print(f"✓ CDP session established")
-        print(f"✓ Event listeners attached")
+        print("✓ Browser launched")
+        print("✓ CDP session established")
+        print("✓ Event listeners attached")
 
     def _on_request(self, event: dict):
         """CDP Network request listener."""
@@ -188,10 +183,10 @@ class ChatKitPlaywrightTester:
                 json={"email": email, "password": password, "full_name": full_name}
             )
             if response.status_code in [200, 201]:
-                print(f"  ✓ User registered successfully")
+                print("  ✓ User registered successfully")
                 return True
             elif response.status_code == 400:
-                print(f"  ⚠ User already exists")
+                print("  ⚠ User already exists")
                 return False
             else:
                 print(f"  ✗ Registration failed: {response.status_code}")
@@ -209,7 +204,7 @@ class ChatKitPlaywrightTester:
             if response.status_code == 200:
                 data = response.json()
                 token = data["data"]["token"]
-                print(f"  ✓ Login successful")
+                print("  ✓ Login successful")
                 return token
             else:
                 print(f"  ✗ Login failed: {response.status_code}")
@@ -218,7 +213,7 @@ class ChatKitPlaywrightTester:
 
     async def inject_auth_cookie(self, access_token: str):
         """Inject authentication cookie into browser session."""
-        print(f"\n→ Injecting auth cookie into browser")
+        print("\n→ Injecting auth cookie into browser")
 
         # Navigate to the frontend first to set cookie domain
         await self.page.goto(FRONTEND_URL, timeout=90000)
@@ -234,7 +229,7 @@ class ChatKitPlaywrightTester:
             "sameSite": "Lax"
         }])
 
-        print(f"  ✓ Auth cookie injected")
+        print("  ✓ Auth cookie injected")
 
         # Reload to apply cookie
         await self.page.reload()
@@ -245,23 +240,23 @@ class ChatKitPlaywrightTester:
         await asyncio.sleep(2)
 
         if "/dashboard" in self.page.url:
-            print(f"  ✓ Successfully authenticated")
+            print("  ✓ Successfully authenticated")
         else:
             print(f"  ⚠ May not be authenticated (current URL: {self.page.url})")
 
     async def navigate_to_chat(self):
         """Navigate to chat page."""
-        print(f"\n→ Navigating to chat page")
+        print("\n→ Navigating to chat page")
         await self.page.goto(CHAT_URL, timeout=90000)
 
         # Wait for ChatKit web component to be present
-        print(f"  ⏳ Waiting for ChatKit web component...")
+        print("  ⏳ Waiting for ChatKit web component...")
         await self.page.wait_for_selector('openai-chatkit', timeout=60000)
 
         # Wait for ChatKit to be ready (additional time for initialization)
         await asyncio.sleep(5)
 
-        print(f"✓ Chat interface loaded")
+        print("✓ Chat interface loaded")
         await self.save_screenshot("chat_loaded")
 
     async def send_chat_message(self, message: str) -> str:
@@ -289,21 +284,21 @@ class ChatKitPlaywrightTester:
             await self.page.keyboard.press("Enter")
 
             # Wait for AI response (increased timeout)
-            print(f"  ⏳ Waiting for AI response...")
+            print("  ⏳ Waiting for AI response...")
             await asyncio.sleep(15)  # Give more time for AI to process and respond
 
-            print(f"  ✓ Message sent and processed")
+            print("  ✓ Message sent and processed")
             return "Message sent successfully"
 
         except Exception as e:
             print(f"  ⚠ Error sending message: {e}")
-            await self.save_screenshot(f"error_send_message")
+            await self.save_screenshot("error_send_message")
             return ""
 
     async def verify_tasks_via_api(self, expected_count: int | None = None) -> list[dict]:
         """Verify tasks via REST API using stored access token."""
         if not self.access_token:
-            print(f"  ✗ No access token available")
+            print("  ✗ No access token available")
             return []
 
         # Make direct API request using httpx
@@ -352,14 +347,14 @@ class ChatKitPlaywrightTester:
         await self.save_screenshot("test1_update_task")
 
         # 3. Complete task
-        await self.send_chat_message(f"Complete the coffee task")
+        await self.send_chat_message("Complete the coffee task")
         await asyncio.sleep(2)
         tasks = await self.verify_tasks_via_api(expected_count=1)
         assert tasks[0]["completed"] is True, "Task not marked complete"
         await self.save_screenshot("test1_complete_task")
 
         # 4. Delete task
-        await self.send_chat_message(f"Delete the coffee task")
+        await self.send_chat_message("Delete the coffee task")
         await asyncio.sleep(2)
         tasks = await self.verify_tasks_via_api(expected_count=0)
         await self.save_screenshot("test1_delete_task")
@@ -460,7 +455,7 @@ class ChatKitPlaywrightTester:
         if self.browser:
             await self.browser.close()
 
-        print(f"✓ Cleanup complete")
+        print("✓ Cleanup complete")
 
 
 async def main():

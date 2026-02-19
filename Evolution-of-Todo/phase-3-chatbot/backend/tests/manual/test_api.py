@@ -1,5 +1,6 @@
 import requests
 
+
 def test_api():
     # Login
     login_resp = requests.post(
@@ -8,7 +9,7 @@ def test_api():
     )
     login_data = login_resp.json()
     token = login_data["data"]["token"]
-    print("Login successful! Token: {}...".format(token[:20]))
+    print(f"Login successful! Token: {token[:20]}...")
 
     # Test tasks endpoint
     tasks_resp = requests.get(
@@ -30,9 +31,9 @@ def test_api():
     if "error" in chat_data:
         error_code = chat_data.get("error", {}).get("code", "UNKNOWN")
         if error_code in ["GEMINI_QUOTA_EXCEEDED", "INTERNAL_ERROR"]:
-            print("Chat endpoint responding (expected error: {})".format(error_code))
+            print(f"Chat endpoint responding (expected error: {error_code})")
         else:
-            print("Unexpected error: {}".format(chat_data))
+            print(f"Unexpected error: {chat_data}")
     else:
         print("Chat success! Response: {}...".format(chat_data.get("response", "N/A")[:50]))
 

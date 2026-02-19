@@ -12,11 +12,11 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
-from app.core.database import get_session
 from app.chatkit.server import TodoChatKitServer
 from app.chatkit.store import ChatContext, DatabaseStore
-from app.models.user import User
+from app.core.database import get_session
 from app.models.task import Priority
+from app.models.user import User
 from app.services.task_service import TaskService
 
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ async def delete_task_handler(context: ChatContext, **kwargs):
 
     result = await service.delete_task(user_id=context.user_id, task_id=task_id)
     if result:
-        return {"success": True, "task_id": task_id}
+        return {"success": True, "task_id": str(task_id)}
     return {"success": False, "error": "Task not found"}
 
 
@@ -181,7 +181,7 @@ async def chatkit_handler(
     ChatKit uses a specific protocol with multiple endpoints.
     This handler delegates to the ChatKitServer.process() method.
     """
-    from chatkit.server import StreamingResult, NonStreamingResult
+    from chatkit.server import StreamingResult
     from fastapi.responses import Response
 
     # Create context with user and db session

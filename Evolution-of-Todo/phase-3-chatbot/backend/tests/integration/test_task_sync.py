@@ -10,25 +10,9 @@ ADR References:
 """
 
 import asyncio
-import time
-from uuid import uuid4
 
 import pytest
-import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
-
-# Test configuration
-BASE_URL = "http://localhost:8000"
-TEST_TOKEN = "test_jwt_token_for_sync_tests"
-
-
-@pytest_asyncio.fixture
-async def test_client():
-    """Create async test client with auth token."""
-    transport = ASGITransport()
-    async with AsyncClient(base_url=BASE_URL, transport=transport) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        yield client
+from httpx import AsyncClient
 
 
 class TestTaskSync:
@@ -40,13 +24,9 @@ class TestTaskSync:
 
         Test Case: Task list sync after add operation.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Get initial task count
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -59,7 +39,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add task: Test sync add",
             },
         )
@@ -72,7 +51,6 @@ class TestTaskSync:
         # Get updated task count
         updated_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         assert updated_response.status_code == 200
@@ -95,14 +73,10 @@ class TestTaskSync:
 
         Test Case: Task list sync after complete operation.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create a pending task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Test complete sync", "completed": False},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -114,7 +88,6 @@ class TestTaskSync:
         # Get initial state
         initial_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         initial_task = initial_response.json()["data"]
 
@@ -124,7 +97,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Complete task: Test complete sync",
             },
         )
@@ -137,7 +109,6 @@ class TestTaskSync:
         # Get updated state
         updated_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         updated_task = updated_response.json()["data"]
 
@@ -152,14 +123,10 @@ class TestTaskSync:
 
         Test Case: Task list sync after update operation.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create a task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Original Title", "description": "Original description"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -172,7 +139,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Rename 'Original Title' to 'Updated Title'",
             },
         )
@@ -185,7 +151,6 @@ class TestTaskSync:
         # Get updated task
         updated_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         updated_task = updated_response.json()["data"]
 
@@ -200,14 +165,10 @@ class TestTaskSync:
 
         Test Case: Task list sync after delete operation.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create a task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Delete me test", "completed": False},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -219,7 +180,6 @@ class TestTaskSync:
         # Verify task exists
         exists_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         assert exists_response.status_code == 200, "Task should exist before deletion"
 
@@ -227,7 +187,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Delete task: Delete me test",
             },
         )
@@ -240,7 +199,6 @@ class TestTaskSync:
         # Verify task was deleted
         deleted_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # Should return 404 or not exist
@@ -254,14 +212,10 @@ class TestTaskSync:
 
         Test Case: Task updates should be reflected without full refresh.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create a task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "No reload test", "completed": False},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -273,7 +227,6 @@ class TestTaskSync:
         # Get task status
         status_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         assert status_response.status_code == 200
 
@@ -281,7 +234,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Complete task: No reload test",
             },
         )
@@ -291,7 +243,6 @@ class TestTaskSync:
         # Verify we can check status directly without reloading
         check_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         check_task = check_response.json()["data"]
 
@@ -305,22 +256,17 @@ class TestTaskSync:
 
         Test Case: Rapid successive operations should all sync.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Perform multiple operations
         operations = [
-            ("Add task: Multi 1", None),
-            ("Add task: Multi 2", None),
-            ("Add task: Multi 3", None),
+            "Add task: Multi 1",
+            "Add task: Multi 2",
+            "Add task: Multi 3",
         ]
 
-        task_ids = []
-
-        for message, expected_id in operations:
+        for message in operations:
             response = await test_client.post(
                 "/api/v1/chat",
-                json={"user_id": test_user_id, "message": message},
+                json={"message": message},
             )
             assert response.status_code == 200
 
@@ -330,7 +276,6 @@ class TestTaskSync:
         # Verify all tasks are present
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -346,14 +291,10 @@ class TestTaskSync:
 
         Test Case: Priority changes should reflect in task list.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create task with default priority
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Priority sync test"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -365,7 +306,6 @@ class TestTaskSync:
         # Verify default priority
         initial_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         initial_task = initial_response.json()["data"]
         assert initial_task.get("priority") == "medium", "Default should be medium"
@@ -374,7 +314,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Set priority of 'Priority sync test' to high",
             },
         )
@@ -387,12 +326,11 @@ class TestTaskSync:
         # Verify priority was updated
         updated_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         updated_task = updated_response.json()["data"]
         assert updated_task.get("priority") == "high", "Priority should be high"
 
-        print(f"Priority sync: medium -> high")
+        print("Priority sync: medium -> high")
 
     @pytest.mark.asyncio
     async def test_tags_sync(self, test_client: AsyncClient):
@@ -400,14 +338,10 @@ class TestTaskSync:
 
         Test Case: Tag changes should reflect in task list.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Tags sync test", "tags": []},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code != 200:
@@ -419,7 +353,6 @@ class TestTaskSync:
         # Verify no tags
         initial_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         initial_task = initial_response.json()["data"]
         assert len(initial_task.get("tags", [])) == 0, "Should start with no tags"
@@ -428,7 +361,6 @@ class TestTaskSync:
         chat_response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add tags Work, Urgent to 'Tags sync test'",
             },
         )
@@ -441,7 +373,6 @@ class TestTaskSync:
         # Verify tags were added
         updated_response = await test_client.get(
             f"/api/v1/tasks/{task_id}",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         updated_task = updated_response.json()["data"]
         tags = updated_task.get("tags", [])
@@ -449,28 +380,3 @@ class TestTaskSync:
         assert "Urgent" in tags, "Urgent tag should be present"
 
         print(f"Tags sync: [] -> {tags}")
-
-
-# Run tests if executed directly
-async def main() -> None:
-    """Run all task sync tests."""
-    print("Running Task List Sync Tests...")
-
-    async with AsyncClient(base_url=BASE_URL, transport=ASGITransport()) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        test_instance = TestTaskSync()
-
-        await test_instance.test_task_list_refreshes_after_add(client)
-        await test_instance.test_task_list_refreshes_after_complete(client)
-        await test_instance.test_task_list_refreshes_after_update(client)
-        await test_instance.test_task_list_refreshes_after_delete(client)
-        await test_instance.test_no_full_page_reload_required(client)
-        await test_instance.test_multiple_operations_sync(client)
-        await test_instance.test_priority_sync(client)
-        await test_instance.test_tags_sync(client)
-
-    print("All task sync tests passed!")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

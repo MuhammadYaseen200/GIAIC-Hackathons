@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test script to verify task completion fix."""
 
-import subprocess
 import json
+
 import requests
 
 # Login to get token

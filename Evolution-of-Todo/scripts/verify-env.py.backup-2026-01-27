@@ -1,0 +1,361 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Environment Validation Script
+Validates development environment configuration before operations.
+
+Exit Codes:
+    0 - All validations passed
+    2 - Validation failures detected (fail-fast)
+    1 - Script execution error
+"""
+
+import os
+import sys
+import subprocess
+import re
+from urllib.parse import urlparse
+from pathlib import Path
+
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    # Load from root .env file
+    root_dir = Path(__file__).parent.parent
+    env_path = root_dir / '.env'
+    if env_path.exists():
+        load_dotenv(env_path)
+except ImportError:
+    # python-dotenv not available, expect env vars to be set externally
+    pass
+
+# Fix Windows console encoding for Unicode characters
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
+
+def check_env_var(name, required=True):
+    """
+    Check if environment variable exists and has a value.
+
+    Args:
+        name: Environment variable name
+        required: Whether the variable is required
+
+    Returns:
+        tuple: (bool success, str error_message)
+    """
+    value = os.getenv(name)
+    if required and not value:
+        return False, f"Missing required environment variable: {name}"
+    return True, None
+
+
+def check_url_format(url_str, var_name="DATABASE_URL"):
+    """
+    Validate URL format for database connection strings.
+
+    Args:
+        url_str: URL string to validate
+        var_name: Variable name for error messages
+
+    Returns:
+        tuple: (bool success, str error_message)
+    """
+    if not url_str:
+        return False, f"{var_name} is empty"
+
+    try:
+        parsed = urlparse(url_str)
+
+        # Check for PostgreSQL URL
+        if var_name == "DATABASE_URL":
+            if parsed.scheme not in ['postgres', 'postgresql']:
+                return False, f"{var_name} must be a PostgreSQL URL (postgres:// or postgresql://)"
+
+            if not parsed.netloc:
+                return False, f"{var_name} missing host/netloc"
+
+        return True, None
+    except Exception as e:
+        return False, f"{var_name} invalid format: {str(e)}"
+
+
+def check_version(command, min_version_str):
+    """
+    Check if a command's version meets minimum requirement.
+
+    Args:
+        command: Command to check (e.g., 'python3', 'node')
+        min_version_str: Minimum version string (e.g., '3.13', '18.0')
+
+    Returns:
+        tuple: (bool success, str error_message, str current_version)
+    """
+    try:
+        # Run command --version
+        result = subprocess.run(
+            [command, '--version'],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        if result.returncode != 0:
+            return False, f"{command} version check failed", None
+
+        # Extract version number from output
+        version_output = result.stdout + result.stderr
+
+        # Match version patterns like "3.13.0", "v18.20.0", etc.
+        version_match = re.search(r'(\d+)\.(\d+)\.?(\d+)?', version_output)
+
+        if not version_match:
+            return False, f"Could not parse {command} version from: {version_output[:50]}", None
+
+        # Parse current version
+        major = int(version_match.group(1))
+        minor = int(version_match.group(2))
+        patch = int(version_match.group(3) or 0)
+        current_version = f"{major}.{minor}.{patch}"
+
+        # Parse minimum version
+        min_parts = min_version_str.split('.')
+        min_major = int(min_parts[0])
+        min_minor = int(min_parts[1]) if len(min_parts) > 1 else 0
+
+        # Compare versions
+        if major < min_major or (major == min_major and minor < min_minor):
+            return False, f"{command} version {current_version} < {min_version_str} (required)", current_version
+
+        return True, None, current_version
+
+    except FileNotFoundError:
+        return False, f"{command} not found in PATH", None
+    except subprocess.TimeoutExpired:
+        return False, f"{command} version check timed out", None
+    except Exception as e:
+        return False, f"{command} version check error: {str(e)}", None
+
+
+def check_cli_tools():
+    """
+    Check if required CLI tools are installed and accessible.
+
+    Returns:
+        list: List of (tool_name, success, error_message) tuples
+    """
+    tools = ['pnpm', 'uv', 'git']
+    results = []
+
+    for tool in tools:
+        try:
+            # Use 'where' on Windows, 'which' on Unix
+            which_cmd = 'where' if sys.platform == 'win32' else 'which'
+            result = subprocess.run(
+                [which_cmd, tool],
+                capture_output=True,
+                timeout=5
+            )
+
+            if result.returncode == 0:
+                results.append((tool, True, None))
+            else:
+                results.append((tool, False, f"{tool} not found in PATH"))
+
+        except Exception as e:
+            results.append((tool, False, f"{tool} check error: {str(e)}"))
+
+    return results
+
+
+def check_database_connectivity(database_url):
+    """
+    Check if database is reachable (basic connectivity test).
+
+    Args:
+        database_url: PostgreSQL connection URL
+
+    Returns:
+        tuple: (bool success, str error_message)
+    """
+    if not database_url:
+        return False, "DATABASE_URL not set"
+
+    try:
+        # Try to import psycopg2 (optional - graceful fallback)
+        try:
+            import psycopg2
+
+            # Attempt connection with 5-second timeout
+            conn = psycopg2.connect(database_url, connect_timeout=5)
+            conn.close()
+            return True, None
+
+        except ImportError:
+            # psycopg2 not installed - skip database connectivity check
+            return True, "⚠ psycopg2 not installed - skipping database connectivity check"
+
+    except Exception as e:
+        error_msg = str(e)
+        # Check if it's a network/connection error vs bad credentials
+        if 'timeout' in error_msg.lower() or 'connection' in error_msg.lower():
+            return False, f"Database unreachable: {error_msg}"
+        else:
+            return False, f"Database connection error: {error_msg}"
+
+
+def main():
+    """Main validation routine - collects all errors before failing."""
+    errors = []
+    warnings = []
+
+    print("=" * 60)
+    print("ENVIRONMENT VALIDATION")
+    print("=" * 60)
+    print()
+
+    # Check 1: Environment Variables
+    print("[1/5] Checking environment variables...")
+
+    required_env_vars = [
+        'DATABASE_URL',
+        'OPENROUTER_API_KEY',
+        'NEXTAUTH_SECRET'
+    ]
+
+    for var in required_env_vars:
+        success, error = check_env_var(var, required=True)
+        if not success:
+            errors.append((var, error, "Copy .env.example to .env and fill in values"))
+
+    # Check DATABASE_URL format
+    database_url = os.getenv('DATABASE_URL')
+    if database_url:
+        success, error = check_url_format(database_url, 'DATABASE_URL')
+        if not success:
+            errors.append(('DATABASE_URL format', error, "Ensure DATABASE_URL is a valid PostgreSQL URL"))
+
+    print(f"   {'✓' if len([e for e in errors if 'DATABASE_URL' in e[0] or any(v in e[0] for v in required_env_vars)]) == 0 else '✗'} Environment variables")
+    print()
+
+    # Check 2: Runtime Versions
+    print("[2/5] Checking runtime versions...")
+
+    python_ok, python_err, python_ver = check_version('python3', '3.13')
+    if not python_ok:
+        errors.append(('Python version', python_err or 'Check failed', "Install Python 3.13+ from python.org"))
+    else:
+        print(f"   ✓ Python {python_ver}")
+
+    node_ok, node_err, node_ver = check_version('node', '18.0')
+    if not node_ok:
+        errors.append(('Node.js version', node_err or 'Check failed', "Install Node.js 18+ from nodejs.org"))
+    else:
+        print(f"   ✓ Node.js {node_ver}")
+
+    print()
+
+    # Check 3: CLI Tools
+    print("[3/5] Checking CLI tools...")
+
+    tool_results = check_cli_tools()
+    for tool, success, error in tool_results:
+        if success:
+            print(f"   ✓ {tool}")
+        else:
+            print(f"   ✗ {tool}")
+            if tool == 'pnpm':
+                fix = "npm install -g pnpm"
+            elif tool == 'uv':
+                fix = "Install uv from https://astral.sh/uv"
+            elif tool == 'git':
+                fix = "Install Git from git-scm.com"
+            else:
+                fix = f"Install {tool}"
+            errors.append((f"{tool} CLI", error, fix))
+
+    print()
+
+    # Check 4: Database Connectivity
+    print("[4/5] Checking database connectivity...")
+
+    if database_url:
+        db_ok, db_err = check_database_connectivity(database_url)
+        if not db_ok:
+            errors.append(('Database connectivity', db_err, "Check DATABASE_URL and network connection"))
+            print(f"   ✗ Database unreachable")
+        elif db_err and '⚠' in db_err:
+            # Warning, not error
+            warnings.append(db_err)
+            print(f"   ⚠ {db_err}")
+        else:
+            print(f"   ✓ Database reachable")
+    else:
+        errors.append(('Database connectivity', 'DATABASE_URL not set', "Set DATABASE_URL in .env file"))
+        print(f"   ✗ DATABASE_URL not set")
+
+    print()
+
+    # Check 5: Project Structure
+    print("[5/5] Checking project structure...")
+
+    project_root = Path(__file__).parent.parent
+    required_dirs = ['phase-3-chatbot/frontend', 'phase-3-chatbot/backend']
+
+    for dir_path in required_dirs:
+        full_path = project_root / dir_path
+        if full_path.exists():
+            print(f"   ✓ {dir_path}/")
+        else:
+            warnings.append(f"Directory not found: {dir_path}/")
+            print(f"   ⚠ {dir_path}/ not found")
+
+    print()
+    print("=" * 60)
+
+    # Display results
+    if warnings:
+        print()
+        print("WARNINGS:")
+        for warning in warnings:
+            print(f"  ⚠ {warning}")
+
+    if errors:
+        print()
+        print("❌ VALIDATION FAILED")
+        print()
+        print(f"Issues found ({len(errors)}):")
+        print()
+
+        for i, (category, error, fix) in enumerate(errors, 1):
+            print(f"  {i}. {category}")
+            print(f"     Error: {error}")
+            print(f"     Fix: {fix}")
+            print()
+
+        print("Blocking all operations until fixed (fail-fast)")
+        print("=" * 60)
+        sys.exit(2)  # Exit code 2 = validation failure
+
+    print()
+    print("✅ All validations passed")
+    print("=" * 60)
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nValidation interrupted by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n\n❌ Validation script error: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)

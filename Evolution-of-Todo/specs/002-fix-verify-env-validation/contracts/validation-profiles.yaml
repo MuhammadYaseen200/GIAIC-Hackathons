@@ -22,7 +22,7 @@ profiles:
 
       - name: SECRET_KEY
         format: "string (32+ characters, hex recommended)"
-        example: "4UCedWq7LD7y3Rg-euQgJ8ZPqTzrgRyp14GhXIJAKx8"
+        example: "your-secret-key-here-min-32-chars-long-example-placeholder"
         validation:
           - min_length: 32
         fix_hint: "Generate with: openssl rand -hex 32"
@@ -65,7 +65,7 @@ profiles:
 
       - name: SECRET_KEY
         format: "string (32+ characters, hex recommended)"
-        example: "4UCedWq7LD7y3Rg-euQgJ8ZPqTzrgRyp14GhXIJAKx8"
+        example: "your-secret-key-here-min-32-chars-long-example-placeholder"
         validation:
           - min_length: 32
         fix_hint: "Generate with: openssl rand -hex 32"

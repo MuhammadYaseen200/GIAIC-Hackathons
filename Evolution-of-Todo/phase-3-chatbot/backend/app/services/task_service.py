@@ -11,8 +11,8 @@ Ported from Phase 1 with database persistence and multi-tenancy support.
 Extended in Phase 3 with priority, tags, and search capabilities per ADR-011.
 """
 
-from datetime import datetime
-from typing import Any, Literal
+from datetime import UTC, datetime
+from typing import Literal
 from uuid import UUID
 
 import sqlalchemy as sa
@@ -22,15 +22,14 @@ from sqlmodel import select
 
 from app.models.task import Priority, Task
 
-
 # Constants for tag validation per ADR-011
 MAX_TAGS = 10
 MAX_TAG_LENGTH = 50
 
 
 def utc_now() -> datetime:
-    """Return current UTC time as timezone-naive datetime for PostgreSQL compatibility."""
-    return datetime.utcnow()
+    """Return current UTC time as timezone-aware datetime."""
+    return datetime.now(UTC)
 
 
 class TaskService:

@@ -22,11 +22,10 @@ from typing import Any, Literal
 from uuid import UUID
 
 from mcp.types import TextContent, Tool
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.task import Priority
 from app.services.task_service import TaskService
-from sqlalchemy.ext.asyncio import AsyncSession
-
 
 # =============================================================================
 # Tool Definitions (T-310)

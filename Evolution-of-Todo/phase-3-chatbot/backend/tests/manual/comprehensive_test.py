@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Comprehensive Phase 2 backend endpoint test suite."""
 
-import json
-import requests
 from datetime import datetime
+
+import requests
 
 BASE_URL = "http://localhost:8000/api/v1"
 
@@ -38,7 +38,7 @@ if login_resp.status_code == 200:
     login_data = login_resp.json()
     token = login_data['data']['token']
     test_data['user_id'] = login_data['data']['user']['id']
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  User ID: {test_data['user_id']}")
     print(f"  Token: {token[:30]}...")
 else:
@@ -62,7 +62,7 @@ print(f"  Status: {create_resp.status_code}")
 if create_resp.status_code == 201:
     task = create_resp.json()['data']
     test_data['task_ids'].append(task['id'])
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Task ID: {task['id']}")
     print(f"  Title: {task['title']}")
     print(f"  Completed: {task['completed']}")
@@ -81,7 +81,7 @@ print(f"  Status: {list_resp.status_code}")
 if list_resp.status_code == 200:
     tasks_data = list_resp.json()
     task_count = len(tasks_data['data'])
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Total tasks: {task_count}")
     print(f"  Meta: {tasks_data['meta']}")
 else:
@@ -104,7 +104,7 @@ print(f"  Status: {toggle_resp.status_code}")
 if toggle_resp.status_code == 200:
     task = toggle_resp.json()['data']
     is_completed = task['completed']
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Task completed: {is_completed}")
     print(f"  Updated at: {task['updated_at']}")
 
@@ -138,7 +138,7 @@ update_resp = requests.put(
 print(f"  Status: {update_resp.status_code}")
 if update_resp.status_code == 200:
     task = update_resp.json()['data']
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  New title: {task['title']}")
     print(f"  New description: {task['description']}")
 else:
@@ -155,7 +155,7 @@ get_resp = requests.get(f"{BASE_URL}/tasks/{task_id}", headers=headers)
 print(f"  Status: {get_resp.status_code}")
 if get_resp.status_code == 200:
     task = get_resp.json()['data']
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Task ID: {task['id']}")
     print(f"  Title: {task['title']}")
 else:
@@ -196,14 +196,14 @@ delete_resp = requests.delete(
 print(f"  Status: {delete_resp.status_code}")
 if delete_resp.status_code == 200:
     result = delete_resp.json()
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Deleted task ID: {result['data']['id']}")
     print(f"  Deleted flag: {result['data']['deleted']}")
 
     # Verify it's gone
     verify_resp = requests.get(f"{BASE_URL}/tasks/{task_to_delete}", headers=headers)
     if verify_resp.status_code == 404:
-        print(f"  Verified: Task no longer accessible")
+        print("  Verified: Task no longer accessible")
     else:
         print(f"  Warning: Task still accessible ({verify_resp.status_code})")
 else:
@@ -220,10 +220,10 @@ list_resp = requests.get(f"{BASE_URL}/tasks", headers=headers)
 if list_resp.status_code == 200:
     final_count = len(list_resp.json()['data'])
     print(f"  Status: {list_resp.status_code}")
-    print(f"  Result: PASS")
+    print("  Result: PASS")
     print(f"  Final task count: {final_count}")
 else:
-    print(f"  Result: FAIL")
+    print("  Result: FAIL")
     exit(1)
 print()
 

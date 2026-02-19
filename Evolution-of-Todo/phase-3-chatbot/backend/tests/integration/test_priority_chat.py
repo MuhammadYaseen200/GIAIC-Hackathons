@@ -9,25 +9,8 @@ ADR References:
 - ADR-011 (Task Schema Extension) - Priority enum and handling
 """
 
-import asyncio
-from uuid import uuid4
-
 import pytest
-import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
-
-# Test configuration
-BASE_URL = "http://localhost:8000"
-TEST_TOKEN = "test_jwt_token_for_priority_tests"
-
-
-@pytest_asyncio.fixture
-async def test_client():
-    """Create async test client with auth token."""
-    transport = ASGITransport()
-    async with AsyncClient(base_url=BASE_URL, transport=transport) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        yield client
+from httpx import AsyncClient
 
 
 class TestPriorityChat:
@@ -40,13 +23,9 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 1: "Add a high priority task called Submit report"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add a high priority task called Submit report",
             },
         )
@@ -59,7 +38,6 @@ class TestPriorityChat:
         # Verify task was created with high priority
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -81,13 +59,9 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 3: "Create task: Buy groceries with medium priority"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Create task: Buy groceries with medium priority",
             },
         )
@@ -96,7 +70,6 @@ class TestPriorityChat:
 
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -114,13 +87,9 @@ class TestPriorityChat:
 
         Test Case: US-308 - Set Task Priority via Chat
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add low priority task: Read book",
             },
         )
@@ -129,7 +98,6 @@ class TestPriorityChat:
 
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -148,14 +116,10 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 2: "Set the priority of 'Submit report' to low"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # First create a task
         create_response = await test_client.post(
             "/api/v1/tasks",
             json={"title": "Submit report", "priority": "high"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if create_response.status_code == 200:
@@ -167,7 +131,6 @@ class TestPriorityChat:
                 chat_response = await test_client.post(
                     "/api/v1/chat",
                     json={
-                        "user_id": test_user_id,
                         "message": "Set the priority of 'Submit report' to low",
                     },
                 )
@@ -177,7 +140,6 @@ class TestPriorityChat:
                 # Verify priority was updated
                 task_response = await test_client.get(
                     f"/api/v1/tasks/{task_id}",
-                    headers={"Authorization": f"Bearer {TEST_TOKEN}"},
                 )
 
                 if task_response.status_code == 200:
@@ -192,31 +154,24 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 5: "Show my high priority tasks"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         # Create tasks with different priorities
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "High Priority Task 1", "priority": "high"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "High Priority Task 2", "priority": "high"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
         await test_client.post(
             "/api/v1/tasks",
             json={"title": "Low Priority Task", "priority": "low"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         # Filter by high priority via chat
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Show my high priority tasks",
             },
         )
@@ -231,7 +186,6 @@ class TestPriorityChat:
         tasks_response = await test_client.get(
             "/api/v1/tasks",
             params={"priority": "high"},
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -247,13 +201,9 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 4: Tasks without specified priority default to medium.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add task: Default priority task",
             },
         )
@@ -262,7 +212,6 @@ class TestPriorityChat:
 
         tasks_response = await test_client.get(
             "/api/v1/tasks",
-            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
         )
 
         if tasks_response.status_code == 200:
@@ -281,13 +230,9 @@ class TestPriorityChat:
         Test Case: US-308 - Set Task Priority via Chat
         Acceptance Scenario 6: Invalid priority like "urgent" prompts clarification.
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         response = await test_client.post(
             "/api/v1/chat",
             json={
-                "user_id": test_user_id,
                 "message": "Add urgent priority task: Urgent meeting",
             },
         )
@@ -310,9 +255,6 @@ class TestPriorityChat:
 
         Test phrases: "urgent", "important", "not important"
         """
-        test_client.cookies.set("auth-token", TEST_TOKEN)
-        test_user_id = str(uuid4())
-
         variations = [
             ("urgent task", "high"),
             ("important task", "high"),
@@ -323,35 +265,9 @@ class TestPriorityChat:
             response = await test_client.post(
                 "/api/v1/chat",
                 json={
-                    "user_id": test_user_id,
                     "message": f"Add {phrase}: {phrase.replace(' task', ' item')}",
                 },
             )
 
             assert response.status_code == 200
             print(f"Variation '{phrase}' processed successfully")
-
-
-# Run tests if executed directly
-async def main() -> None:
-    """Run all priority chat tests."""
-    print("Running Priority via Chat Tests...")
-
-    async with AsyncClient(base_url=BASE_URL, transport=ASGITransport()) as client:
-        client.cookies.set("auth-token", TEST_TOKEN)
-        test_instance = TestPriorityChat()
-
-        await test_instance.test_set_high_priority_on_creation(client)
-        await test_instance.test_set_medium_priority_on_creation(client)
-        await test_instance.test_set_low_priority_on_creation(client)
-        await test_instance.test_update_existing_task_priority(client)
-        await test_instance.test_filter_by_priority_high(client)
-        await test_instance.test_default_priority_is_medium(client)
-        await test_instance.test_invalid_priority_prompts_clarification(client)
-        await test_instance.test_priority_variations(client)
-
-    print("All priority chat tests passed!")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

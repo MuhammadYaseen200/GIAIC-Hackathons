@@ -7,7 +7,7 @@ and generates AI responses using OpenRouter API (OpenAI-compatible).
 import json
 import logging
 from collections.abc import AsyncIterator
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from chatkit.server import ChatKitServer
 from chatkit.store import default_generate_id
@@ -240,7 +240,7 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
 
             # Generate a message ID and timestamp
             msg_id = default_generate_id("message")
-            created_at = datetime.now(timezone.utc)
+            created_at = datetime.now(UTC)
 
             # Start the assistant message
             # Note: AssistantMessageItem requires thread_id and created_at
@@ -349,7 +349,7 @@ class TodoChatKitServer(ChatKitServer[ChatContext]):
             logger.exception("Error generating response")
             # Yield error message
             error_msg_id = default_generate_id("message")
-            error_created_at = datetime.now(timezone.utc)
+            error_created_at = datetime.now(UTC)
 
             error_item = AssistantMessageItem(
                 id=error_msg_id,

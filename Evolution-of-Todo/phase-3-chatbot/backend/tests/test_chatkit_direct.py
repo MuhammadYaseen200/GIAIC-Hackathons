@@ -1,15 +1,11 @@
 """Direct ChatKit endpoint test with detailed error tracking."""
 
 import asyncio
-import sys
-import httpx
 from uuid import uuid4
 
-# Fix UTF-8 for Windows
-if sys.platform == "win32":
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+import httpx
+
+# Note: UTF-8 wrapping removed - it breaks pytest capture mechanism
 
 
 async def test_chatkit_endpoint():
@@ -33,7 +29,7 @@ async def test_chatkit_endpoint():
         print(f"   Status: {register_response.status_code}")
 
         # Step 2: Login
-        print(f"\n2. Logging in...")
+        print("\n2. Logging in...")
         login_response = await client.post(
             f"{BASE_URL}/auth/login",
             json={"email": email, "password": password}
@@ -48,7 +44,7 @@ async def test_chatkit_endpoint():
         print(f"   ✓ Token obtained: {token[:20]}...")
 
         # Step 3: Test ChatKit root endpoint
-        print(f"\n3. Testing ChatKit root endpoint (GET)...")
+        print("\n3. Testing ChatKit root endpoint (GET)...")
         chatkit_root_response = await client.get(
             f"{BASE_URL}/chatkit/",
             headers={"Authorization": f"Bearer {token}"}
@@ -57,7 +53,7 @@ async def test_chatkit_endpoint():
         print(f"   Response: {chatkit_root_response.text[:200]}")
 
         # Step 4: Test sessions endpoint
-        print(f"\n4. Creating ChatKit session (POST /chatkit/sessions)...")
+        print("\n4. Creating ChatKit session (POST /chatkit/sessions)...")
         try:
             session_response = await client.post(
                 f"{BASE_URL}/chatkit/sessions",
@@ -72,7 +68,7 @@ async def test_chatkit_endpoint():
             print(f"   Response: {session_response.text}")
 
             if session_response.status_code == 200:
-                print(f"\n   ✓ SUCCESS! Session created")
+                print("\n   ✓ SUCCESS! Session created")
                 return True
             else:
                 print(f"\n   ✗ FAILED with status {session_response.status_code}")
