@@ -1,0 +1,927 @@
+we fist keep sure that we are working in correct directory , we strictly check the structure of project, for each phase with name according to its work, we consider each phase as a seprate project but connected and linked with each other
+
+for e.g: 
+ - every file of Phase one sholud be inside In-Memory Python Console App folder
+ - and same for rest phases folder
+<example>
+  Project - 1 Folder:  In-Memory Python Console App
+      Phase: Phase I
+      Description: In-Memory Python Console App
+      Technology Stack: Python, Claude Code, Spec-Kit Plus
+      Points: 100
+--------------------------
+  Project - 2 Folder: Full-Stack Web Application
+      Phase: Phase 2
+      Description: Full-Stack Web Application
+      Technology Stack: Next.js, FastAPI, SQLModel, Neon DB
+      Points: 150
+      Phase 1 basic and feature that can be reuse will be connect with Phase 2
+</example>
+
+
+
+
+
+
+
+
+
+
+
+Using reusable intelligence: Agents, Sub-agents, skills, (Specificatiom -> Plan -> Task -> implementation -> Documentation)
+
+Generate prompt for phase 3: 
+
+
+
+- will will ceate chatbot using OpenAi AgentSDK with chat-completion and use model gemini 
+- we will not write code for phase 3, we connect the filesby importing them, like jwe connect js or css file or next.js file via link or path
+
+The "Agents":
+- always use Command Team Agent: qa-oversee, loop-controller, imperator, path-warden 
+- always use Build Team Agent: modular-ai-architect, ux-frontend-developer, spec-architect  
+
+The "Skill Set":
+- always use A. AI & MCP Construction: building-mcp-servers, scaffolding-openai-agents, streaming-llm-responses, building-chat-interfaces
+- always use B. Safety & Quality: deployment-preflight-check:, security-scan, env-validator, spec-driven-development
+
+"MCP":
+- always use mcps: context7, code-search, postgres
+
+add this in prompt for claude to use "skill-creator" when need, context7 mcp for doc, framework, package,
+
+use agents, skills and mcp in prompt for claude from mention below
+
+and give claude a little few free hand on subagents, skill and mcp tu use by it self by adding this line "Use mcp, skills, and agenst" which are required and needed"
+
+
+
+
+we work in this way :
+ we plan with intelligence which unlock other path and esae in building the project  and then scale it up 
+
+the hackathon hase different phases and each phase will done in a seprate  folder but connect with previous one with some additional and new features, which make it more complex 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<my-sub-agent-list>                                                        
+
+
+ Agents                                                                                                               │
+│ 24 agents                                                                                                            │
+│                                                                                                                                                                                                           │
+│                                                                                                                      │
+│   User agents (/home/m-y-j/.claude/agents)                                                                           │
+│   agent-specialization-architect · sonnet                                                                            │
+│   backend-builder · opus                                                                                             │
+│   content-builder · sonnet                                                                                           │
+│   demo-master · sonnet                                                                                               │
+│   devops-rag-engineer · sonnet                                                                                       │
+│   docusaurus-librarian · sonnet                                                                                      │
+│   enterprise-grade-validator · sonnet                                                                                │
+│   imperator · opus                                                                                                   │
+│   lead-architect · opus                                                                                              │
+│   loop-controller · opus                                                                                             │
+│   modular-ai-architect · opus                                                                                        │
+│   path-warden · sonnet                                                                                               │
+│   qa-overseer · opus                                                                                                 │
+│   risk-assessor · opus                                                                                               │
+│   robotics-textbook-author · sonnet                                                                                  │
+│   spec-architect · opus                                                                                              │
+│   task-orchestrator · sonnet                                                                                         │
+│   ux-frontend-developer · sonnet                                                                                     │
+│                                                                                                                      │
+│   Built-in agents (always available)                                                                                 │
+│   Bash · inherit                                                                                                     │
+│   claude-code-guide · haiku                                                                                          │
+│   Explore · haiku                                                                                                    │
+│   general-purpose · inherit                                                                                          │
+│   Plan · inherit                                                                                                     │
+│   statusline-setup · sonnet
+
+</my-sub-agent-list>
+
+
+
+
+
+<claude-skills-list>
+ Skills
+ 97 skills
+
+ Project skills (.claude/skills, .claude/commands)
+ sp.git.commit_pr · ~43 description tokens
+ sp.clarify · ~42 description tokens
+ sp.constitution · ~38 description tokens
+ sp.analyze · ~36 description tokens
+ sp.taskstoissues · ~36 description tokens
+ sp.tasks · ~28 description tokens
+ sp.plan · ~27 description tokens
+ sp.implement · ~26 description tokens
+ sp.reverse-engineer · ~26 description tokens
+ sp.specify · ~25 description tokens
+ sp.checklist · ~23 description tokens
+ sp.adr · ~23 description tokens
+ sp.phr · ~23 description tokens
+
+ User skills (~/.claude/skills)
+ fetching-library-docs · ~132 description tokens
+ qa-overseer · ~132 description tokens
+ translate-urdu · ~124 description tokens
+ generate-chapter · ~119 description tokens
+ xlsx · ~113 description tokens
+ building-mcp-servers · ~112 description tokens
+ spec-architect · ~112 description tokens
+ building-chatgpt-apps · ~111 description tokens
+ doc-coauthoring · ~111 description tokens
+ scaffolding-openai-agents · ~108 description tokens
+ frontend-design · ~104 description tokens
+ systematic-debugging · ~104 description tokens
+ researching-with-deepwiki · ~102 description tokens
+ deploying-postgres-k8s · ~99 description tokens
+ deployment-stability · ~98 description tokens
+ building-chat-interfaces · ~97 description tokens
+ building-rag-systems · ~97 description tokens
+ configuring-better-auth · ~97 description tokens
+ configuring-dapr-pubsub · ~97 description tokens
+ code-cleanliness · ~95 description tokens
+ deploying-kafka-k8s · ~95 description tokens
+ nx-monorepo · ~93 description tokens
+ scaffolding-fastapi-dapr · ~93 description tokens
+ docx · ~92 description tokens
+ building-nextjs-apps · ~91 description tokens
+ test-ui · ~90 description tokens
+ env-validator · ~89 description tokens
+ rag-ingest · ~88 description tokens
+ internal-comms · ~86 description tokens
+ algorithmic-art · ~85 description tokens
+ streaming-llm-responses · ~85 description tokens
+ styling-with-shadcn · ~85 description tokens
+ building-chat-widgets · ~84 description tokens
+ deployment-preflight-check · ~84 description tokens
+ operating-production-services · ~82 description tokens
+ security-scan · ~81 description tokens
+ browsing-with-playwright · ~80 description tokens
+ creating-skills · ~80 description tokens
+ web-artifacts-builder · ~78 description tokens
+ canvas-design · ~76 description tokens
+ working-with-spreadsheets · ~75 description tokens
+ containerizing-applications · ~74 description tokens
+ mcp-builder · ~72 description tokens
+ deploying-cloud-k8s · ~69 description tokens
+ pptx · ~69 description tokens
+ theme-factory · ~69 description tokens
+ operating-k8s-local · ~65 description tokens
+ nextjs-devtools · ~64 description tokens
+ pdf · ~64 description tokens
+ brand-guidelines · ~63 description tokens
+ slack-gif-creator · ~61 description tokens
+ skill-creator · ~60 description tokens
+ working-with-documents · ~59 description tokens
+ context-optimization · ~57 description tokens
+ installing-skill-tracker · ~56 description tokens
+ webapp-testing · ~55 description tokens
+ multi-agent-patterns · ~54 description tokens
+ memory-systems · ~53 description tokens
+ context-fundamentals · ~52 description tokens
+ context-degradation · ~51 description tokens
+ phase-progress-auditor · ~46 description tokens
+ evaluation · ~43 description tokens
+ project-context · ~43 description tokens
+ tool-design · ~41 description tokens
+ spec-driven-development · ~33 description tokens
+ phase-execution-controller · ~32 description tokens
+ session-state-manager · ~32 description tokens
+ template-selector · ~27 description tokens
+ command-orchestration · ~25 description tokens
+ review-and-judge · ~25 description tokens
+ todo-domain-expert · ~22 description tokens
+ hackathon-rules · ~20 description tokens
+ template-skill · ~19 description tokens
+ k8s-manifests-generator · ~15 description tokens
+ k8s-pod-crash-handler · ~14 description tokens
+ db-timeout-handler · ~13 description tokens
+ auto-architect · ~12 description tokens
+ build-error-handler · ~12 description tokens
+ cors-config · ~12 description tokens
+ dockerfile-generator · ~12 description tokens
+ helm-chart-generator · ~12 description tokens
+ jwt-middleware · ~12 description tokens
+ phase-workflow-runne · ~11 description tokens
+ neon-db-setup · ~9 description tokens
+</claude-skills-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hooks>
+5 hooks
+
+   1.  PreToolUse - Before tool execution
+   2.  PostToolUse - After tool execution
+   3.  PostToolUseFailure - After tool execution fails
+   4.  Notification - When notifications are sent
+   5.  UserPromptSubmit - When the user submits a prompt
+   6.  SessionStart - When a new session is started
+   7.  Stop - Right before Claude concludes its response
+   8.  SubagentStart - When a subagent (Task tool call) is started
+   9.  SubagentStop - Right before a subagent (Task tool call) concludes its response
+  10. PreCompact - Before conversation compaction
+  11. SessionEnd - When a session is ending
+  12. PermissionRequest - When a permission dialog is displayed
+  13. Setup - Repo setup hooks for init and maintenance
+  14. TeammateIdle - When a teammate is about to go idle
+  15. TaskCompleted - When a task is being marked as completed
+</hooks>
+
+
+
+
+
+
+
+
+
+
+<plugins>
+◯ frontend-design · claude-plugins-official · 183.8K installs
+     Create distinctive, production-grade frontend interfaces ...
+
+   ◯ context7 · claude-plugins-official [Community Managed] · 115.5K installs
+     Upstash Context7 MCP server for up-to-date documentation ...
+
+   ◯ code-review · claude-plugins-official · 91.9K installs
+     Automated code review for pull requests using multiple sp...
+
+   ◯ github · claude-plugins-official · 83.3K installs
+     Official GitHub MCP server for repository management. Cre...
+
+   ◯ feature-dev · claude-plugins-official · 80.6K installs
+     Comprehensive feature development workflow with specializ...
+
+   ◯ code-simplifier · claude-plugins-official · 73.4K installs
+     Agent that simplifies and refines code for clarity, consi...
+
+   ◯ superpowers · claude-plugins-official · 72.1K installs
+     Superpowers teaches Claude brainstorming, subagent driven...
+
+   ◯ ralph-loop · claude-plugins-official · 67.6K installs
+     Interactive self-referential AI loops for iterative devel...
+
+   ◯ typescript-lsp · claude-plugins-official · 61.8K installs
+     TypeScript/JavaScript language server for enhanced code i...
+
+   ◯ playwright · claude-plugins-official · 60.4K installs
+     Browser automation and end-to-end testing MCP server by M...
+
+   ◯ commit-commands · claude-plugins-official · 53K installs
+     Commands for git commit workflows including commit, push,...
+
+   ◯ serena · claude-plugins-official [Community Managed] · 47.4K installs
+     Semantic code analysis MCP server providing intelligent c...
+
+   ◯ security-guidance · claude-plugins-official · 47.3K installs
+     Security reminder hook that warns about potential securit...
+
+   ◯ pr-review-toolkit · claude-plugins-official · 35.7K installs
+     Comprehensive PR review agents specializing in comments, ...
+
+   ◯ pyright-lsp · claude-plugins-official · 32.2K installs
+     Python language server (Pyright) for type checking and co...
+  
+   ◯ figma · claude-plugins-official · 31.9K installs
+     Figma design platform integration. Access design files, e...
+
+   ◯ supabase · claude-plugins-official · 31.7K installs
+     Supabase MCP integration for database operations, authent...
+
+   ◯ claude-md-management · claude-plugins-official · 28.9K installs
+     Tools to maintain and improve CLAUDE.md files - audit qua...
+
+   ◯ agent-sdk-dev · claude-plugins-official · 27.6K installs
+     Development kit for working with the Claude Agent SDK
+
+   ◯ atlassian · claude-plugins-official · 26.9K installs
+     Connect to Atlassian products including Jira and Confluen...
+
+   ◯ plugin-dev · claude-plugins-official · 21.7K installs
+     Comprehensive toolkit for developing Claude Code plugins....
+
+   ◯ explanatory-output-style · claude-plugins-official · 21.6K installs
+     Adds educational insights about implementation choices an...
+
+   ◯ greptile · claude-plugins-official · 20.2K installs
+     AI-powered codebase search and understanding. Query your ...
+
+   ◯ claude-code-setup · claude-plugins-official · 19.5K installs
+     Analyze codebases and recommend tailored Claude Code auto...
+
+   ◯ Notion · claude-plugins-official · 18.7K installs
+     Notion workspace integration. Search pages, create and up...
+
+   ◯ hookify · claude-plugins-official · 18.5K installs
+     Easily create custom hooks to prevent unwanted behaviors ...
+
+   ◯ linear · claude-plugins-official · 15.7K installs
+     Linear issue tracking integration. Create issues, manage ...
+
+   ◯ vercel · claude-plugins-official · 15.5K installs
+     Vercel deployment platform integration. Manage deployment...
+
+   ◯ learning-output-style · claude-plugins-official · 14.5K installs
+     Interactive learning mode that requests meaningful code c...
+
+   ◯ slack · claude-plugins-official · 12.8K installs
+     Slack workspace integration. Search messages, access chan...
+
+   ◯ sentry · claude-plugins-official · 12.6K installs
+     Sentry error monitoring integration. Access error reports...
+
+   ◯ gopls-lsp · claude-plugins-official · 12.2K installs
+     Go language server for code intelligence and refactoring
+
+   ◯ csharp-lsp · claude-plugins-official · 11.7K installs
+     C# language server for code intelligence
+
+   ◯ gitlab · claude-plugins-official · 10.7K installs
+     GitLab DevOps platform integration. Manage repositories, ...
+
+   ◯ rust-analyzer-lsp · claude-plugins-official · 10.6K installs
+     Rust language server for code intelligence and analysis
+
+   ◯ stripe · claude-plugins-official · 10.5K installs
+     Stripe development plugin for Claude
+
+   ◯ laravel-boost · claude-plugins-official · 9.6K installs
+     Laravel development toolkit MCP server. Provides intellig...
+
+   ◯ php-lsp · claude-plugins-official · 9.2K installs
+     PHP language server (Intelephense) for code intelligence
+
+   ◯ jdtls-lsp · claude-plugins-official · 9.2K installs
+     Java language server (Eclipse JDT.LS) for code intelligence
+
+  ◯ playground · claude-plugins-official · 8.4K installs
+     Creates interactive HTML playgrounds — self-contained sin...
+
+  ◯ clangd-lsp · claude-plugins-official · 8.1K installs
+     C/C++ language server (clangd) for code intelligence
+
+   ◯ swift-lsp · claude-plugins-official · 7.7K installs
+     Swift language server (SourceKit-LSP) for code intelligence
+
+   ◯ firebase · claude-plugins-official · 7.7K installs
+     Google Firebase MCP integration. Manage Firestore databas...
+
+   ◯ huggingface-skills · claude-plugins-official · 7.6K installs
+     Build, train, evaluate, and use open source AI models, da...
+
+   ◯ kotlin-lsp · claude-plugins-official · 5.3K installs
+     Kotlin language server for code intelligence
+
+   ◯ lua-lsp · claude-plugins-official · 4.8K installs
+     Lua language server for code intelligence
+
+   ◯ coderabbit · claude-plugins-official · 4.4K installs
+     Your code review partner. CodeRabbit provides external va...
+
+   ◯ asana · claude-plugins-official · 3.3K installs
+     Asana project management integration. Create and manage t...
+
+   ◯ circleback · claude-plugins-official · 3.3K installs
+     Circleback conversational context integration. Search and...
+
+   ◯ pinecone · claude-plugins-official · 3K installs
+     Pinecone vector database integration. Streamline your Pin...
+
+   ◯ posthog · claude-plugins-official · 2.3K installs
+     Connect Claude Code to your PostHog analytics platform. Q...
+
+   ◯ firecrawl · claude-plugins-official · 1.5K installs
+     Web scraping and crawling powered by Firecrawl. Turn any ...
+
+   ◯ sonatype-guide · claude-plugins-official · 931 installs
+     Sonatype Guide MCP server for software supply chain intel...
+
+</plugins>
+
+
+
+
+
+<available-mcp-to-claude>
+
+
+
+✔ connected:
+
+
+
+chrome-devtools
+
+
+
+code-search
+
+
+
+context7
+
+
+
+docker
+
+
+
+filesystem
+
+
+
+github
+
+
+
+hopx-sandbox
+
+
+
+mysql
+
+
+
+nx-mcp
+
+
+
+playwright
+
+
+
+postgres
+
+
+
+ragie
+
+
+
+scriptflow
+
+
+
+vercel-awesome-ai
+
+
+
+windows-cli
+
+
+
+
+
+
+
+✘ failed:
+
+
+
+git
+
+
+
+mcp-hfspace
+
+
+
+n8n-local
+
+
+
+Neon
+
+
+
+MCP_DOCKER
+
+
+
+mcp_server_mysql
+
+
+
+
+
+
+
+△ needs authentication:
+
+
+
+
+
+
+
+</available-mcp-to-claude>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<claude build-in slash(/) commands> 
+
+
+
+/add-dir                                Add a new working directory
+
+
+
+  /agents                                 Manage agent configurations
+
+
+
+  /chrome                                 Claude in Chrome (Beta) settings
+
+
+
+  /clear                                  Clear conversation history and free up context
+
+
+
+  /compact                                Clear conversation history but keep a summary in context.
+
+
+
+                                          Optional: /compact [instructions for summarization]
+
+
+
+  /config                                 Open config panel
+
+
+
+  /context                                Visualize current context usage as a colored grid
+
+
+
+  /doctor                                 Diagnose and verify your Claude Code installation and settings
+
+
+
+  /exit                                   Exit the REPL
+
+
+
+  /export                                 Export the current conversation to a file or clipboard
+
+
+
+  /extra-usage                            Configure extra usage to keep working when limits are hit
+
+
+
+  /feedback                               Submit feedback about Claude Code
+
+
+
+  /github:AssignCodingAgent (MCP)         Assign GitHub Coding Agent to multiple tasks in a GitHub
+
+
+
+                                         repository. (arguments: repo)
+
+
+
+  /github:issue_to_fix_workflow (MCP)     Create an issue for a problem and then generate a pull request
+
+
+
+                                          to fix it (arguments: owner, repo, title, description, labels,
+
+
+
+                                          assignees)
+
+
+
+  /help                                   Show help and available commands
+
+
+
+  /hooks                                  Manage hook configurations for tool events
+
+
+
+  /ide                                    Manage IDE integrations and show status
+
+
+
+  /init                                   Initialize a new CLAUDE.md file with codebase documentation
+
+
+
+  /install-github-app                     Set up Claude GitHub Actions for a repository
+
+
+
+  /install-slack-app                      Install the Claude Slack app
+
+
+
+  /login                                  Sign in with your Anthropic account
+
+
+
+  /logout                                 Sign out from your Anthropic account
+
+
+
+  /mcp                                    Manage MCP servers
+
+
+
+  /memory                                 Edit Claude memory files
+
+
+
+  /mobile                                 Show QR code to download the Claude mobile app
+
+
+
+  /model                                  Set the AI model for Claude Code
+
+
+
+  /output-style                           Set the output style directly or from a selection menu
+
+
+
+  /permissions                            Manage allow & deny tool permission rules
+
+
+
+  /plan                                   View or open the current session plan
+
+
+
+  /plugin                                 Manage Claude Code plugins
+
+
+
+  /pr-comments                            Get comments from a GitHub pull request
+
+
+
+  /privacy-settings                       View and update your privacy settings
+
+
+
+  /release-notes                          View release notes
+
+
+
+  /remote-env                             Configure the default remote environment for teleport sessions
+
+
+
+  /rename                                 Rename the current conversation
+
+
+
+  /resume                                 Resume a conversation
+
+
+
+  /review                                 Review a pull request
+
+
+
+  /rewind                                 Restore the code and/or conversation to a previous point
+
+
+
+  /security-review                        Complete a security review of the pending changes on the current branch
+
+
+
+  /skills                                 List available skills
+
+
+
+  /stats                                  Show your Claude Code usage statistics and activity
+
+
+
+  /status                                 Show Claude Code status including version, model, account, API
+
+
+
+                                          connectivity, and tool statuses
+
+
+
+  /statusline                             Set up Claude Code's status line UI
+
+
+
+  /stickers                               Order Claude Code stickers
+
+
+
+  /tasks                                  List and manage background tasks
+
+
+
+  /terminal-setup                         Install Shift+Enter key binding for newlines
+
+
+
+  /theme                                  Change the theme
+
+
+
+  /todos                                  List current todo items
+
+
+
+  /upgrade                                Upgrade to Max for higher rate limits and more Opus
+
+
+
+  /usage                                  Show plan usage limits
+
+
+
+  /vim                                    Toggle between Vim and Normal editing modes
+
+
+
+</claude build-in slash(/) commands>
+
+
+
+
+
+
+
+
+
+<specifyplus-cammands>
+
+
+
+/sp.reverse-engineer     Reverse engineer a codebase into SDD-RI artifacts (spec, plan, tasks, intelligence)                          (project)
+
+
+
+  /sp.git.commit_pr        An autonomous Git agent that intelligently executes git workflows. Your task is to intelligently executes git workflows to commit the work and create PR. (project)
+
+
+
+  /sp.taskstoissues        Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts. (project)
+
+
+
+  /sp.tasks                Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts. (project)
+
+
+
+  /sp.specify              Create or update the feature specification from a natural language feature description.                           (project)
+
+
+
+  /sp.plan                 Execute the implementation planning workflow using the plan template to generate design artifacts. (project)
+
+
+
+  /sp.phr                  Record an AI exchange as a Prompt History Record (PHR) for learning and traceability.                           (project)
+
+
+
+  /sp.implement            Execute the implementation plan by processing and executing all tasks defined in tasks.md                           (project)
+
+
+
+  /sp.constitution         Create or update the project constitution from interactive or provided principle inputs,ensuring all dependent templates stay in sync. (project)
+
+
+
+  /sp.clarify              Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec. (project)
+
+
+
+  /sp.checklist            Generate a custom checklist for the current feature based on user requirements. (project)
+
+
+
+  /sp.analyze              Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation. (project)
+
+
+
+  /sp.adr                  Review planning artifacts for architecturally significant decisions and create ADRs. (project)
+
+
+</specifyplus-cammands>
+
+
+
+
+
+
+
+
+
+
+<project-constitutio>
+
+</project-constitution>
+
+
+
+
+
+
+
+we willl add some new feature in phase 3 
+
+<new-features>
+
+</new-features>
+
+
+
+
+
+<tasks>
+
+</tasks>
+
+
+
+
+
+
+
+
+
+<claude-responce>
+
+</claude-responce>

@@ -1,0 +1,66 @@
+Read this carefully with responsiblility:
+
+we will first analyze the docs of this project to understan what we are going to build, the we read the whole and entire codebase of the past ptojects and other project, copy important things that matter, to create first mind map that hepl us to decide what we'll use in this hackathone, and then hepl us in creation of constitution
+
+Read this projest docs: @Doc-Personal-AI-Employee-Hackathon-0_ Building-Autonomous-FTEs-in-2026
+
+Personal AI Employee Hackathon 0 Building Autonomous FTEs (Full-Time Equivalent) in 2026
+
+
+Read this projest Rough planning: @Personal-AI-Employee-Hackathon-0-Rough Planning
+extraced data from experienced teachers prject show-casing 
+we learn form there mistakes and use best ideas and approach and techstacks, that they use  
+
+then read and copy
+
+from these two  directions:
+e:\M.Y\GIAIC-Hackathons\Evolution-of-Todo
+e:\M.Y\GIAIC-Hackathons\final-project-v2\Humanoid-Robots-Book 
+
+
+read the entire, scripts,all main and sub folders and files, all *.md files including readme.md, agent.md, claude.md, swarm and spawn agent-team, workflows, automatons, histories, prompts, tests, reviews, feedback, flaws, failures, success, all specs, allspec.md, all clarify.md, all plan.md, all adr.md, all task.md, all implement.md all analyze.md, all checklist.md, all reports all research and generals, read rules, laws, governanve, ai control folder   
+each entire and everythings
+
+
+copy, scripts, workflow, automations, governance, rules, law, loops, that will required in this project
+
+
+
+from these directoried read, understand and copy my prompts:
+
+E:\M.Y\GIAIC-Hackathons\Personal-AI-Employee-Hackathon-0\How-I-give-prompts
+
+  read @prompt-01 
+       1st prompt file and understand how i give prompt to gemini and chatgpt        to generate project related prompt that i that i then give to claude,             fot its understanding what input and output i want
+
+
+  read @prompt-2
+      2nd prompt file and understand how i give prompt to claude, fot its       understanding what input and output i want
+
+
+  read @resume-prompt
+     3rd prompt file and understand how i give prompt to claude, every next day to 
+     resume and continue where we left
+
+
+
+  read @You've-hit-your-limit-·reset
+     4th prompt file and understand how i give prompt to claude, after limit reset 
+
+
+and read other file like claude-dot-md and phase 3- bot- test 
+
+
+to automate my repeating patterns, mistakes, loops, we can generate reusable intelligence, skills, subagents, add MCPs, create scripts, workflows, automations, secure, validate, handle erros and debug deep dive  root and atomic cuse as much as tests Driven entirly (backend, frontend, at ui for actul user experince on browser), review and feedbak, and deliver perfectly with client and user setifaction  
+and can create setup like step back, reverce and think out of the box, and elephant in the room  you cna tell me what mistakes im am doing, i will tell you yours, how should do  here , what should, and where should do, an waht to do here, you and I will teach and guide each other during the execution to avoid again and reset the problem at a time 
+
+
+so that we can create our this time governance, control and imperator will more deep and strong tough, and not miss any place
+and everything become more transparent 
+
+
+
+and then we satrt our work, prepate structure, creat constitution for H0  and guides to fulfill and success the project delivery
+
+
+set multiple claude instance at perfect and different positions for different works parallelly and take full benefits of it 

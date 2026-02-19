@@ -1,0 +1,1045 @@
+we fist keep sure that we are working in correct directory , we strictly check the structure of project, for each phase with name according to its work, we consider each phase as a seprate project but connected and linked with each other
+
+for e.g: 
+ - every file of Phase one sholud be inside In-Memory Python Console App folder
+ - and same for rest phases folder
+<example>
+  Project - 1 Folder:  In-Memory Python Console App
+      Phase: Phase I
+      Description: In-Memory Python Console App
+      Technology Stack: Python, Claude Code, Spec-Kit Plus
+      Points: 100
+--------------------------
+  Project - 2 Folder: Full-Stack Web Application
+      Phase: Phase 2
+      Description: Full-Stack Web Application
+      Technology Stack: Next.js, FastAPI, SQLModel, Neon DB
+      Points: 150
+      Phase 1 basic and feature that can be reuse will be connect with Phase 2
+</example>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Using reusable intelligence: Agents, Sub-agents, skills, (Specificatiom -> Plan -> Task -> implementation -> Documentation) to avoid same mistakes and work likae a dumb everytime
+
+Generate prompt for phase 3: from (Specification, plan, task, implement, analyze)
+
+
+The "Agents":
+- always use Command Team Agent: qa-oversee, loop-controller, imperator, path-warden 
+- always use Build Team Agent: modular-ai-architect, ux-frontend-developer, spec-architect  
+
+The "Skill Set":
+- always use A. AI & MCP Construction: building-mcp-servers, scaffolding-openai-agents, streaming-llm-responses, building-chat-interfaces
+- always use B. Safety & Quality: deployment-preflight-check:, security-scan, env-validator, spec-driven-development
+
+"MCP":
+- always use mcps: context7, code-search, postgres
+
+add this in prompt for claude to use "skill-creator" when need, context7 mcp for doc, framework, package,
+
+use agents, skills and mcp in prompt for claude from mention below
+
+and give claude a little few free hand on subagents, skill and mcp tu use by it self by adding this line "Use mcp, skills, and agenst" which are required and needed"
+
+
+
+
+
+we work in this way :
+ we plan with intelligence which unlock other path and esae in building the project  and then scale it up 
+
+the hackathon hase different phases and each phase will done in a seprate  folder but connect with previous one with some additional and new features, which make it more complex 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<my-sub-agent-list>                                                        
+
+ ux-frontend-developer · sonnet                                                                                     │
+
+│   lead-architect · opus                                                                                              │
+
+│   devops-rag-engineer · sonnet                                                                                       │
+
+│   backend-builder · opus                                                                                             │
+
+│   task-orchestrator · sonnet                                                                                         │
+
+│   spec-architect · opus                                                                                              │
+
+│   robotics-textbook-author · sonnet                                                                                  │
+
+│   qa-overseer · opus                                                                                                 │
+
+│   path-warden · sonnet                                                                                               │
+
+│   modular-ai-architect · opus                                                                                        │
+
+│   loop-controller · opus                                                                                             │
+
+│   imperator · opus                                                                                                   │
+
+│   enterprise-grade-validator · sonnet                                                                                │
+
+│   docusaurus-librarian · sonnet                                                                                      │
+
+│   agent-specialization-architect · sonnet                                                                            │
+
+│   content-builder · sonnet                                                                                           │
+
+│                                                                                                                      │
+
+│   Built-in agents (always available)                                                                                 │
+
+│   general-purpose · sonnet                                                                                           │
+
+│   statusline-setup · sonnet                                                                                          │
+
+│   Explore · haiku                                                                                                    │
+
+│   Plan · inherit                                                                                                     │
+
+│   claude-code-guide · haiku
+
+</my-sub-agent-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<claude-skills-list>
+
+  Skills
+
+ 84 skills
+
+
+
+ User skills (C:\Users\PCW\.claude\skills)
+
+ algorithmic-art · ~4.9k tokens
+
+ auto-architect · ~1.4k tokens
+
+ brand-guidelines · ~496 tokens
+
+ browsing-with-playwright · ~1.2k tokens
+
+ build-error-handler · ~1.3k tokens
+
+ building-chat-interfaces · ~2.4k tokens
+
+ building-chat-widgets · ~2.3k tokens
+
+ building-chatgpt-apps · ~3.2k tokens
+
+ building-mcp-servers · ~1.3k tokens
+
+ building-nextjs-apps · ~1.8k tokens
+
+ building-rag-systems · ~2.7k tokens
+
+ canvas-design · ~2.9k tokens
+
+ code-cleanliness · ~1.0k tokens
+
+ command-orchestration · ~122 tokens
+
+ configuring-better-auth · ~1.8k tokens
+
+ configuring-dapr-pubsub · ~2.5k tokens
+
+ containerizing-applications · ~1.9k tokens
+
+ context-degradation · ~3.9k tokens
+
+ context-fundamentals · ~3.0k tokens
+
+ context-optimization · ~2.1k tokens
+
+ cors-config · ~897 tokens
+
+ creating-skills · ~2.7k tokens
+
+ db-timeout-handler · ~1.1k tokens
+
+ deploying-cloud-k8s · ~2.1k tokens
+
+ deploying-kafka-k8s · ~1.8k tokens
+
+ deploying-postgres-k8s · ~2.0k tokens
+
+ deployment-preflight-check · ~751 tokens
+
+ deployment-stability · ~885 tokens
+
+ doc-coauthoring · ~3.9k tokens
+
+ dockerfile-generator · ~1.4k tokens
+
+ docx · ~2.5k tokens
+
+ env-validator · ~611 tokens
+
+ evaluation · ~2.6k tokens
+
+ fetching-library-docs · ~1.5k tokens
+
+ frontend-design · ~999 tokens
+
+ generate-chapter · ~2.3k tokens
+
+ hackathon-rules · ~140 tokens
+
+ helm-chart-generator · ~1.9k tokens
+
+ installing-skill-tracker · ~272 tokens
+
+ internal-comms · ~282 tokens
+
+ jwt-middleware · ~1.1k tokens
+
+ k8s-manifests-generator · ~1.6k tokens
+
+ k8s-pod-crash-handler · ~1.3k tokens
+
+ mcp-builder · ~2.2k tokens
+
+ memory-systems · ~3.2k tokens
+
+ multi-agent-patterns · ~3.6k tokens
+
+ neon-db-setup · ~721 tokens
+
+ nextjs-devtools · ~519 tokens
+
+ nx-monorepo · ~1.9k tokens
+
+ operating-k8s-local · ~1.6k tokens
+
+ operating-production-services · ~1.2k tokens
+
+ pdf · ~1.8k tokens
+
+ phase-execution-controller · ~241 tokens
+
+ phase-progress-auditor · ~242 tokens
+
+ phase-workflow-runner · ~394 tokens
+
+ pptx · ~6.4k tokens
+
+ project-context · ~218 tokens
+
+ qa-overseer · ~2.0k tokens
+
+ rag-ingest · ~954 tokens
+
+ researching-with-deepwiki · ~1.2k tokens
+
+ review-and-judge · ~118 tokens
+
+ scaffolding-fastapi-dapr · ~2.2k tokens
+
+ scaffolding-openai-agents · ~3.3k tokens
+
+ security-scan · ~607 tokens
+
+ session-state-manager · ~763 tokens
+
+ skill-creator · ~4.4k tokens
+
+ slack-gif-creator · ~1.9k tokens
+
+ spec-architect · ~1.5k tokens
+
+ spec-driven-development · ~162 tokens
+
+ streaming-llm-responses · ~2.0k tokens
+
+ styling-with-shadcn · ~2.0k tokens
+
+ systematic-debugging · ~1.4k tokens
+
+ template-skill · ~8 tokens
+
+ template-selector · ~110 tokens
+
+ test-ui · ~1.3k tokens
+
+ theme-factory · ~708 tokens
+
+ todo-domain-expert · ~122 tokens
+
+ tool-design · ~3.2k tokens
+
+ translate-urdu · ~1.8k tokens
+
+ web-artifacts-builder · ~691 tokens
+
+ webapp-testing · ~916 tokens
+
+ working-with-documents · ~1.5k tokens
+
+ working-with-spreadsheets · ~1.3k tokens
+
+ xlsx · ~2.6k tokens
+
+</claude-skills-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<available-mcp-to-claude>
+
+✔ connected:
+
+chrome-devtools
+
+code-search
+
+context7
+
+docker
+
+filesystem
+
+github
+
+hopx-sandbox
+
+mysql
+
+nx-mcp
+
+playwright
+
+postgres
+
+ragie
+
+scriptflow
+
+vercel-awesome-ai
+
+windows-cli
+
+vercel
+
+
+
+✘ failed:
+
+git
+
+mcp-hfspace
+
+n8n-local
+
+Neon
+
+MCP_DOCKER
+
+mcp_server_mysql
+
+codex-cli
+
+gemini-cli
+
+
+△ needs authentication:
+
+
+
+</available-mcp-to-claude>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<claude build-in slash(/) commands> 
+
+/add-dir                                Add a new working directory
+
+  /agents                                 Manage agent configurations
+
+  /chrome                                 Claude in Chrome (Beta) settings
+
+  /clear                                  Clear conversation history and free up context
+
+  /compact                                Clear conversation history but keep a summary in context.
+
+                                          Optional: /compact [instructions for summarization]
+
+  /config                                 Open config panel
+
+  /context                                Visualize current context usage as a colored grid
+
+  /doctor                                 Diagnose and verify your Claude Code installation and settings
+
+  /exit                                   Exit the REPL
+
+  /export                                 Export the current conversation to a file or clipboard
+
+  /extra-usage                            Configure extra usage to keep working when limits are hit
+
+  /feedback                               Submit feedback about Claude Code
+
+  /github:AssignCodingAgent (MCP)         Assign GitHub Coding Agent to multiple tasks in a GitHub
+
+                                         repository. (arguments: repo)
+
+  /github:issue_to_fix_workflow (MCP)     Create an issue for a problem and then generate a pull request
+
+                                          to fix it (arguments: owner, repo, title, description, labels,
+
+                                          assignees)
+
+  /help                                   Show help and available commands
+
+  /hooks                                  Manage hook configurations for tool events
+
+  /ide                                    Manage IDE integrations and show status
+
+  /init                                   Initialize a new CLAUDE.md file with codebase documentation
+
+  /install-github-app                     Set up Claude GitHub Actions for a repository
+
+  /install-slack-app                      Install the Claude Slack app
+
+  /login                                  Sign in with your Anthropic account
+
+  /logout                                 Sign out from your Anthropic account
+
+  /mcp                                    Manage MCP servers
+
+  /memory                                 Edit Claude memory files
+
+  /mobile                                 Show QR code to download the Claude mobile app
+
+  /model                                  Set the AI model for Claude Code
+
+  /output-style                           Set the output style directly or from a selection menu
+
+  /permissions                            Manage allow & deny tool permission rules
+
+  /plan                                   View or open the current session plan
+
+  /plugin                                 Manage Claude Code plugins
+
+  /pr-comments                            Get comments from a GitHub pull request
+
+  /privacy-settings                       View and update your privacy settings
+
+  /release-notes                          View release notes
+
+  /remote-env                             Configure the default remote environment for teleport sessions
+
+  /rename                                 Rename the current conversation
+
+  /resume                                 Resume a conversation
+
+  /review                                 Review a pull request
+
+  /rewind                                 Restore the code and/or conversation to a previous point
+
+  /security-review                        Complete a security review of the pending changes on the current branch
+
+  /skills                                 List available skills
+
+  /stats                                  Show your Claude Code usage statistics and activity
+
+  /status                                 Show Claude Code status including version, model, account, API
+
+                                          connectivity, and tool statuses
+
+  /statusline                             Set up Claude Code's status line UI
+
+  /stickers                               Order Claude Code stickers
+
+  /tasks                                  List and manage background tasks
+
+  /terminal-setup                         Install Shift+Enter key binding for newlines
+
+  /theme                                  Change the theme
+
+  /todos                                  List current todo items
+
+  /upgrade                                Upgrade to Max for higher rate limits and more Opus
+
+  /usage                                  Show plan usage limits
+
+  /vim                                    Toggle between Vim and Normal editing modes
+
+</claude build-in slash(/) commands>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<specifyplus-cammands>
+
+/sp.reverse-engineer     Reverse engineer a codebase into SDD-RI artifacts (spec, plan, tasks, intelligence)                          (project)
+
+  /sp.git.commit_pr        An autonomous Git agent that intelligently executes git workflows. Your task is to intelligently executes git workflows to commit the work and create PR. (project)
+
+  /sp.taskstoissues        Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts. (project)
+
+  /sp.tasks                Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts. (project)
+
+  /sp.specify              Create or update the feature specification from a natural language feature description.                           (project)
+
+  /sp.plan                 Execute the implementation planning workflow using the plan template to generate design artifacts. (project)
+
+  /sp.phr                  Record an AI exchange as a Prompt History Record (PHR) for learning and traceability.                           (project)
+
+  /sp.implement            Execute the implementation plan by processing and executing all tasks defined in tasks.md                           (project)
+
+  /sp.constitution         Create or update the project constitution from interactive or provided principle inputs,ensuring all dependent templates stay in sync. (project)
+
+  /sp.clarify              Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec. (project)
+
+  /sp.checklist            Generate a custom checklist for the current feature based on user requirements. (project)
+
+  /sp.analyze              Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation. (project)
+
+  /sp.adr                  Review planning artifacts for architecturally significant decisions and create ADRs. (project)
+
+
+
+</specifyplus-cammands>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<project-constitutio>
+
+# Evolution of Todo Constitution
+
+## Project Overview
+
+**Mission**: Master Spec-Driven Development & Cloud-Native AI through iterative evolution from a Python console app to a fully-featured, Kubernetes-deployed AI chatbot.
+
+**Constraint**: No manual code writing. All code must be generated via Claude Code from approved specifications.
+
+---
+
+## Core Principles
+
+### I. Spec-Driven Development (NON-NEGOTIABLE)
+
+Every line of code must trace back to an approved specification. The workflow is immutable:
+
+1. **Specify** → Define WHAT (requirements, journeys, acceptance criteria)
+2. **Plan** → Define HOW (architecture, components, interfaces)
+3. **Tasks** → Break into ATOMIC, testable work units
+4. **Implement** → Generate code ONLY for approved tasks
+
+**Violation Response**: If code is proposed without a referenced Task ID, HALT and request specification.
+
+### II. Iterative Evolution (The Brownfield Protocol)
+
+Each phase builds on the previous. We evolve, not rewrite.
+
+- **Phase I → II**: In-memory logic moves to `backend/app/services/`
+- **Phase II → III**: REST API becomes MCP Tool provider
+- **Phase III → IV**: App containerized, Helm charts created
+- **Phase IV → V**: Monolith decoupled via Kafka/Dapr events
+
+**Pre-Phase Checklist**:
+- [ ] Backup `CLAUDE.md` and current specs
+- [ ] Verify previous phase acceptance criteria pass
+- [ ] Create migration spec before touching code
+
+### III. Test-First Mindset
+
+While not enforcing strict TDD, every feature must have:
+
+1. **Acceptance Criteria** defined in spec BEFORE implementation
+2. **Verification Steps** documented for manual testing
+3. **Automated Tests** where tooling permits (pytest, Jest)
+
+### IV. Smallest Viable Diff
+
+- Implement ONLY what the task specifies
+- No "while I'm here" refactoring
+- No premature optimization
+- No feature creep within phases
+
+### V. Intelligence Capture (PHR & ADR)
+
+Every significant interaction is recorded:
+
+- **PHR (Prompt History Record)**: Created after EVERY implementation session
+- **ADR (Architectural Decision Record)**: Created for decisions with long-term impact (framework choices, data models, API contracts)
+
+---
+
+## Technology Stack (Immutable)
+
+### Phase I: Console App
+| Layer | Technology |
+|-------|------------|
+| Runtime | Python 3.13+ |
+| Package Manager | UV |
+| AI Tooling | Claude Code, Spec-Kit Plus |
+
+### Phase II: Full-Stack Web
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 16+ (App Router) |
+| Backend | Python FastAPI |
+| ORM | SQLModel |
+| Database | Neon Serverless PostgreSQL |
+| Authentication | Better Auth (JWT) |
+
+### Phase III: AI Chatbot
+| Layer | Technology |
+|-------|------------|
+| Chat UI | OpenAI ChatKit |
+| AI Framework | OpenAI Agents SDK |
+| MCP Server | Official MCP SDK (Python) |
+| State | Stateless API + DB persistence |
+
+### Phase IV: Local Kubernetes
+| Layer | Technology |
+|-------|------------|
+| Containers | Docker (Docker Desktop) |
+| Orchestration | Kubernetes (Minikube) |
+| Package Manager | Helm Charts |
+| AIOps | kubectl-ai, Kagent, Gordon (Docker AI) |
+
+### Phase V: Cloud Deployment
+| Layer | Technology |
+|-------|------------|
+| Cloud Platform | DigitalOcean DOKS / Azure AKS / GCP GKE |
+| Event Streaming | Kafka (Redpanda/Strimzi) |
+| Distributed Runtime | Dapr |
+| CI/CD | GitHub Actions |
+
+---
+
+## Feature Progression (Scope Boundaries)
+
+### Basic Level (Phases I-III Core)
+- [x] Add Task
+- [x] Delete Task
+- [x] Update Task
+- [x] View Task List
+- [x] Mark as Complete
+
+### Intermediate Level (Phase V)
+- [ ] Priorities (high/medium/low)
+- [ ] Tags/Categories
+- [ ] Search & Filter
+- [ ] Sort Tasks
+
+### Advanced Level (Phase V)
+- [ ] Recurring Tasks
+- [ ] Due Dates & Time Reminders
+
+### Bonus Features
+- [ ] Multi-language Support (Urdu)
+- [ ] Voice Commands
+- [ ] Reusable Intelligence (Subagents/Skills)
+- [ ] Cloud-Native Blueprints
+
+---
+
+## API Design Principles
+
+### REST Endpoints (Phase II+)
+```
+GET    /api/{user_id}/tasks           → List all tasks
+POST   /api/{user_id}/tasks           → Create task
+GET    /api/{user_id}/tasks/{id}      → Get task details
+PUT    /api/{user_id}/tasks/{id}      → Update task
+DELETE /api/{user_id}/tasks/{id}      → Delete task
+PATCH  /api/{user_id}/tasks/{id}/complete → Toggle completion
+```
+
+### MCP Tools (Phase III+)
+```
+add_task(user_id, title, description?) → {task_id, status, title}
+list_tasks(user_id, status?) → [{id, title, completed, ...}]
+complete_task(user_id, task_id) → {task_id, status, title}
+delete_task(user_id, task_id) → {task_id, status, title}
+update_task(user_id, task_id, title?, description?) → {task_id, status, title}
+```
+
+### Chat Endpoint (Phase III+)
+```
+POST /api/{user_id}/chat
+  Body: { conversation_id?, message }
+  Response: { conversation_id, response, tool_calls[] }
+```
+
+---
+
+## Security Principles
+
+1. **No Hardcoded Secrets**: All credentials via `.env` files
+2. **JWT Verification**: Backend validates Better Auth tokens
+3. **User Isolation**: All queries scoped to authenticated `user_id`
+4. **HTTPS Only**: Production endpoints must use TLS
+
+---
+
+## Monorepo Structure
+
+```
+hackathon-todo/
+├── .specify/                    # Spec-Kit configuration
+│   ├── memory/
+│   │   └── constitution.md     # THIS FILE
+│   └── templates/              # PHR, ADR, Spec templates
+├── specs/                       # Specifications
+│   ├── overview.md
+│   ├── architecture.md
+│   ├── features/               # Feature specs
+│   ├── api/                    # API specs
+│   └── database/               # Schema specs
+├── history/                     # Records
+│   ├── prompts/                # PHR files
+│   │   ├── constitution/
+│   │   ├── general/
+│   │   └── <feature-name>/
+│   └── adr/                    # ADR files
+├── frontend/                    # Next.js app (Phase II+)
+│   └── CLAUDE.md
+├── backend/                     # FastAPI app (Phase II+)
+│   └── CLAUDE.md
+├── src/                         # Python console app (Phase I)
+├── k8s/                         # Kubernetes manifests (Phase IV+)
+├── docker-compose.yml
+├── CLAUDE.md                    # Root instructions
+└── README.md
+```
+
+---
+
+## Quality Gates
+
+### Per-Phase Acceptance
+| Phase | Gate |
+|-------|------|
+| I | All 5 basic features work in console |
+| II | REST API returns correct data; Auth works |
+| III | Chatbot executes MCP tools; State persists |
+| IV | Helm charts deploy successfully on Minikube |
+| V | Full system runs on DOKS with Kafka/Dapr |
+
+### Per-Feature Acceptance
+- [ ] Spec exists in `specs/features/`
+- [ ] Plan exists with architectural decisions
+- [ ] Tasks exist with atomic steps
+- [ ] Implementation matches spec exactly
+- [ ] Manual verification steps pass
+
+---
+
+## Agent Orchestration
+
+| Agent | Role | Model |
+|-------|------|-------|
+| lead-architect | Strategy, constitution, phase transitions | Opus |
+| spec-architect | Writing/refining specifications | Opus |
+| backend-builder | Python, FastAPI, MCP implementation | Opus |
+| ux-frontend-developer | Next.js, Tailwind, Better Auth | Sonnet |
+| devops-rag-engineer | Docker, K8s, Helm, Kafka, Dapr | Sonnet |
+| qa-overseer | Acceptance criteria validation | Opus |
+
+---
+
+## Governance
+
+1. **Constitution Supremacy**: This document supersedes all other practices
+2. **Amendments**: Require documented rationale, PHR creation, and explicit approval
+3. **Spec Hierarchy**: Constitution > Specify > Plan > Tasks
+4. **Backtracking**: Moving to a previous phase requires a new spec iteration
+
+---
+
+## Deadlines
+
+| Phase | Due Date | Status |
+|-------|----------|--------|
+| Phase I | Dec 7, 2025 | ✅ COMPLETE |
+| Phase II | Dec 14, 2025 | ✅ COMPLETE |
+| Phase III | Dec 21, 2025 | PENDING |
+| Phase IV | Jan 4, 2026 | PENDING |
+| Phase V | Jan 18, 2026 | PENDING |
+
+---
+
+## Phase Completion Log
+
+### Phase I: Console App ✅
+- **Completed**: Dec 7, 2025
+- **Deliverables**: Python CLI with in-memory task storage
+- **Location**: `phase-1-console/`
+
+### Phase II: Full-Stack Web ✅
+- **Completed**: Dec 31, 2025
+- **Deliverables**:
+  - FastAPI backend with JWT auth (`phase-2-web/backend/`)
+  - Next.js 15 frontend with App Router (`phase-2-web/frontend/`)
+  - SQLite database (dev), PostgreSQL ready (prod)
+  - 7 User Stories implemented (Register, Login, Add/View/Update/Delete/Complete Tasks)
+  - Toast notifications, loading states, error boundaries
+- **ADRs**: ADR-004 to ADR-007
+- **Tasks**: 80 tasks, all complete
+
+### Phase III: AI Chatbot (NEXT)
+- **Status**: Ready to specify
+- **Scope**: MCP Server wrapping Phase 2 REST API, OpenAI Agents SDK integration
+- **Brownfield**: Port REST endpoints to MCP Tools
+
+---
+
+**Version**: 1.1.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-31
+</project-constitution>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Recommanded-SDD-Commands>
+
+Recommended SDD Commands:
+
+  Step 1: Investigate HTTP 500 Error → Use /sp.clarify or specialized agent
+
+  /sp.clarify "Research ChatKit HTTP 500 session creation error root cause"
+  # OR use Task tool with qa-overseer/backend-builder
+
+  Step 2: Complete Missing Specs → Use /sp.specify
+
+  /sp.specify "Document MCP tools API endpoints for ChatKit integration"
+
+  Step 3: Complete Missing ADRs → Use /sp.adr
+
+  /sp.adr "OpenRouter migration from OpenAI Agents SDK"
+  /sp.adr "Custom ChatKit MCP server implementation"
+
+  Step 4: Fix Tests → Direct testing (no SDD command)
+
+  # Run tests, fix failures, repeat
+  pytest tests/
+</Recommanded-SDD-Commands>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<claude-responce>
+
+</claude-responce>
+

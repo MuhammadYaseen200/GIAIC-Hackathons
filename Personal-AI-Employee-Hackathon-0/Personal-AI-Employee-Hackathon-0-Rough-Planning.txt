@@ -1,0 +1,1692 @@
+**Personal AI Employee | Hackathon 0:**
+
+
+
+After me (Human/user) who will be the leader whch has all authorities
+<claude-sub-agents-skillls-mcps-plugins-hooks>
+- which agent Create Constitution
+- which agent Create Specs
+- which agent Create Plan
+- which agent Create create and break Tasks
+- which agent implemen
+- which agent Orchestrate
+- which agent engineer
+- which agent Create Architech
+- which agent Analyze
+- which agent Create Debug
+- which agent Create remove dublicate and unnecessary
+- which agent Create security
+- which agent Create cleanness
+- which agent Create performance
+- which agent figur out Requirements, weakness, loops hole, 
+- which agent gets votes for what and why 
+- which agent Create Summary
+- which agent Explain, 
+- which agent solve
+- which agent ask When What Why, Where, Which, How,
+- which agent Create feedbacks,
+- which agent customer support
+- which agent Create inquirer
+- which agent Create Tests
+- which agent Create REview
+- which agent Create CheckList
+- which agent Create PHR
+- which agent Create ADR
+- which agent Create PDR
+- which agent Create Approve
+</claude-sub-agents-skillls-mcps-plugins-hooks>
+
+- generate diagaram of who works how 
+mermid, hierarchy, flow, mindmap, chain and linked diagarms
+for system
+for workflows
+for setup
+for understand root cause, problems, error, bugs 
+
+- set criteria, seccess level, 
+generate tests, possible user case, edges, un expected, un usual, un normal and different types and way   
+
+
+in development alway ceck if terminal in use and port are not free, old (caches, dependencies, packages, modules), as initialized first start frontend and backend ports on terminal 
+ 
+- Test Driven Development (TDD) approach 
+
+- create system if agent failed, stuck, loop, helucinate, so we should have a way to check why fails, either its system fault, agent fault, human fault, prompt fault, 
+
+- evaluate system
+- can optimize 
+- Resuable template
+- deploy light weight system on such fre and paid platform that can suitable and handle them 
+- deploy heavy weight system on such fre and paid platform that can suitable and handle them
+- and then create connection during development to connect them all at production time easily
+
+
+- create skeleton to understand what is building
+
+
+
+
+
+- (main, root, forntend, backend, phases, projets, agents) .md file
+
+- Agents as tool 
+- Agents that verify and authenticate, fake and truth, evidences,
+- Aget workflow
+- Agentic system
+- Divide limits among every sub-agents, 
+
+- Switch default and other Agents and models  
+
+- other ai agents in parallel/partnerships and authorities/access
+- check: first -> is connected, is active, purchased, available 
+
+
+ 
+- Claude, Gemini, Codex, Manus, DeepSeek, Meta-ai, Qwen, other western and chinees free and paid model
+
+- use differnt free and shortcut safe resuurce to train system
+
+
+- Use agents like Claude, Gemini, Codex, Manus, DeepSeek, Meta-ai, Qwen, other western and chinees free and paid model to train my model, agent and system, 
+
+- always initialize Playwright, ChromeDevtool, and peppeteer during development and implementation, to write, visualized, debug, handle error, and set at the same time 
+- How much tokens are available, howmuch used how much in used, whos limit end, 
+- which has to up, which has to down,
+- where stop, when stop, where when and hoe to continue
+- pre-requirements befor start,
+- how much work remain, 
+
+- create watches, and session
+- Evaluation system for logs, breaks, who did what
+
+- Add new tech-stack, intigrate Ai agents, Mcps, upt date things, replace from old only if new one has more, maximum and better form old one
+- Evolve its self, team, and system for maxima achievements, prefection, delievery, 
+- create new systems and sub system, first setup for single, main, specific, specialized, field, domain, 
+
+- calling angent
+- soft calling, dealing, guifing, closing agents,
+
+- for human? or for Agent?
+- ad? , important, spam, agent can handle? or need for human ?
+- worthy for human or worthless
+- sync local and cloud serve that who is doing what
+
+
+- add mcp that can be, and set auomatically 
+- tell what need manull authentication, token,
+
+- claen the un used and overloded ports, kill caches, terminal if not in use or before  run new terminal, clean 8000 and 3000 ports 
+- setup our system that can also use each other features like agents, skills, mcps, hook, plugins and other features 
+
+- create skills, agents, mcps, hooks plugins, .md files and other emerging and new discover, recommanded features as need 
+- strict securites, checking, assurance, enterprice grade level setup to almost zero percent chance of any kind of mistakes, for critical important, sensetive, things outcomes, data, and if happend by mistake which should not be, then create upgrade add, enhance, tight up, strict and secure where happend 
+
+
+
+
+
+
+Thing that we can use in our project
+
+<important-points>
+Yeh "Personal AI Employee | Hackathon 0 - Demo Day 01" ki transcript ka detailed breakdown hai. Ismein students aur teachers ne apne AI Employees showcase kiye hain.
+
+Niche di gayi details **Roman Urdu aur English** mix mein hain taake aap easily key points samajh sakein.
+
+### **1. Core Concept & Goal (Achieve)**
+
+* **Goal:** Ek aisa "AI Employee" banana jo 24/7 kaam kar sake, jisko salary kam deni pade, aur jo cheezein bhule nahi.
+* **Digital FTE (Full Time Equivalent):** Human employee 2000 hours/year kaam karta hai, jabke AI Employee 8760 hours/year available reh sakta hai.
+* **Theme:** "Junior Version of Yourself" create karna jo emails, scheduling, aur mundane tasks handle kare.
+
+### **2. Tech-Stacks Used (Tools)**
+
+Hackathon mein participants ne ye tools aur technologies use ki:
+
+* **Brain/Logic:** Claude Code (Anthropic), GLM 4.5, Gemini.
+* **Memory/Storage:** Obsidian (Vault), Markdown Files (.md), JSON.
+* **Environment & Execution:** Python, Terminal, Tmux (Session persistence ke liye), UV (Python package manager).
+* **Integrations (MCP - Model Context Protocol):** Google Workspace (Gmail, Calendar), WhatsApp (via Playwright), LinkedIn, Twitter/X, Discord.
+* **Cloud/Infrastructure:** Oracle Cloud VM (Free tier), Google Drive (Syncing ke liye).
+* **UI/Dashboard:** Flet (Flutter for Python), HTML Dashboards.
+* **New Addition:** **Odoo** (Open Source ERP) ab Xero ki jagah use hoga accounting/inventory ke liye.
+
+### **3. Key Patterns & Solutions (Found & Created)**
+
+Participants ne common problems ke liye ye patterns develop kiye:
+
+* **Watcher Architecture:**
+* File System Watchers use kiye jo kisi folder (Inbox) mein new file aane par trigger hote hain.
+* **Flow:** Inbox -> Watcher Trigger -> AI Plan -> Human Approval (if needed) -> Action -> Archive/Done.
+
+
+* **Persistence (Process Kill na ho):**
+* **Tmux:** Terminal band hone par bhi background mein process chalta rahe.
+* **Ref Loop / While Loop:** Agar AI agent kisi wajah se ruk jaye, to loop usay dubara restart kar deta hai jab tak task complete na ho.
+
+
+* **Syncing Mechanism (Local vs Cloud):**
+* Wania ne **Google Drive** ko as a "Sync Bridge" use kiya.
+* *Method:* VM (Cloud) par heavy lifting hoti hai -> Drive pe data update hota hai -> Local machine pe sync hota hai -> User approve karta hai -> Wapis Cloud pe action trigger hota hai.
+
+
+* **Human-in-the-Loop (Approvals):**
+* Sensitive tasks (paise bhejna, client email) ke liye "Pending Approval" folder pattern use kiya gaya. User wahan `approved` folder mein file move karta hai to action fire hota hai.
+
+
+
+### **4. Individual Showcases (New Ideas & Founds)**
+
+* **Junaid (Junior Junaid):**
+* **Achieved:** Social media (Twitter) fully automate kiya, self-scheduling system banaya.
+* **Unique Thing:** "Self-healing loop" banaya taake Claude Code crash hone par recover kar sake.
+
+
+* **Wania:**
+* **Achieved:** Cloud (Oracle VM) aur Local machine ke darmiyan seamless sync.
+* **Pattern:** Inbox -> Categorization (Urgent/Normal) -> Draft -> Approval -> Send.
+
+
+* **Rehan:**
+* **Achieved:** **Flet (Python UI)** use karke interactive dashboard banaya.
+* **Idea:** **Discord Bot** ko as a mobile interface use kiya. Travel karte waqt Discord pe "Add Expense" likha aur AI ne sheet update kar di.
+* **Tech:** TF-IDF (RAG light version) use kiya emails ke relevant replies dhundne ke liye.
+
+
+* **Fatima (Stock Guard):**
+* **Achieved:** Inventory Management system.
+* **Logic:** Agar order value < $50 hai to auto-order, agar > $50 hai to human approval maange.
+* **Trick:** "Fake Data Injection" use kiya demo ke liye taake stock prices real-time mein change hoti hui nazar aayen.
+
+
+
+### **5. Problems & Suggestions (Should Do / Shouldn't Do)**
+
+* **Problem:** API Cost & Limits (Junaid ne $200+ use kar liye testing mein).
+* **Solution/Suggestion:** Start mein chote models use karein ya limits par strict check rakhein.
+
+
+* **Problem:** Local machine 24/7 on nahi rakh sakte.
+* **Should Do:** Cloud VMs (Oracle Free Tier) use karein aur state ko Google Drive ya Git ke through sync karein.
+
+
+* **Problem:** Process termination (Terminal band to agent band).
+* **Should Do:** **Tmux** ya background service managers use karein.
+
+
+* **Problem:** Vendor Lock-in.
+* **Answer:** System modular rakhein taake model (Claude se Gemini) switch karna aasaan ho.
+
+
+
+### **6. New Things & Future Plan (Will Be)**
+
+* **Odoo Integration:** Hackathon ke next phase mein **Odoo (ERP)** use hoga kyunke ye Open Source hai aur Pakistan/Globally bohat use hota hai. Iske custom modules (Python based) banaye jayenge.
+* **Platinum Tier:** Ab AI Employee ko **Cloud/VM** par deploy karna requirement hogi (Dockerization waghaira).
+* **Open Source:** Hackathon khatam hone ke baad projects ko GitHub par open source kiya jayega.
+
+### **7. Questions & Answers (Q&A Highlights)**
+
+* **Q:** Agar Cloud limit khatam ho jaye to?
+* **A:** Dashboard par usage monitor karein, ya multiple accounts load balance karein.
+
+
+* **Q:** Concurrency kaise handle ho rahi hai (Multiple tasks ek saath)?
+* **A:** Thread pooling use ki gayi hai, ya har task ke liye naya session spawn kiya jata hai.
+
+
+* **Q:** Security ka kya?
+* **A:** Abhi MVP (Minimum Viable Product) stage hai, security par future mein kaam hoga.
+
+
+
+### **Summary of "What to Build" (Create):**
+
+Aapko ek aisa system banana hai jo:
+
+1. **Input le:** Email, WhatsApp, ya File se.
+2. **Process kare:** Watcher detect kare, LLM (Brain) plan banaye.
+3. **Approve karwaye:** Critical actions ke liye human se pooche.
+4. **Execute kare:** Email send kare, DB update kare, ya post lagaye.
+5. **Notify kare:** Dashboard ya Mobile par status update de.
+</important-points>
+
+
+
+<AAIF>
+Big picture: AAIF turns what we’ve been discussing (Claude Code, Goose, Gemini CLI, MCP, AGENTS.md) from a vendor skirmish into an emerging shared infrastructure layer for agents.
+It means:
+You can now safely treat MCP + Goose + AGENTS.md as the open, neutral “plumbing” layer for agentic AI, with Linux Foundation–style governance instead of any one company owning the stack.
+Let’s unpack the implications, especially for the tools you care about.
+1. What AAIF actually is
+Agentic AI Foundation (AAIF) is a new Linux Foundation directed fund focused specifically on agentic AI infrastructure and standards.
+It is co-founded by Anthropic, OpenAI, and Block, with backing from Google, Microsoft, AWS, Bloomberg, Cloudflare, etc.
+Three anchor projects were donated:
+MCP (Model Context Protocol) from Anthropic – the “USB-C for AI tools,” i.e., a standard way to connect agents to tools, data, and apps.
+Goose from Block – an open, local-first agent framework that’s already a reference implementation for MCP.
+AGENTS.md from OpenAI – a simple standard file in repos that tells coding agents how to behave (rules, constraints, context).
+These were already open, but now they sit under neutral governance with community steering, not single-vendor control.
+2. Implications for each of the tools we’ve been comparing
+2.1 Claude Code
+Claude Code already sits very close to MCP and AGENTS.md:
+Anthropic created MCP originally to make Claude (including Claude Code) talk to tools and services cleanly.
+OpenAI’s AGENTS.md is designed for any coding agent (Claude Code, Gemini CLI, Goose-based agents, Copilot, etc.) to read a repo’s instructions consistently.
+What changes for Claude Code:
+Stronger interoperability guarantee.
+MCP is now explicitly positioned as a neutral standard; Claude Code’s tool integration story becomes less “Anthropic-proprietary” and more “this will work with any MCP-aware agent.”
+AGENTS.md will matter more.
+If you drop AGENTS.md into a repo, Claude Code, OpenAI tools, and Goose-based agents can all read the same rules about tests, review policies, style, etc.
+Easier to mix Claude Code with others.
+You can imagine workflows like:
+Gemini CLI or a Goose agent prepares a change set.
+Claude Code does final review and test runs.
+All of them rely on the same MCP servers and AGENTS.md instructions.
+So Claude Code moves from “very powerful but Claude-centric” to “first-class citizen in a shared agent ecosystem.”
+2.2 Goose
+Goose is the biggest immediate winner of AAIF:
+It is now the reference open-source agent framework under AAIF, with community governance, not Block-only control.
+Linux Foundation and AAIF explicitly describe Goose as:
+“An open source, local-first AI agent framework,”
+that combines LLMs, extensible tools, and MCP-based integration.
+Implications for Goose:
+Longevity & stability.
+Goose now sits beside other LF projects (Kubernetes, PyTorch, etc.) in terms of governance model. That makes it safer to bet on as your “agent OS.”
+More contributors and scrutiny.
+Expect more vendors and enterprises to contribute recipes, subagents, safety patterns, and integrations—because contributions benefit everyone, not just Block.
+Stronger reference status.
+When AAIF or others publish best practices for MCP usage, safety, or AGENTS.md patterns, Goose will likely be the first implementation.
+From your perspective: if you adopt Goose as your infra layer, the AAIF announcement is an explicit signal: “this is not a toy side project; this is one of the canonical agent frameworks.”
+2.3 Gemini CLI
+Gemini CLI itself is not (today) an AAIF project, but:
+Google is a founding supporter of AAIF and explicitly backs MCP and the standards work.
+Gemini tools already use or experiment with MCP and MCP-like integrations (e.g., MCP servers for Google Drive, BigQuery, etc., in agent demos).
+Implications for Gemini CLI:
+Pressure to align.
+As MCP solidifies as “USB-C for tools” and AGENTS.md becomes de facto standard for repos, Gemini CLI will almost certainly deepen its support:
+More MCP servers and better MCP ergonomics.
+First-class reading/respecting of AGENTS.md in repos.
+Multi-tool parity.
+Anything you expose via MCP to Claude Code/Goose will be naturally reachable from Gemini CLI as well.
+Missing subagent/recipe abstractions.
+AAIF does not instantly give Gemini CLI subagents or recipes—but it makes it more likely that any future multi-agent features will follow MCP/Goose/AGENTS.md patterns rather than invent new vendor-specific abstractions.
+In short: Gemini CLI remains “Gemini-first,” but its tooling and repo-behavior will be pulled toward AAIF standards, improving cross-compatibility with Claude Code and Goose.
+3. System-level implications: how the landscape shifts
+Think of AAIF as doing for agents what:
+TCP/IP + HTTP did for web applications, or
+Kubernetes + CNCF did for cloud-native workloads.
+Some concrete shifts:
+3.1 Interoperability becomes default, not aspirational
+With MCP, goose, and AGENTS.md all under neutral governance:
+A tool you expose as an MCP server can be used by:
+Claude Code,
+Goose-based agents,
+OpenAI Agents SDK,
+Gemini CLI (as it aligns),
+and any future AAIF-compatible stack.
+A repo with a well-written AGENTS.md will be understandable to multiple coding agents without one-off configuration per tool.
+That directly reduces lock-in and makes your “agentic tooling” investments reusable.
+3.2 The stack separates into clear layers
+AAIF formalizes three layers we’ve implicitly been talking about:
+Protocol / metadata layer
+MCP (how agents talk to tools & data)
+AGENTS.md (how repos talk to coding agents)
+Framework / runtime layer
+Goose (reference open framework)
+OpenAI Agents SDK, Claude Agent SDK, etc., that can plug into MCP.
+Product / UX layer
+Claude Code, Gemini CLI, Copilot-like tools.
+Implication: when you pick Claude Code vs Gemini CLI vs Goose as products, you’re not implicitly picking a closed protocol anymore. They are more clearly swappable at the top while sharing the same plumbing underneath.
+3.3 Safety and best practices will converge
+Linux Foundation + AAIF explicitly mention:
+Coordinating safety patterns, interoperability, and best practices for agents under a neutral umbrella.
+Expect:
+Shared patterns for tool permissions, human-in-the-loop checkpoints, and audit logging over MCP.
+Reference implementations (very likely first in Goose, then mirrored in other stacks) for safer subagents, long-running tasks, and multi-agent collaboration.
+For you, that means less need to invent your own safety architecture from scratch.
+4. What this means practically for you and your stack
+Given your focus on:
+multi-agent architectures,
+multi-LLM use (Claude, Gemini, possibly OpenAI),
+microservice / event-driven designs,
+AAIF is effectively a green light on three concrete architectural bets:
+Standardize on MCP for tool access.
+Wrap your internal services (Xero connectors, project performance APIs, forecasting tools, etc.) as MCP servers.
+Then any of: Claude Code, Goose, OpenAI Agents SDK, Gemini CLI can use them with minimal glue.
+Use AGENTS.md in every repo that agents will touch.
+Document coding standards, test commands, deployment rules, data sensitivity.
+You configure it once, and all AAIF-aligned coding agents should respect it.
+Treat Goose as your reference “agent OS” when you need full control.
+For experiments and internal platforms, build on Goose (or a similar MCP-native framework) so you stay aligned with AAIF as it evolves.
+On top of that infra, you can still offer developers Claude Code, Gemini CLI, etc., as “front ends.”
+And importantly:
+Your earlier comparisons (Claude Code vs Goose vs Gemini CLI) still hold at the UX/product level.
+But after AAIF, they are much less mutually exclusive; you can now combine them under a single standards-based ecosystem instead of picking a single monolith.
+If you’d like, next step we can sketch a concrete “AAIF-aligned” reference architecture for your agentic dev stack:
+MCP servers for your core services,
+Goose or OpenAI Agents SDK as the internal orchestrator,
+Claude Code + Gemini CLI as pluggable developer-facing coding agents,
+AGENTS.md + org-wide conventions for every repo.
+</AAIF>
+
+
+
+
+
+
+
+
+
+
+
+
+
+for memory, context, and auto manage use this approach:
+
+"@agent.md" file mention it in claude.md file, mention "@claude.md" in gemini, qwen and codex .md file 
+
+<agent.md>
+You’re right to zoom in on this – AGENTS.md is becoming the “one file to rule them all,” and Claude Code now plays nicely with it.
+
+Here’s exactly how to use AGENTS.md with Claude Code.
+
+
+---
+
+1. What Claude Code actually supports today
+
+Claude Code still autoloads CLAUDE.md, not AGENTS.md, when you start a session in a repo.
+
+However, the official Claude Code docs now say:
+
+> “If you have an AGENTS.md file, you can source it in your CLAUDE.md using @AGENTS.md to maintain a single source of truth.”
+
+
+
+And Claude Code supports @file references generally: writing @path/to/file in a context document (or prompt) causes Claude Code to pull that file’s contents into context.
+
+So the pattern is:
+
+> AGENTS.md = canonical instructions,
+CLAUDE.md = thin wrapper that imports AGENTS.md and adds Claude-specific bits.
+
+
+
+
+---
+
+2. Step-by-step: wiring AGENTS.md into Claude Code
+
+Step 1 – Create (or refine) AGENTS.md
+
+At the root of your repo, create an AGENTS.md file following the spec from agents.md.
+
+The current “good practice” is to cover at least:
+
+Setup commands (install deps, dev server)
+
+Testing (how to run tests, linters, type-checkers)
+
+Project structure (what lives where, monorepo layout, key packages)
+
+Code style (language versions, formatting, typing requirements)
+
+Git workflow (branch naming, PR rules, CI expectations)
+
+Boundaries / safety (things agents must not do, e.g., “don’t touch infra/”, “don’t modify migrations directly”)
+
+
+A minimal example:
+
+# AGENTS.md
+
+## Setup commands
+- Install deps: `pnpm install`
+- Start dev server: `pnpm dev`
+- Run tests: `pnpm test`
+
+## Project structure
+- `apps/web` – Next.js frontend
+- `apps/api` – FastAPI backend
+- `packages/ui` – shared React components
+- `packages/config` – TS config, eslint, etc.
+
+## Code style
+- TypeScript strict mode, no `any`
+- Use `pnpm lint` and `pnpm format` before commits
+
+## Git workflow
+- Branches: `feat/*`, `fix/*`, `chore/*`
+- Always open a PR; no direct pushes to `main`
+
+## Boundaries
+- Never change GitHub Actions workflows without explicit instruction.
+- Do not modify `terraform/` or `infra/` directories.
+
+This file will be consumed by any AGENTS.md-aware coding agent (Copilot, Cursor, Goose-based agents, etc.)
+
+
+---
+
+Step 2 – Create CLAUDE.md that imports AGENTS.md
+
+In the same repo root, create or edit CLAUDE.md.
+
+Claude Code automatically loads CLAUDE.md as persistent context for every session in that project. 
+
+To hook it into AGENTS.md, make CLAUDE.md essentially a thin wrapper:
+
+# Claude Code context
+
+@AGENTS.md
+
+## Claude-specific notes
+
+- Prefer `Claude Code`’s explore → plan → code workflow for non-trivial tasks.
+- Use `/clear` between unrelated tasks to avoid stale context.
+- Use an isolated subagent for security reviews and large refactors.
+
+That @AGENTS.md line is the key: Claude Code will resolve it and pull the AGENTS.md contents into its context when a session starts.
+
+You can put @AGENTS.md at the top so all general rules are loaded, and then keep any Claude-specific overrides or workflows below.
+
+
+---
+
+Step 3 – Start Claude Code in that repo
+
+From your project root:
+
+cd /path/to/your-repo
+claude
+
+Claude Code will:
+
+1. Autoload CLAUDE.md. 
+
+
+2. See @AGENTS.md and include the contents of AGENTS.md into the session context.
+
+
+
+You can sanity-check by asking:
+
+> “Summarize the key instructions from our AGENTS.md.”
+
+
+
+If it answers correctly, you know the wiring is working.
+
+
+---
+
+3. Variants and tips
+
+Option A – Symlink approach
+
+For environments where symlinks are easy, you can instead do:
+
+ln -s AGENTS.md CLAUDE.md
+
+Then CLAUDE.md is literally your AGENTS.md. This is the approach some folks suggest to make proprietary agents behave like they support AGENTS.md.
+
+Downside: symlinks can be annoying on Windows/CI, so the @AGENTS.md pattern is more portable.
+
+
+---
+
+Option B – Monorepos / multiple services
+
+If you have a monorepo, you can combine:
+
+One root AGENTS.md for repo-wide conventions.
+
+Service-level sub-AGENTS (or additional markdown docs) referenced from CLAUDE.md:
+
+
+# Claude Code context
+
+@AGENTS.md      # global rules for the repo
+@services/api/AGENTS.md
+@services/web/AGENTS.md
+
+## Claude-specific workflows
+
+- For backend changes, follow the TDD workflow described in `@docs/backend_workflow.md`.
+- For frontend changes, run `pnpm lint` and `pnpm test --filter web`.
+
+This uses the same @file mechanism to progressively disclose more detailed instructions only when relevant. 
+
+
+---
+
+Option C – Claude-only overrides
+
+If some guidance is only for Claude Code (e.g., how to use specific Claude Skills or hooks), keep that in CLAUDE.md and keep AGENTS.md tool-agnostic:
+
+# Claude-specific behaviors
+
+- When asked to refactor, always:
+  1. Scan tests with `@docs/tests.md`
+  2. Propose a plan
+  3. Implement in small commits
+
+- Use the `security-review` Skill for anything touching auth or payments.
+
+Other tools will ignore this (they don’t load CLAUDE.md), while Claude Code benefits from both AGENTS.md and Claude-specific tuning.
+
+
+---
+
+4. Summary
+
+To use AGENTS.md with Claude Code today:
+
+1. Put your canonical project instructions in AGENTS.md.
+
+
+2. Create a small CLAUDE.md in the repo root that contains @AGENTS.md and any Claude-specific hints.
+
+
+3. Run Claude Code from that repo; it autoloads CLAUDE.md, which in turn sources AGENTS.md.
+
+
+
+That gives you:
+
+Single source of truth for all agents (AGENTS.md),
+
+Native Claude Code behavior (CLAUDE.md),
+
+And minimal duplication or drift.
+
+
+If you want, I can draft an AGENTS.md / CLAUDE.md pair tailored to one of your actual repos (monorepo + tests + branch rules, etc.) so you can just paste-and-adapt.
+
+
+---------
+
+Here’s a concrete way to make AGENTS.md + GitHub Spec-Kit + Claude Code all work together as one coherent agentic dev stack.
+
+
+---
+
+1. Mental model: who does what
+
+AGENTS.md
+Single, vendor-neutral “README for agents”: how to set up, how to run things, coding standards, and how you want agents to use Spec-Kit on this repo.
+
+Spec-Kit
+Spec-driven development toolkit that creates and manages spec artifacts like speckit.specify, speckit.plan, speckit.tasks, etc., and works with multiple coding agents (Copilot, Claude Code, Gemini CLI, etc.).
+
+Claude Code
+Agentic coding environment. It auto-loads CLAUDE.md / .claude/CLAUDE.md as project memory and can call external tools via MCP (e.g., spec-kit-mcp).
+
+
+Key idea:
+AGENTS.md is the cross-agent truth; Spec-Kit is the spec engine; Claude Code is the executor. Claude reads AGENTS.md via a tiny CLAUDE.md shim and uses Spec-Kit via the MCP server.
+
+
+---
+
+2. Step 1 – Initialize Spec-Kit in the repo
+
+In your project root:
+
+uvx --from git+https://github.com/github/spec-kit.git specify init . --ai claude
+# or
+uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --ai claude
+
+This scaffolds the Spec-Kit structure (spec files, docs, etc.) and tailors templates for Claude as your primary agent.
+
+You’ll now have a spec-driven flow available:
+
+/specify → generates speckit.specify
+
+/plan → generates speckit.plan
+
+/tasks → generates speckit.tasks
+
+/implement → uses those tasks to write code
+
+
+(You can invoke these via CLI or via tools/MCP; more on that in Step 4.)
+
+
+---
+
+3. Step 2 – Create AGENTS.md that is Spec-Kit-aware
+
+In the repo root, create AGENTS.md and make it explicitly describe how agents should use Spec-Kit.
+
+Example skeleton (adapt as you like):
+
+# AGENTS.md
+
+## Purpose
+
+This project uses **Spec-Driven Development** with **GitHub Spec-Kit**.
+All coding agents (Claude Code, Copilot, Gemini CLI, etc.) MUST follow the
+specs generated by Spec-Kit instead of “vibe coding”.
+
+## Setup commands
+
+- Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- Check Spec-Kit tools: `uvx --from git+https://github.com/github/spec-kit.git specify check`
+- Run tests: `uv run pytest`  # or your stack
+
+## Spec-Kit workflow
+
+When adding or changing features, follow this sequence:
+
+1. **Constitution**  
+   - If the project principles need updating, generate or refine:
+     - File: `speckit.constitution`
+     - Tool/command (via MCP or CLI):
+       - `speckit_constitution` (preferred, MCP)  
+       - or `uvx --from git+https://github.com/github/spec-kit.git specify constitution`
+
+2. **Specify (WHAT)**  
+   - Update `speckit.specify` to capture user journeys, acceptance criteria, and constraints.
+   - Prefer to use Spec-Kit tools instead of freeform prompts:
+     - `speckit_specify` (MCP tool) or `/specify` command where available.
+
+3. **Plan (HOW)**  
+   - Generate or update `speckit.plan` from the spec with our tech stack:
+     - Language: Python
+     - Web: FastAPI
+     - Infra: Docker + Kubernetes
+   - Use `speckit_plan` (MCP) or `/plan`.
+
+4. **Tasks (BREAKDOWN)**  
+   - Use `speckit.tasks` as the single source of truth for implementation work.
+   - Always break work into small tasks via `speckit_tasks` or `/tasks`
+     before writing code.
+
+5. **Implement (CODE)**  
+   - Implement tasks *one by one* using `speckit_implement` where supported,
+     or by editing code files directly while referencing:
+       - `speckit.constitution`
+       - `speckit.specify`
+       - `speckit.plan`
+       - `speckit.tasks`
+
+## Coding conventions
+
+- Language: Python 3.11+, Type hints required.
+- Web framework: FastAPI, SQLModel, async endpoints where appropriate.
+- Tests: pytest, keep coverage > 80%. Testing is part of the tasks.
+
+## Agent behavior rules
+
+- Do NOT start large refactors without first updating the spec via Spec-Kit.
+- For ambiguous requirements, call `speckit_clarify` or ask for clarification
+  before coding.
+- For quality checks, prefer:
+  - `speckit_analyze` for spec-driven audits
+  - `speckit_checklist` for review checklists
+
+## Files agents should read first
+
+1. `AGENTS.md` (this file)
+2. `speckit.constitution` (principles/constraints)
+3. `speckit.specify`
+4. `speckit.plan`
+5. `speckit.tasks`
+
+This does three things:
+
+1. Turns AGENTS.md into a central place that teaches every agent about Spec-Kit.
+
+
+2. Explicitly encodes the Specify → Plan → Tasks → Implement pipeline.
+
+
+3. Keeps the instructions vendor-neutral, so Copilot / Gemini CLI / Codex can use exactly the same file.
+
+
+
+
+---
+
+4. Step 3 – Make Claude Code read AGENTS.md
+
+Claude Code doesn’t (yet) auto-load AGENTS.md directly, but it does auto-load CLAUDE.md. You can forward that to AGENTS.md.
+
+In your repo root, create a very small CLAUDE.md:
+
+@AGENTS.md
+
+Claude Code docs explicitly recommend this pattern to keep a single source of truth in AGENTS.md.
+
+Options:
+
+Simplest: Just the @AGENTS.md line, checked into git.
+
+Fancy: Use symlinks so CLAUDE.md points to AGENTS.md (often used in multi-directory monorepos).
+
+
+Result: whenever you run Claude Code in that repo, it automatically loads the AGENTS.md content as project memory.
+
+
+---
+
+5. Step 4 – Wire Spec-Kit into Claude via MCP
+
+You can let Claude call Spec-Kit tools directly using the open-source spec-kit-mcp server.
+
+5.1 Install spec-kit-mcp
+
+Preferred (Rust binary):
+
+cargo install spec-kit-mcp
+
+or via Node:
+
+npm install -g @lsendel/spec-kit-mcp
+# or
+npx @lsendel/spec-kit-mcp
+
+5.2 Register it with Claude Code
+
+Create or edit ~/.config/claude-code/mcp.json:
+
+Option A – using the cargo binary (recommended):
+
+{
+  "mcpServers": {
+    "spec-kit": {
+      "command": "spec-kit-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
+
+Option B – using npx:
+
+{
+  "mcpServers": {
+    "spec-kit": {
+      "command": "npx",
+      "args": ["-y", "@lsendel/spec-kit-mcp"],
+      "env": {}
+    }
+  }
+}
+
+Restart Claude Code. You should now see MCP tools such as:
+
+speckit_init
+
+speckit_constitution
+
+speckit_specify
+
+speckit_plan
+
+speckit_tasks
+
+speckit_implement
+
+speckit_clarify
+
+speckit_analyze
+
+speckit_check
+
+speckit_checklist
+
+
+5.3 Tell agents, via AGENTS.md, to use those tools
+
+You already hinted at this in AGENTS.md, but you can be more explicit:
+
+## Spec-Kit tools (via MCP)
+
+When running inside Claude Code with Spec-Kit MCP configured:
+
+- Use `speckit_constitution` to update project principles.
+- Use `speckit_specify` to generate or refine `speckit.specify`.
+- Use `speckit_plan` to turn the spec into a technical plan.
+- Use `speckit_tasks` to generate task breakdowns.
+- Use `speckit_implement` to implement tasks into code.
+- Use `speckit_analyze` + `speckit_checklist` to validate and review.
+
+Now Claude Code doesn’t just know about Spec-Kit—it knows how you expect it to call Spec-Kit for every piece of work.
+
+
+---
+
+6. Step 5 – Define a concrete day-to-day workflow
+
+Here’s how all three pieces tie together when you work on a new feature.
+
+1. Start in Claude Code inside your repo.
+Claude auto-loads CLAUDE.md → which delegations to AGENTS.md. It learns:
+
+You’re using Spec-Kit.
+
+The accepted tech stack and conventions.
+
+That it must not “vibe code” outside the spec.
+
+
+
+2. Create or refine spec artifacts via Spec-Kit MCP tools
+Example prompt to Claude:
+
+> “Use Spec-Kit to add a new ‘Projects dashboard’ feature:
+
+1. Update the spec for a role-based dashboard with filters and KPIs.
+
+
+2. Generate a technical plan using FastAPI + React.
+
+
+3. Break it into tasks at ‘medium’ granularity.”
+
+
+
+
+
+Claude then calls:
+
+speckit_specify → writes speckit.specify for the feature
+
+speckit_plan → writes speckit.plan
+
+speckit_tasks → writes/updates speckit.tasks
+
+
+
+3. Implementation according to spec
+Next prompt:
+
+> “Implement the first three tasks from speckit.tasks, and update tests accordingly. Show me the diff per task.”
+
+
+
+Claude calls speckit_implement and/or edits the code directly, but always with:
+
+AGENTS.md rules for architecture, style, testing
+
+Spec-Kit artifacts as the contract
+
+
+
+4. Review and quality
+Prompt:
+
+> “Run a Spec-Kit analysis of the src/ directory and generate a review checklist.”
+
+
+
+Claude calls:
+
+speckit_analyze on ./src
+
+speckit_checklist on speckit.specify + speckit.tasks
+
+
+
+5. Iterate
+When requirements change, you update specs first (speckit.specify / speckit.plan), not random code. AGENTS.md ensures every agent follows that discipline.
+
+
+
+
+---
+
+7. How constitution vs. AGENTS.md fits together
+
+Spec-Kit introduces a constitution artifact—essentially the project’s governing principles, constraints, and standards for specs and implementation.
+
+A clean separation that works well:
+
+AGENTS.md
+“How agents should behave” – workflows, commands, conventions, when to call which tools, and how to interpret these artifacts.
+
+speckit.constitution
+“What this project values” – security, performance, architecture rules, compliance, domain-level constraints, etc.
+
+
+In practice:
+
+AGENTS.md should explicitly tell agents to always consult speckit.constitution before making big design decisions.
+
+Constitution and AGENTS.md can link to each other, but avoid duplicating content:
+
+High-level principles → constitution
+
+“How to work with those principles via tools” → AGENTS.md
+
+
+
+
+---
+
+8. Summary
+
+To integrate everything cleanly:
+
+1. Initialize Spec-Kit in the repo with specify init.
+
+
+2. Create AGENTS.md that:
+
+Explains your Spec-Driven workflow (Specify → Plan → Tasks → Implement).
+
+Documents setup, stack, coding rules, and how to use Spec-Kit tools.
+
+
+
+3. Create CLAUDE.md containing just @AGENTS.md so Claude Code gets that context automatically.
+
+
+4. Install spec-kit-mcp and register it in ~/.config/claude-code/mcp.json, so Claude Code can call Spec-Kit tools directly.
+
+
+5. Mandate in AGENTS.md that all agents use Spec-Kit artifacts (speckit.*) as the source of truth, not ad-hoc prompts.
+
+
+
+If you’d like, next step I can draft a project-ready AGENTS.md and matching CLAUDE.md tailored to your preferred stack (FastAPI, Postgres, Kafka, Kubernetes, etc.) so you can drop them straight into your next repo.
+
+----------
+
+Summary
+
+To integrate everything cleanly:
+
+Initialize Spec-Kit Plus in the repo with specify init.
+
+Create AGENTS.md that:
+
+Explains your Spec-Driven workflow (Specify → Plan → Tasks → Implement).
+
+Documents setup, stack, coding rules, and how to use Spec-Kit tools.
+
+Create CLAUDE.md containing just @AGENTS.md so Claude Code gets that context automatically.
+
+Mandate in AGENTS.md that all agents use Spec-Kit artifacts (speckit.*) as the source of truth, not ad-hoc prompts.
+
+----
+
+
+
+Step 1: Accept Claude as the boss
+
+Never talk to Gemini or Codex directly again (for this workflow).
+
+Step 2: Create AGENTS.md (THIS matters)
+
+Example:
+
+# Agent Roles
+
+Claude:
+- Task orchestration
+- Context owner
+- Final authority
+
+Gemini (MCP):
+- Repo analysis
+- Long-context reasoning
+- Research
+
+Codex (MCP):
+- Code generation
+- Diffs and patches
+
+Step 3: Explicitly instruct Claude
+
+Example:
+
+“Use Gemini to analyze, Codex to implement, then merge”
+
+Claude will comply.
+
+---
+
+Perfect.
+Now you are at the **execution layer**, not theory.
+
+Yes — you **DO need** to create **separate `.md` control files** for **Claude, Gemini, Codex, Swarm, and the Agent system**.
+These files are **NOT documentation** — they are **behavioral constitutions**.
+
+Below is a **battle-tested, minimal, strict set** you can **copy-paste immediately**.
+
+---
+
+# 📁 REQUIRED FILE STRUCTURE (MANDATORY)
+
+```
+/ai-control/
+├── CLAUDE.md
+├── GEMINI.md
+├── CODEX.md
+├── SWARM.md
+├── AGENTS.md
+├── SKILLS.md
+├── MCP.md
+└── LOOP.md
+```
+
+These files **replace long prompts** and **save tokens**.
+
+---
+
+# 🧠 1. `CLAUDE.md` — THE SUPREME EXECUTION LAW
+
+Claude is your **primary orchestrator**.
+
+```md
+# CLAUDE EXECUTION CONSTITUTION
+
+You are Claude CLI operating inside a Spec-Driven, Agentic System.
+
+## ABSOLUTE RULES
+- Never write code without a spec
+- Never assume requirements
+- Never mix frontend and backend
+- Never write outside intended directory
+- Never proceed without QA approval
+
+## OPERATING MODE
+1. Read spec
+2. Enforce loop: SPEC → IMPLEMENT → TEST → QA
+3. Delegate work to agents
+4. Keep responses short and structured
+
+## ERROR HANDLING
+- If error occurs: stop and call error-sentinel
+- Do not retry blindly
+
+## TOKEN POLICY
+- Prefer file references over explanations
+- Chunk large tasks
+
+## AUTHORITY
+Claude does not decide architecture alone.
+Claude obeys AGENTS.md and LOOP.md
+```
+
+---
+
+# 🧠 2. `GEMINI.md` — RESEARCH & ALTERNATIVE THINKER
+
+Gemini is **NOT allowed to execute**.
+
+```md
+# GEMINI ROLE DEFINITION
+
+You are Gemini, used ONLY for:
+- Research
+- Alternative solutions
+- Second opinions
+- Cross-checking logic
+
+## RESTRICTIONS
+- You do NOT write production code
+- You do NOT modify files
+- You do NOT deploy anything
+
+## OUTPUT FORMAT
+- Bullet points only
+- No long explanations
+
+## USAGE
+Called only by imperator or spec-architect
+```
+
+---
+
+# 🧠 3. `CODEX.md` — CODE PRECISION ENGINE
+
+Codex is your **low-level code worker**.
+
+```md
+# CODEX CODING CONTRACT
+
+You generate code ONLY from specs.
+
+## RULES
+- No architecture decisions
+- No feature guessing
+- No refactoring unless asked
+- Output code only
+
+## INPUTS
+- specs/*.md
+- instructions from CLAUDE.md
+
+## OUTPUT
+- Minimal
+- Correct
+- Compile-ready
+
+## FAILURE
+If spec is missing or unclear:
+STOP and request clarification
+```
+
+---
+
+# 🐜 4. `SWARM.md` — PARALLEL EXECUTION LOGIC
+
+This controls **multi-agent parallelism**.
+
+```md
+# SWARM EXECUTION RULES
+
+Swarm mode is enabled when:
+- Tasks are independent
+- Shared state is minimal
+
+## RULES
+- Each agent owns ONE task
+- No shared memory
+- Results go to QA before merge
+
+## FORBIDDEN
+- Cross-agent communication
+- Long context sharing
+
+## COORDINATION
+Imperator collects outputs
+```
+
+---
+
+# 🧠 5. `AGENTS.md` — AGENT FACTORY & GOVERNANCE
+
+This is **one of the most important files**.
+
+```md
+# AGENT GOVERNANCE FILE
+
+## CORE AGENTS
+- imperator (commander)
+- spec-architect
+- system-designer
+- qa-overseer
+- error-sentinel
+- path-warden
+- loop-controller
+- chunk-breaker
+- extension-orchestrator
+
+## BUILD AGENTS
+- frontend-agent
+- backend-agent
+- db-agent
+- auth-agent
+- ai-agent
+- deploy-agent
+
+## RULES
+- One agent = one responsibility
+- Agents do not talk to user
+- Agents do not override specs
+
+## DYNAMIC CREATION
+If capability is missing:
+extension-orchestrator may create new agent using:
+/agent create <name>
+
+All new agents must be registered here
+```
+
+---
+
+# 🧩 6. `SKILLS.md` — REUSABLE MICRO-INTELLIGENCE
+
+Skills are **cheap, fast, repeatable**.
+
+```md
+# SKILLS REGISTRY
+
+## CORE SKILLS
+- read-pdf
+- extract-requirements
+- create-spec
+- split-tasks
+- validate-output
+- generate-readme
+- generate-demo-script
+
+## RULES
+- Skills do NOT think
+- Skills do NOT decide
+- Skills return structured output
+
+## CREATION
+If logic repeats 3+ times:
+/skill create <skill-name>
+```
+
+---
+
+# 🔌 7. `MCP.md` — EXTERNAL POWER SOURCES
+
+```md
+# MCP REGISTRY
+
+## ACTIVE MCPs
+- filesystem
+- github
+- bash
+- package-manager
+- knowledge-base
+
+## RULES
+- MCPs are stateless
+- MCPs expose tools only
+- No business logic in MCPs
+
+## ADDING MCP
+When external system needed:
+/mcp add <name>
+```
+
+---
+
+# 🔁 8. `LOOP.md` — SPEC-DRIVEN HEARTBEAT
+
+This **prevents 90% of failures**.
+
+```md
+# SPEC-DRIVEN LOOP
+
+## MANDATORY LOOP
+SPEC → IMPLEMENT → TEST → QA → FIX → REPEAT
+
+## ENFORCEMENT
+- No implementation without spec
+- No deployment without QA
+- No shortcuts
+
+## FAILURE MODE
+If loop is broken:
+STOP execution immediately
+```
+
+---
+
+# ✅ WHY THIS SETUP IS CORRECT
+
+✔ Minimal files
+✔ Zero redundancy
+✔ Token-efficient
+✔ Works with **Claude, Gemini, Codex, Swarm**
+✔ Hackathon-safe
+✔ Professional-grade
+
+This is **exactly** how serious agentic systems are run.
+
+---
+
+
+</agent.md>
+
+
+
+
+
+
+
+
+
+
+
+
+<my-sub-agent-list>                                                        
+
+ ux-frontend-developer · sonnet                                                                                     │
+
+│   lead-architect · opus                                                                                              │
+
+│   devops-rag-engineer · sonnet                                                                                       │
+
+│   backend-builder · opus                                                                                             │
+
+│   task-orchestrator · sonnet                                                                                         │
+
+│   spec-architect · opus                                                                                              │
+
+│   robotics-textbook-author · sonnet                                                                                  │
+
+│   qa-overseer · opus                                                                                                 │
+
+│   path-warden · sonnet                                                                                               │
+
+│   modular-ai-architect · opus                                                                                        │
+
+│   loop-controller · opus                                                                                             │
+
+│   imperator · opus                                                                                                   │
+
+│   enterprise-grade-validator · sonnet                                                                                │
+
+│   docusaurus-librarian · sonnet                                                                                      │
+
+│   agent-specialization-architect · sonnet                                                                            │
+
+│   content-builder · sonnet                                                                                           │
+
+│                                                                                                                      │
+
+│   Built-in agents (always available)                                                                                 │
+
+│   general-purpose · sonnet                                                                                           │
+
+│   statusline-setup · sonnet                                                                                          │
+
+│   Explore · haiku                                                                                                    │
+
+│   Plan · inherit                                                                                                     │
+
+│   claude-code-guide · haiku
+
+</my-sub-agent-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<claude-skills-list>
+
+  Skills
+
+ 84 skills
+
+
+
+ User skills (C:\Users\PCW\.claude\skills)
+
+ algorithmic-art · ~4.9k tokens
+
+ auto-architect · ~1.4k tokens
+
+ brand-guidelines · ~496 tokens
+
+ browsing-with-playwright · ~1.2k tokens
+
+ build-error-handler · ~1.3k tokens
+
+ building-chat-interfaces · ~2.4k tokens
+
+ building-chat-widgets · ~2.3k tokens
+
+ building-chatgpt-apps · ~3.2k tokens
+
+ building-mcp-servers · ~1.3k tokens
+
+ building-nextjs-apps · ~1.8k tokens
+
+ building-rag-systems · ~2.7k tokens
+
+ canvas-design · ~2.9k tokens
+
+ code-cleanliness · ~1.0k tokens
+
+ command-orchestration · ~122 tokens
+
+ configuring-better-auth · ~1.8k tokens
+
+ configuring-dapr-pubsub · ~2.5k tokens
+
+ containerizing-applications · ~1.9k tokens
+
+ context-degradation · ~3.9k tokens
+
+ context-fundamentals · ~3.0k tokens
+
+ context-optimization · ~2.1k tokens
+
+ cors-config · ~897 tokens
+
+ creating-skills · ~2.7k tokens
+
+ db-timeout-handler · ~1.1k tokens
+
+ deploying-cloud-k8s · ~2.1k tokens
+
+ deploying-kafka-k8s · ~1.8k tokens
+
+ deploying-postgres-k8s · ~2.0k tokens
+
+ deployment-preflight-check · ~751 tokens
+
+ deployment-stability · ~885 tokens
+
+ doc-coauthoring · ~3.9k tokens
+
+ dockerfile-generator · ~1.4k tokens
+
+ docx · ~2.5k tokens
+
+ env-validator · ~611 tokens
+
+ evaluation · ~2.6k tokens
+
+ fetching-library-docs · ~1.5k tokens
+
+ frontend-design · ~999 tokens
+
+ generate-chapter · ~2.3k tokens
+
+ hackathon-rules · ~140 tokens
+
+ helm-chart-generator · ~1.9k tokens
+
+ installing-skill-tracker · ~272 tokens
+
+ internal-comms · ~282 tokens
+
+ jwt-middleware · ~1.1k tokens
+
+ k8s-manifests-generator · ~1.6k tokens
+
+ k8s-pod-crash-handler · ~1.3k tokens
+
+ mcp-builder · ~2.2k tokens
+
+ memory-systems · ~3.2k tokens
+
+ multi-agent-patterns · ~3.6k tokens
+
+ neon-db-setup · ~721 tokens
+
+ nextjs-devtools · ~519 tokens
+
+ nx-monorepo · ~1.9k tokens
+
+ operating-k8s-local · ~1.6k tokens
+
+ operating-production-services · ~1.2k tokens
+
+ pdf · ~1.8k tokens
+
+ phase-execution-controller · ~241 tokens
+
+ phase-progress-auditor · ~242 tokens
+
+ phase-workflow-runner · ~394 tokens
+
+ pptx · ~6.4k tokens
+
+ project-context · ~218 tokens
+
+ qa-overseer · ~2.0k tokens
+
+ rag-ingest · ~954 tokens
+
+ researching-with-deepwiki · ~1.2k tokens
+
+ review-and-judge · ~118 tokens
+
+ scaffolding-fastapi-dapr · ~2.2k tokens
+
+ scaffolding-openai-agents · ~3.3k tokens
+
+ security-scan · ~607 tokens
+
+ session-state-manager · ~763 tokens
+
+ skill-creator · ~4.4k tokens
+
+ slack-gif-creator · ~1.9k tokens
+
+ spec-architect · ~1.5k tokens
+
+ spec-driven-development · ~162 tokens
+
+ streaming-llm-responses · ~2.0k tokens
+
+ styling-with-shadcn · ~2.0k tokens
+
+ systematic-debugging · ~1.4k tokens
+
+ template-skill · ~8 tokens
+
+ template-selector · ~110 tokens
+
+ test-ui · ~1.3k tokens
+
+ theme-factory · ~708 tokens
+
+ todo-domain-expert · ~122 tokens
+
+ tool-design · ~3.2k tokens
+
+ translate-urdu · ~1.8k tokens
+
+ web-artifacts-builder · ~691 tokens
+
+ webapp-testing · ~916 tokens
+
+ working-with-documents · ~1.5k tokens
+
+ working-with-spreadsheets · ~1.3k tokens
+
+ xlsx · ~2.6k tokens
+
+</claude-skills-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<available-mcp-to-claude>
+
+✔ connected:
+
+chrome-devtools
+
+code-search
+
+context7
+
+docker
+
+filesystem
+
+github
+
+hopx-sandbox
+
+mysql
+
+nx-mcp
+
+playwright
+
+postgres
+
+ragie
+
+scriptflow
+
+vercel-awesome-ai
+
+windows-cli
+
+vercel
+
+
+
+✘ failed:
+
+git
+
+mcp-hfspace
+
+n8n-local
+
+Neon
+
+MCP_DOCKER
+
+mcp_server_mysql
+
+codex-cli
+
+gemini-cli
+
+peppeteer
+
+consult7
+
+
+△ needs authentication:
+
+
+
+</available-mcp-to-claude>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sources:
+https://github.com/modelcontextprotocol/servers
+https://modelcontextprotocol.io/docs/getting-started/intro
+https://chatgpt.com/share/693a6399-bc94-8001-8e6e-c15691d378f6
