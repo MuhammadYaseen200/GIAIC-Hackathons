@@ -1,7 +1,0 @@
-if model is responcing
-
-  try to test one by one: for each function and feature,
-  then test in bulk: add multiple tasks, delete multiple tasks, mark, edit,
-  then test edge cases, possible scenerios, un expected scenerios,
-
-  all in natural language by communicating with bot

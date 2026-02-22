@@ -7,6 +7,10 @@ saves token.json, and verifies with getProfile().
 Usage:
     python scripts/gmail_auth.py [--credentials PATH] [--token PATH]
 
+WSL2 users: the script auto-detects WSL2 and uses a manual code-paste flow
+instead of the local redirect server (which fails in WSL2 due to localhost
+not routing from Windows browser to WSL2 network).
+
 If paths are not provided, reads from GMAIL_CREDENTIALS_PATH and
 GMAIL_TOKEN_PATH environment variables (loaded from .env).
 """
@@ -14,6 +18,7 @@ GMAIL_TOKEN_PATH environment variables (loaded from .env).
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -33,6 +38,52 @@ SCOPES = [
     "https://www.googleapis.com/auth/gmail.send",
     "https://www.googleapis.com/auth/gmail.modify",
 ]
+
+
+def _is_wsl() -> bool:
+    """Detect WSL2 environment where localhost redirect won't work."""
+    try:
+        version = Path("/proc/version").read_text().lower()
+        return "microsoft" in version or "wsl" in version
+    except OSError:
+        return False
+
+
+def _run_manual_flow(credentials_path: Path) -> Credentials:
+    """WSL2-safe OAuth2 flow: print URL, user pastes redirect URL back.
+
+    Google redirects to localhost after consent. In WSL2 the browser
+    (Windows-side) cannot reach the WSL2 local server, so the browser shows
+    ERR_CONNECTION_REFUSED. The full redirect URL in the address bar still
+    contains the auth code — the user copies and pastes it here.
+    """
+    # Allow http://localhost redirect (safe for local dev, never sent over network)
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+    flow = InstalledAppFlow.from_client_secrets_file(
+        str(credentials_path),
+        scopes=SCOPES,
+        redirect_uri="http://localhost",
+    )
+    auth_url, _ = flow.authorization_url(
+        access_type="offline",
+        include_granted_scopes="true",
+        prompt="consent",
+    )
+
+    print("\n" + "=" * 60)
+    print("WSL2 DETECTED — Manual auth flow")
+    print("=" * 60)
+    print("\nStep 1: Copy and open this URL in your Windows browser:\n")
+    print(f"  {auth_url}\n")
+    print("Step 2: Log in and click Allow.")
+    print("Step 3: The browser will show ERR_CONNECTION_REFUSED.")
+    print("        That is normal — copy the FULL URL from the address bar.")
+    print("        It looks like:  http://localhost/?code=4/0A...&state=...\n")
+    redirect_response = input("Step 4: Paste the full URL here and press Enter:\n> ").strip()
+
+    flow.fetch_token(authorization_response=redirect_response)
+    return flow.credentials
 
 
 def main() -> int:
@@ -96,14 +147,18 @@ def main() -> int:
         atomic_write(token_path, creds.to_json())
         print("Token refreshed successfully.")
     else:
-        print("Starting OAuth2 browser flow...")
-        print("A browser window will open for Google consent.")
-        flow = InstalledAppFlow.from_client_secrets_file(
-            str(credentials_path), SCOPES
-        )
-        creds = flow.run_local_server(port=0)
+        if _is_wsl():
+            creds = _run_manual_flow(credentials_path)
+        else:
+            print("Starting OAuth2 browser flow...")
+            print("A browser window will open for Google consent.")
+            flow = InstalledAppFlow.from_client_secrets_file(
+                str(credentials_path), SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+
         atomic_write(token_path, creds.to_json())
-        print(f"Token saved to {token_path}")
+        print(f"\nToken saved to {token_path}")
 
     # Verify with getProfile()
     print("\nVerifying authentication...")
