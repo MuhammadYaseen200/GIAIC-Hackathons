@@ -10,6 +10,17 @@ token.json
 vault/.obsidian/workspace.json
 vault/.obsidian/workspace-mobile.json
 
+# Vault runtime data — personal email content, NEVER commit
+vault/Needs_Action/*.md
+vault/Inbox/*.md
+vault/Logs/*.log
+vault/Logs/*_state.json
+vault/Logs/*.lock
+vault/Untitled.base
+
+# Personal prompt notes — not for public repo
+How-I-give-prompts/
+
 # OS
 .DS_Store
 Thumbs.db
