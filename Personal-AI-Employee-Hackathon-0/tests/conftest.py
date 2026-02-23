@@ -1,4 +1,4 @@
-"""Shared test fixtures for the watcher test suite."""
+"""Shared test fixtures for the watcher and orchestrator test suites."""
 
 import base64
 import json
@@ -156,3 +156,111 @@ def mock_env(tmp_path):
     # Cleanup
     os.environ.pop("GMAIL_CREDENTIALS_PATH", None)
     os.environ.pop("GMAIL_TOKEN_PATH", None)
+
+
+# =============================================================================
+# Phase 3: Ralph Wiggum Orchestrator fixtures
+# =============================================================================
+
+_PENDING_EMAIL_FRONTMATTER = """\
+---
+type: email
+status: pending
+source: gmail
+message_id: test_msg_001
+from: Sarah Li <sarah@example.com>
+subject: Product Roadmap Discussion
+date_received: Thu, 19 Feb 2026 21:02:14 +0000
+date_processed: '2026-02-19T21:24:44.000000+00:00'
+classification: actionable
+priority: standard
+has_attachments: false
+watcher: gmail_watcher
+---
+Hi,
+
+I wanted to follow up on our product roadmap discussion from last week.
+Could you share the updated timeline for Q2 features?
+
+Best,
+Sarah
+"""
+
+
+@pytest.fixture
+def tmp_vault_dir(tmp_path):
+    """Temporary vault directory with canonical orchestrator sub-structure.
+
+    Creates: Needs_Action/, Logs/, Done/, Drafts/, Inbox/
+    This mirrors the production vault layout used by RalphWiggumOrchestrator.
+    """
+    vault = tmp_path / "vault"
+    for subdir in ("Needs_Action", "Logs", "Done", "Drafts", "Inbox"):
+        (vault / subdir).mkdir(parents=True)
+    return vault
+
+
+@pytest.fixture
+def mock_email_file(tmp_vault_dir):
+    """A valid vault markdown file with status: pending in Needs_Action/.
+
+    Returns the Path to the created file.
+    """
+    email_path = tmp_vault_dir / "Needs_Action" / "test_msg_001.md"
+    email_path.write_text(_PENDING_EMAIL_FRONTMATTER, encoding="utf-8")
+    return email_path
+
+
+@pytest.fixture
+def mock_llm_decision_json():
+    """Minimal valid LLMDecision JSON string — 'archive' decision."""
+    return json.dumps({
+        "decision": "archive",
+        "confidence": 0.92,
+        "reasoning": "This is a newsletter with no action required.",
+        "reply_body": None,
+        "delegation_target": None,
+        "info_needed": None,
+    })
+
+
+@pytest.fixture
+def mock_llm_draft_reply_json():
+    """Valid LLMDecision JSON string — 'draft_reply' decision."""
+    return json.dumps({
+        "decision": "draft_reply",
+        "confidence": 0.85,
+        "reasoning": "Email requires a direct response about the roadmap timeline.",
+        "reply_body": (
+            "Hi Sarah,\n\nThank you for following up. "
+            "I'll share the updated Q2 timeline by end of week.\n\nBest regards"
+        ),
+        "delegation_target": None,
+        "info_needed": None,
+    })
+
+
+@pytest.fixture
+def mock_llm_delegate_json():
+    """Valid LLMDecision JSON string — 'delegate' decision."""
+    return json.dumps({
+        "decision": "delegate",
+        "confidence": 0.78,
+        "reasoning": "This falls under the engineering team's scope.",
+        "reply_body": None,
+        "delegation_target": "Engineering Manager — roadmap decisions are their domain.",
+        "info_needed": None,
+    })
+
+
+@pytest.fixture
+def mock_llm_needs_info_json():
+    """Valid LLMDecision JSON string — 'needs_info' decision."""
+    return json.dumps({
+        "decision": "needs_info",
+        "confidence": 0.60,
+        "reasoning": "Cannot triage without knowing which product line this refers to.",
+        "reply_body": None,
+        "delegation_target": None,
+        "info_needed": "Which specific product line and Q2 milestone is this about?",
+    })

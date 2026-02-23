@@ -1,5 +1,9 @@
 # H0 MCP Server Registry
 
+> **Agent Control Authority**: This file is managed by **[`AGENTS.md`](AGENTS.md)**.
+> All MCP tool calls MUST be made by agents registered in `AGENTS.md`. Direct API calls from agent code bypassing this registry are FORBIDDEN (Constitution Principle IV).
+> Related: [`LOOP.md`](LOOP.md) (enforcement loops) | [`SKILLS.md`](SKILLS.md) (skill registry) | [`SWARM.md`](SWARM.md) (swarm coordination)
+
 ## Purpose
 This file is the authoritative registry of all Model Context Protocol (MCP) servers available to the H0 project. Per Constitution Principle IV, ALL external interactions MUST be routed through MCP servers. Direct API calls from agent code are FORBIDDEN.
 

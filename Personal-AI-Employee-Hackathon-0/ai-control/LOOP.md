@@ -1,5 +1,9 @@
 # H0 Enforcement Loops
 
+> **Agent Control Authority**: This file is managed by **[`AGENTS.md`](AGENTS.md)**.
+> All agents MUST be registered in `AGENTS.md` with an approved authority level before reading or enforcing any loop in this file.
+> Related: [`SWARM.md`](SWARM.md) (parallel execution) | [`SKILLS.md`](SKILLS.md) (skill registry) | [`MCP.md`](MCP.md) (MCP registry)
+
 ## Purpose
 This file defines every enforcement loop that governs execution in the H0 project. Loops are the heartbeat of the system — they ensure work stays on track, violations are caught, and the project maintains quality standards. Violation of any loop MUST halt execution immediately.
 

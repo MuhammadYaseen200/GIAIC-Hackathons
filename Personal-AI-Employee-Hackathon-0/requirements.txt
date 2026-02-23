@@ -1,5 +1,24 @@
+# =============================================================================
+# H0 Personal AI Employee — Python Dependencies
+# =============================================================================
+# Install: pip install -r requirements.txt
+# =============================================================================
+
+# --- Phase 2: Gmail Watcher ---
 google-api-python-client>=2.100.0
 google-auth-oauthlib>=1.2.0
 google-auth-httplib2>=0.2.0
+
+# --- Phase 3: LLM Reasoning Loop (Ralph Wiggum Orchestrator) ---
+anthropic          # Anthropic Claude — native SDK (AnthropicAdapter)
+openai             # OpenAI + all OpenAI-compatible providers (OpenAICompatibleAdapter)
+openai-agents      # OpenAI Agents SDK (multi-provider agentic patterns)
+pydantic           # Structured output validation (LLMDecision, EmailContext, etc.)
+
+# --- Shared Utilities ---
 pyyaml>=6.0
 python-dotenv>=1.0.0
+
+# --- Testing ---
+pytest
+pytest-asyncio     # Async test support for orchestrator lifecycle tests

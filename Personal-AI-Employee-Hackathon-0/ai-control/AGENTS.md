@@ -1,5 +1,10 @@
 # H0 Agent Registry & Governance
 
+> **ROOT AUTHORITY**: This file (`AGENTS.md`) is the master control document for all agents in this project.
+> Every other file in `ai-control/` and `CLAUDE.md` is **governed by this file**.
+> No agent may execute ANY work without first being registered here.
+> Cross-references: [`LOOP.md`](LOOP.md) | [`SWARM.md`](SWARM.md) | [`SKILLS.md`](SKILLS.md) | [`MCP.md`](MCP.md) | [`HUMAN-TASKS.md`](HUMAN-TASKS.md) | [`../CLAUDE.md`](../CLAUDE.md)
+
 ## Purpose
 This file is the single source of truth for all Claude Code agent instances operating on the H0 Personal AI Employee project. Every agent MUST be registered here before activation. Unregistered agents are FORBIDDEN from executing any work.
 
