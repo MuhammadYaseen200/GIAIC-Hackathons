@@ -1,5 +1,9 @@
 # H0 Skills Registry
 
+> **Agent Control Authority**: This file is managed by **[`AGENTS.md`](AGENTS.md)**.
+> Only agents registered in `AGENTS.md` may invoke skills. Skill authority (ALWAYS / PRE-ACTION / ON-TRIGGER / ON-REQUEST) is enforced by the Loop-Controller registered therein.
+> Related: [`LOOP.md`](LOOP.md) (enforcement loops) | [`SWARM.md`](SWARM.md) (swarm coordination) | [`MCP.md`](MCP.md) (MCP registry)
+
 ## Purpose
 This file is the authoritative registry of all reusable skills available to Claude Code agents on the H0 project. Per Constitution Principle VIII (Reusable Intelligence), skills MUST be extracted when a pattern repeats 3+ times. Every skill used in the project MUST be registered here.
 

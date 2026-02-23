@@ -1,5 +1,9 @@
 # H0 Swarm: Multi-Agent Orchestration Rules
 
+> **Agent Control Authority**: This file is managed by **[`AGENTS.md`](AGENTS.md)**.
+> All agents participating in swarm execution MUST be registered in `AGENTS.md`. Domain boundaries and authority levels defined there are binding on all swarm patterns here.
+> Related: [`LOOP.md`](LOOP.md) (enforcement loops) | [`SKILLS.md`](SKILLS.md) (skill registry) | [`MCP.md`](MCP.md) (MCP registry)
+
 ## Purpose
 This file governs how multiple Claude Code instances coordinate parallel work on the H0 project. The swarm pattern enables throughput multiplication while preventing conflicts, race conditions, and cross-domain violations.
 

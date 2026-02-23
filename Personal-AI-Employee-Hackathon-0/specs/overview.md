@@ -5,9 +5,9 @@
 | Phase | Name | Status | Entry Criteria | Exit Criteria |
 |-------|------|--------|---------------|--------------|
 | 0 | Foundation & Governance | COMPLETE | Project created | Constitution ratified, ai-control/ complete, directory structure created |
-| 1 | Obsidian Vault | NOT_STARTED | Phase 0 complete + HT-001 done | Dashboard.md functional, templates created, Dataview queries working |
-| 2 | First Watcher - Bronze | NOT_STARTED | Phase 1 complete + HT-002 done | Gmail watcher reading emails, writing to Needs_Action/ |
-| 3 | Claude Reasoning Loop | NOT_STARTED | Phase 2 complete | Ralph Wiggum loop processing Needs_Action/ items autonomously |
+| 1 | Obsidian Vault | COMPLETE | Phase 0 complete + HT-001 done | Dashboard.md functional, templates created, Dataview queries working |
+| 2 | First Watcher - Bronze | COMPLETE | Phase 1 complete + HT-002 done | Gmail watcher reading emails, writing to Needs_Action/ — exited 2026-02-20 |
+| 3 | Claude Reasoning Loop | IN_PROGRESS | Phase 2 complete | Ralph Wiggum loop processing Needs_Action/ items autonomously |
 | 4 | MCP Integration | NOT_STARTED | Phase 3 complete | Gmail send MCP, browser MCP, file system MCP operational |
 | 5 | HITL + WhatsApp - Silver | NOT_STARTED | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running |
 | 6 | CEO Briefing + Odoo - Gold | NOT_STARTED | Phase 5 complete + HT-006/007 done | Daily briefing generated, Odoo integration working |

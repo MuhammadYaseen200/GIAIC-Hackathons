@@ -1,5 +1,9 @@
 # H0 Human-Dependent Tasks
 
+> **Agent Control Authority**: This file is managed by **[`AGENTS.md`](AGENTS.md)**.
+> Agents may READ this file to understand what humans must do. Agents MUST NOT mark tasks as DONE — only the human who completed the action may update the status. Escalation protocol follows Loop 3 (HITL) in [`LOOP.md`](LOOP.md).
+> Related: [`AGENTS.md`](AGENTS.md) (agent registry) | [`LOOP.md`](LOOP.md) (human-in-the-loop)
+
 ## Purpose
 This file tracks all tasks that REQUIRE human intervention because Claude Code cannot perform them autonomously. These tasks involve authentication, provisioning, installation, or physical access that is beyond AI agent capability.
 
@@ -222,13 +226,38 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Verification**: `ssh -i ~/.ssh/oracle_h0 ubuntu@<ip> "docker --version"` succeeds
 - **Claude Can Then**: Deploy watchers, orchestrator, and MCP servers to cloud
 
+### HT-010: Verify LLM Provider Connectivity
+- **Status**: PENDING
+- **Blocks**: Phase 3 (LLM Reasoning Loop) — must confirm before relying on live orchestrator
+- **Why Human**: Requires your actual API key and network access to the provider endpoint. Claude cannot call external APIs directly without your credentials.
+- **Instructions**:
+  1. Ensure HT-009 is complete (ANTHROPIC_API_KEY set in .env, LLM_PROVIDER=anthropic)
+  2. From the project root, run:
+     ```bash
+     python scripts/verify_llm_provider.py
+     ```
+  3. Expected output (exit 0):
+     ```
+     Provider : anthropic
+     Model    : claude-sonnet-4-...
+     Response : Hello
+     Tokens   : <N> input / <N> output
+     OK  LLM provider connectivity verified
+     ```
+  4. If exit 1: check your ANTHROPIC_API_KEY in .env, verify network access to api.anthropic.com
+- **Verification**: Script exits 0 and prints "OK  LLM provider connectivity verified"
+- **Claude Can Then**: Run the full orchestrator against your vault/Needs_Action/ emails
+
 ---
 
 ## Completed Tasks
 
 | ID | Task | Completed | Notes |
 |----|------|-----------|-------|
-| — | None yet | — | — |
+| HT-001 | Create Obsidian Vault and Folder Structure | 2026-02-17 | vault/ initialized with all required dirs |
+| HT-002 | Set Up Gmail API OAuth2 Credentials | 2026-02-20 | token.json created, 52 emails processed live |
+| HT-009 | Configure LLM Provider API Key(s) | 2026-02-22 | ANTHROPIC_API_KEY set in .env, anthropic SDK installed, LLM_PROVIDER=anthropic |
+| HT-010 | Verify LLM Provider Connectivity | 2026-02-23 (PENDING) | Run `python scripts/verify_llm_provider.py` from project root to confirm provider responds correctly. Requires HT-009 complete. Exit 0 = pass. |
 
 ---
 
