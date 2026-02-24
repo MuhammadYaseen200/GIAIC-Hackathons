@@ -108,7 +108,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 ## High Priority (Blocks Phase 5 Silver)
 
 ### HT-004: Authenticate WhatsApp Web Session
-- **Status**: PENDING
+- **Status**: DONE (2026-02-25 — paired as 923128294076:4@s.whatsapp.net; bridge running on :8080)
 - **Blocks**: Phase 5 (HITL Approval + WhatsApp)
 - **Why Human**: WhatsApp Web requires scanning a QR code with your phone. This is a physical authentication step.
 - **Instructions**:
@@ -124,7 +124,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Build whatsapp_watcher.py, process incoming messages
 
 ### HT-005: Add New MCP Server Configurations
-- **Status**: PENDING (Gmail MCP + Obsidian MCP built — registration required)
+- **Status**: DONE (2026-02-25 — gmail_mcp + obsidian_mcp added to ~/.claude.json; restart Claude Code to activate)
 - **Blocks**: Phase 4 live execution (servers are BUILT; just need Claude Code registration)
 - **Why Human**: MCP server configuration requires editing `~/.claude.json` (Claude Code's global settings) and restarting the CLI. Claude Code cannot edit its own config file.
 
@@ -341,6 +341,8 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 | HT-002 | Set Up Gmail API OAuth2 Credentials | 2026-02-20 | token.json created, 52 emails processed live |
 | HT-009 | Configure LLM Provider API Key(s) | 2026-02-22 | ANTHROPIC_API_KEY set in .env, anthropic SDK installed, LLM_PROVIDER=anthropic |
 | HT-010 | Verify LLM Provider Connectivity | 2026-02-23 (PENDING) | Run `python scripts/verify_llm_provider.py` from project root to confirm provider responds correctly. Requires HT-009 complete. Exit 0 = pass. |
+| HT-005 | Add Gmail MCP + Obsidian MCP to ~/.claude.json | 2026-02-25 | Both servers registered; restart Claude Code to activate gmail_mcp and obsidian_mcp |
+| HT-004 | Authenticate WhatsApp Web Session | 2026-02-25 | Paired as 923128294076:4@s.whatsapp.net; Go bridge on :8080; Python MCP server configured |
 
 ---
 

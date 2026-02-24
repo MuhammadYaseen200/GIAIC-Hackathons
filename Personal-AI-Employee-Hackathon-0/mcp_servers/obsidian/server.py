@@ -12,14 +12,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from .models import (
+from mcp_servers.obsidian.models import (
     ListNotesInput,
     MoveNoteInput,
     ReadNoteInput,
     SearchNotesInput,
     WriteNoteInput,
 )
-from .tools import ObsidianTools
+from mcp_servers.obsidian.tools import ObsidianTools
 
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", "./vault")).resolve()
 if not VAULT_PATH.exists():

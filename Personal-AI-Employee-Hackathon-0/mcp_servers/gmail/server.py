@@ -13,15 +13,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from .auth import AuthRequiredError, get_gmail_service, reset_service_cache
-from .models import (
+from mcp_servers.gmail.auth import AuthRequiredError, get_gmail_service, reset_service_cache
+from mcp_servers.gmail.models import (
     AddLabelInput,
     GetEmailInput,
     ListEmailsInput,
     MoveEmailInput,
     SendEmailInput,
 )
-from .tools import GmailTools
+from mcp_servers.gmail.tools import GmailTools
 
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", "./vault"))
 
