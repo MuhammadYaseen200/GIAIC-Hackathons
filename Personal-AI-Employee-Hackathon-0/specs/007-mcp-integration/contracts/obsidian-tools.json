@@ -1,0 +1,206 @@
+{
+  "server": "obsidian",
+  "version": "1.0.0",
+  "description": "Obsidian vault MCP server tool contracts. All tools communicate via stdio JSON-RPC. No Obsidian app required — direct filesystem access.",
+  "tools": [
+    {
+      "name": "health_check",
+      "description": "Verify Obsidian MCP server is operational and vault directory is accessible.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["ok"] },
+          "vault_path": { "type": "string", "description": "Absolute path to configured vault" },
+          "note_count": { "type": "integer", "description": "Total .md files in vault" }
+        },
+        "required": ["status", "vault_path"]
+      },
+      "errorCodes": ["permission_denied", "not_found", "internal_error"]
+    },
+    {
+      "name": "read_note",
+      "description": "Read a vault note by vault-relative path. Returns parsed frontmatter and body.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Vault-relative path to the note, e.g. 'Needs_Action/email-001.md'"
+          }
+        },
+        "required": ["path"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "Vault-relative path (canonical)" },
+          "frontmatter": {
+            "type": "object",
+            "description": "Parsed YAML frontmatter key-value pairs"
+          },
+          "body": {
+            "type": "string",
+            "description": "Markdown body content after the frontmatter block"
+          }
+        },
+        "required": ["path", "frontmatter", "body"]
+      },
+      "errorCodes": ["not_found", "permission_denied", "parse_error", "internal_error"]
+    },
+    {
+      "name": "write_note",
+      "description": "Write a vault note atomically (temp file + rename). Creates parent directories if needed. Overwrites if exists.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Vault-relative path to write, e.g. 'Needs_Action/email-001.md'"
+          },
+          "frontmatter": {
+            "type": "object",
+            "description": "YAML frontmatter as key-value dict. Will be serialized to YAML block."
+          },
+          "body": {
+            "type": "string",
+            "description": "Markdown body content (written after frontmatter block)"
+          }
+        },
+        "required": ["path", "frontmatter", "body"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "frontmatter": { "type": "object" },
+          "body": { "type": "string" }
+        },
+        "required": ["path", "frontmatter", "body"],
+        "description": "Returns the written note content (round-trip verification)"
+      },
+      "errorCodes": ["permission_denied", "parse_error", "internal_error"]
+    },
+    {
+      "name": "list_notes",
+      "description": "List notes in a vault directory, optionally filtered by frontmatter field.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "directory": {
+            "type": "string",
+            "description": "Vault-relative directory path, e.g. 'Needs_Action'"
+          },
+          "filter": {
+            "type": "string",
+            "description": "Optional frontmatter filter in 'field:value' format, e.g. 'status:pending'. Case-sensitive exact match."
+          }
+        },
+        "required": ["directory"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string", "description": "Vault-relative path" },
+                "snippet": { "type": "string", "description": "null for list_notes" }
+              },
+              "required": ["path"]
+            }
+          },
+          "count": { "type": "integer" }
+        },
+        "required": ["notes", "count"]
+      },
+      "errorCodes": ["not_found", "permission_denied", "internal_error"]
+    },
+    {
+      "name": "move_note",
+      "description": "Move a vault note from source to destination path. Creates destination parent directory if needed. Destination must not already exist.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "Vault-relative source path, e.g. 'Needs_Action/email.md'"
+          },
+          "destination": {
+            "type": "string",
+            "description": "Vault-relative destination path, e.g. 'Done/email.md'"
+          }
+        },
+        "required": ["source", "destination"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "moved": { "type": "boolean", "enum": [true] },
+          "source": { "type": "string" },
+          "destination": { "type": "string" }
+        },
+        "required": ["moved", "source", "destination"]
+      },
+      "errorCodes": ["not_found", "permission_denied", "internal_error"]
+    },
+    {
+      "name": "search_notes",
+      "description": "Full-text search across all notes in the vault. Searches both frontmatter values and body content.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Text to search for (case-insensitive substring match)",
+            "minLength": 1
+          }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "snippet": {
+                  "type": "string",
+                  "description": "Up to 200 chars of matched context"
+                }
+              },
+              "required": ["path", "snippet"]
+            }
+          },
+          "count": { "type": "integer" }
+        },
+        "required": ["notes", "count"]
+      },
+      "errorCodes": ["permission_denied", "internal_error"]
+    }
+  ],
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "error": {
+        "type": "string",
+        "enum": ["not_found", "permission_denied", "parse_error", "internal_error"]
+      },
+      "message": { "type": "string" },
+      "details": {
+        "type": "object",
+        "description": "Optional structured context (e.g. path for not_found)"
+      }
+    },
+    "required": ["error", "message"]
+  }
+}
