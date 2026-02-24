@@ -1,0 +1,217 @@
+{
+  "server": "gmail",
+  "version": "1.0.0",
+  "description": "Gmail MCP server tool contracts. All tools communicate via stdio JSON-RPC.",
+  "tools": [
+    {
+      "name": "health_check",
+      "description": "Verify Gmail MCP server is operational and OAuth token is valid.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["ok"] },
+          "authenticated_as": { "type": "string", "description": "Gmail account email" },
+          "token_expires_at": { "type": "string", "description": "ISO8601 or 'never'" }
+        },
+        "required": ["status", "authenticated_as"]
+      },
+      "errorCodes": ["auth_required", "internal_error"]
+    },
+    {
+      "name": "send_email",
+      "description": "Send an email via authenticated Gmail account. Writes pre-action audit log before execution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Recipient email address",
+            "format": "email"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Email subject line",
+            "minLength": 1
+          },
+          "body": {
+            "type": "string",
+            "description": "Plain-text email body",
+            "minLength": 1
+          },
+          "reply_to_message_id": {
+            "type": "string",
+            "description": "Optional Gmail message ID to thread reply against (sets In-Reply-To header)"
+          }
+        },
+        "required": ["to", "subject", "body"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": { "type": "string", "description": "Sent Gmail message ID" },
+          "thread_id": { "type": "string", "description": "Gmail thread ID" },
+          "sent_at": { "type": "string", "description": "ISO8601 timestamp" }
+        },
+        "required": ["message_id", "thread_id", "sent_at"]
+      },
+      "errorCodes": ["auth_required", "send_failed", "rate_limited", "internal_error"],
+      "sideEffects": [
+        "Writes JSONL audit entry to vault/Logs/gmail_mcp_{date}.jsonl BEFORE send",
+        "Email is transmitted via Gmail SMTP"
+      ]
+    },
+    {
+      "name": "list_emails",
+      "description": "List emails matching a Gmail search query.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Gmail search query (same syntax as Gmail UI, e.g. 'is:unread', 'from:boss@co.com')",
+            "default": "is:unread"
+          },
+          "max_results": {
+            "type": "integer",
+            "description": "Maximum number of results to return (1-100)",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "emails": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "subject": { "type": "string" },
+                "sender": { "type": "string" },
+                "date": { "type": "string", "description": "ISO8601" },
+                "snippet": { "type": "string", "description": "~100 char preview" }
+              },
+              "required": ["id", "subject", "sender", "date", "snippet"]
+            }
+          },
+          "total_count": { "type": "integer" }
+        },
+        "required": ["emails", "total_count"]
+      },
+      "errorCodes": ["auth_required", "rate_limited", "internal_error"]
+    },
+    {
+      "name": "get_email",
+      "description": "Retrieve full email content by Gmail message ID.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "description": "Gmail message ID (from list_emails result)"
+          }
+        },
+        "required": ["message_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "subject": { "type": "string" },
+          "sender": { "type": "string" },
+          "to": { "type": "string" },
+          "date": { "type": "string", "description": "ISO8601" },
+          "body": { "type": "string", "description": "Decoded plain-text body" },
+          "has_attachments": { "type": "boolean" },
+          "attachment_names": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Filenames only — no attachment content returned"
+          }
+        },
+        "required": ["id", "subject", "sender", "to", "date", "body", "has_attachments", "attachment_names"]
+      },
+      "errorCodes": ["auth_required", "not_found", "rate_limited", "internal_error"]
+    },
+    {
+      "name": "move_email",
+      "description": "Move an email to a different Gmail label/folder.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "description": "Gmail message ID"
+          },
+          "destination_label": {
+            "type": "string",
+            "description": "Target Gmail label name (e.g. 'INBOX', 'DONE', 'AI_PROCESSED')"
+          }
+        },
+        "required": ["message_id", "destination_label"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "moved": { "type": "boolean", "enum": [true] },
+          "message_id": { "type": "string" },
+          "label": { "type": "string" }
+        },
+        "required": ["moved", "message_id", "label"]
+      },
+      "errorCodes": ["auth_required", "not_found", "rate_limited", "internal_error"]
+    },
+    {
+      "name": "add_label",
+      "description": "Apply a Gmail label to an email (non-destructive — does not remove existing labels).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "description": "Gmail message ID"
+          },
+          "label_name": {
+            "type": "string",
+            "description": "Label name to apply (e.g. 'AI_PROCESSED'). Label is created if it does not exist."
+          }
+        },
+        "required": ["message_id", "label_name"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "labeled": { "type": "boolean", "enum": [true] },
+          "message_id": { "type": "string" },
+          "label": { "type": "string" }
+        },
+        "required": ["labeled", "message_id", "label"]
+      },
+      "errorCodes": ["auth_required", "not_found", "rate_limited", "internal_error"]
+    }
+  ],
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "error": {
+        "type": "string",
+        "enum": ["auth_required", "not_found", "rate_limited", "send_failed", "internal_error"]
+      },
+      "message": { "type": "string" },
+      "details": {
+        "type": "object",
+        "description": "Optional structured context (e.g. retry_after for rate_limited)"
+      }
+    },
+    "required": ["error", "message"]
+  }
+}

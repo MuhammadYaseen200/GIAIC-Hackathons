@@ -45,15 +45,22 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 | 7 | **mcp_server_mysql** | Redundant MySQL config | Remove (using postgres for H0) | postgres MCP | LOW |
 | 8 | **peppeteer** | Misconfigured (typo in name?) | Fix config or remove (playwright covers this) | playwright MCP | LOW |
 
-## Needed MCP Servers (To Add)
+## Project-Custom MCP Servers (Built — Phase 4)
+
+| # | Server | Purpose | Tools | Path | Health Check | Phase |
+|---|--------|---------|-------|------|-------------|-------|
+| 1 | **gmail_mcp** | Gmail email send/read/act | `send_email`, `list_emails`, `get_email`, `move_email`, `add_label`, `health_check` | `mcp_servers/gmail/server.py` | `python3 -c "import asyncio; from mcp_servers.gmail.tools import GmailTools; from pathlib import Path; asyncio.run(GmailTools(Path('./vault')).health_check())"` | Phase 4 |
+| 2 | **obsidian_mcp** | Vault read/write/search | `read_note`, `write_note`, `list_notes`, `move_note`, `search_notes`, `health_check` | `mcp_servers/obsidian/server.py` | `python3 -c "import asyncio; from mcp_servers.obsidian.tools import ObsidianTools; from pathlib import Path; asyncio.run(ObsidianTools(Path('./vault')).health_check())"` | Phase 4 |
+
+**Registration**: See `ai-control/HUMAN-TASKS.md` HT-005 for exact `~/.claude.json` config blocks.
+
+## Needed MCP Servers (To Add — Future Phases)
 
 | # | Server | Purpose | Phase Required | Human Action Required | Priority |
 |---|--------|---------|---------------|----------------------|----------|
-| 1 | **Gmail MCP** | Email reading and sending | Phase 2 (Bronze) | Set up Gmail API OAuth2 credentials, configure MCP | CRITICAL |
-| 2 | **WhatsApp MCP** | Message monitoring and sending | Phase 5 (Silver) | Authenticate WhatsApp Web session, configure MCP | HIGH |
-| 3 | **Obsidian MCP** | Vault read/write from Claude | Phase 1 | Install Obsidian MCP plugin, configure vault path | HIGH |
-| 4 | **Calendar MCP** | Schedule management | Phase 5 (Silver) | Set up Google Calendar API credentials | MEDIUM |
-| 5 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
+| 1 | **WhatsApp MCP** | Message monitoring and sending | Phase 5 (Silver) | Authenticate WhatsApp Web session, configure MCP | HIGH |
+| 2 | **Calendar MCP** | Schedule management | Phase 5 (Silver) | Set up Google Calendar API credentials | MEDIUM |
+| 3 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
 
 ## MCP Fallback Protocol
 

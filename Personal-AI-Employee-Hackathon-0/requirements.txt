@@ -19,6 +19,11 @@ pydantic           # Structured output validation (LLMDecision, EmailContext, et
 pyyaml>=6.0
 python-dotenv>=1.0.0
 
+# --- Phase 4: MCP Integration ---
+mcp>=1.0.0         # FastMCP server framework (gmail_mcp + obsidian_mcp servers)
+jsonschema>=4.0.0  # Contract test validation
+anyio>=4.0.0       # Async I/O foundation for MCP (transitively required)
+
 # --- Testing ---
 pytest
 pytest-asyncio     # Async test support for orchestrator lifecycle tests

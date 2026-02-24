@@ -124,30 +124,113 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Build whatsapp_watcher.py, process incoming messages
 
 ### HT-005: Add New MCP Server Configurations
-- **Status**: PENDING
-- **Blocks**: Various phases
-- **Why Human**: MCP server configuration requires editing Claude Code's settings JSON and potentially restarting the CLI.
+- **Status**: PENDING (Gmail MCP + Obsidian MCP built — registration required)
+- **Blocks**: Phase 4 live execution (servers are BUILT; just need Claude Code registration)
+- **Why Human**: MCP server configuration requires editing `~/.claude.json` (Claude Code's global settings) and restarting the CLI. Claude Code cannot edit its own config file.
+
 - **Instructions**:
 
-  **Gmail MCP** (Phase 2):
-  - After HT-002 is complete (OAuth credentials ready)
-  - Add Gmail MCP server config to Claude Code settings
-  - Claude will provide the exact JSON config to add
+  **Step 1 — Open `~/.claude.json`** (create if it doesn't exist):
+  ```bash
+  code ~/.claude.json   # or: nano ~/.claude.json
+  ```
 
-  **WhatsApp MCP** (Phase 5):
-  - After HT-004 is complete (session authenticated)
-  - Add WhatsApp MCP server config
-  - Claude will provide the exact JSON config
+  **Step 2 — Add the Gmail MCP server block**:
 
-  **Obsidian MCP** (Phase 1):
-  - Install Obsidian Local REST API plugin in Obsidian
-  - Configure API key in plugin settings
-  - Add to `.env`: `OBSIDIAN_API_KEY=<your-key>`
-  - Add Obsidian MCP server config
-  - Claude will provide the exact JSON config
+  Add under `"mcpServers"` (create the key if missing):
+  ```json
+  "gmail_mcp": {
+    "command": "python3",
+    "args": [
+      "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
+    ],
+    "env": {
+      "GMAIL_CREDENTIALS_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
+      "GMAIL_TOKEN_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
+      "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+    }
+  }
+  ```
 
-- **Verification**: Each MCP appears in `/health` check after restart
-- **Claude Can Then**: Use MCP tools for Gmail/WhatsApp/Obsidian operations
+  **Step 3 — Add the Obsidian MCP server block**:
+  ```json
+  "obsidian_mcp": {
+    "command": "python3",
+    "args": [
+      "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
+    ],
+    "env": {
+      "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+    }
+  }
+  ```
+
+  **Full `~/.claude.json` example** (if starting fresh):
+  ```json
+  {
+    "mcpServers": {
+      "gmail_mcp": {
+        "command": "python3",
+        "args": [
+          "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
+        ],
+        "env": {
+          "GMAIL_CREDENTIALS_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
+          "GMAIL_TOKEN_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
+          "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+        }
+      },
+      "obsidian_mcp": {
+        "command": "python3",
+        "args": [
+          "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
+        ],
+        "env": {
+          "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+        }
+      }
+    }
+  }
+  ```
+
+  **Step 4 — Restart Claude Code** (required for MCP changes to take effect):
+  - Close and reopen your Claude Code terminal session
+
+  **Step 5 — Verify health_check for each MCP**:
+  ```bash
+  # Test Gmail MCP health_check manually:
+  cd /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0
+  VAULT_PATH=./vault GMAIL_CREDENTIALS_PATH=./credentials.json GMAIL_TOKEN_PATH=./token.json \
+    python3 -c "
+  import asyncio, sys
+  sys.path.insert(0, '.')
+  from mcp_servers.gmail.tools import GmailTools
+  from pathlib import Path
+  async def test():
+      t = GmailTools(Path('./vault'))
+      r = await t.health_check()
+      print(r)
+  asyncio.run(test())
+  "
+
+  # Test Obsidian MCP health_check manually:
+  VAULT_PATH=./vault python3 -c "
+  import asyncio, sys
+  sys.path.insert(0, '.')
+  from mcp_servers.obsidian.tools import ObsidianTools
+  from pathlib import Path
+  async def test():
+      t = ObsidianTools(Path('./vault'))
+      r = await t.health_check()
+      print(r)
+  asyncio.run(test())
+  "
+  ```
+  - Gmail: expect `{"status": "ok", "email": "<your-email>@gmail.com", "messages_total": <N>}`
+  - Obsidian: expect `{"status": "ok", "vault_path": "...", "note_count": <N>}`
+
+- **Verification**: After Claude Code restart, both `gmail_mcp` and `obsidian_mcp` appear as available MCP servers in the session
+- **Claude Can Then**: Use `gmail_mcp` and `obsidian_mcp` tools natively in any Claude Code session for this project; orchestrator can send approved draft replies live
 
 ---
 

@@ -43,6 +43,7 @@ from orchestrator.prompts import (
     build_user_message,
     prepare_body_for_context,
 )
+from orchestrator.mcp_client import MCPClient
 from orchestrator.providers.base import LLMProvider
 from orchestrator.vault_ops import (
     append_to_body,
@@ -91,6 +92,20 @@ class RalphWiggumOrchestrator(BaseWatcher):
         self._needs_action_dir = self.vault_path / "Needs_Action"
         self._done_dir = self.vault_path / "Done"
         self._drafts_dir = self.vault_path / "Drafts"
+
+        # Phase 4: MCP clients for approved draft send loop + vault operations
+        self._gmail_mcp = MCPClient(
+            server_name="gmail",
+            command=["python3", "mcp_servers/gmail/server.py"],
+            vault_path=self.vault_path,
+        )
+        self._obsidian_mcp = MCPClient(
+            server_name="obsidian",
+            command=["python3", "mcp_servers/obsidian/server.py"],
+            vault_path=self.vault_path,
+        )
+        self._approved_dir = self.vault_path / "Approved"
+        self._approved_dir.mkdir(parents=True, exist_ok=True)
 
     # -----------------------------------------------------------------------
     # BaseWatcher abstract method implementations
@@ -309,60 +324,238 @@ class RalphWiggumOrchestrator(BaseWatcher):
     ) -> Path | None:
         """Apply an LLM decision to vault files.
 
+        MCP-first: uses Obsidian MCPClient for vault operations.
+        Fallback: direct vault_ops calls if MCP unavailable.
+
         Returns:
             Path to the created draft file, or None if no draft was written.
         """
         filepath = Path(context.filepath) if context.filepath else None
         draft_path: Path | None = None
+        decided_by = f"{self._provider.provider_name()}:{self._provider.model_name()}"
 
         if decision.decision == "draft_reply":
-            # Write draft + update status
             if filepath and decision.reply_body:
                 draft = DraftReply(
                     source_message_id=context.message_id,
                     to=context.sender,
                     subject=context.subject,
-                    drafted_by=f"{self._provider.provider_name()}:{self._provider.model_name()}",
+                    drafted_by=decided_by,
                     drafted_at=DraftReply.now_iso(),
                     reply_body=decision.reply_body,
                 )
-                draft_path = write_draft_reply(self._drafts_dir, draft)
+                # MCP-first: write draft via Obsidian MCP
+                draft_rel = str(
+                    Path("Drafts") / f"draft-{context.message_id[:8]}.md"
+                )
+                draft_fm = {
+                    "type": draft.type,
+                    "status": draft.status,
+                    "source_message_id": draft.source_message_id,
+                    "to": draft.to,
+                    "subject": draft.subject,
+                    "drafted_by": draft.drafted_by,
+                    "drafted_at": draft.drafted_at,
+                }
+                await self._obsidian_mcp.call_tool(
+                    "write_note",
+                    {"path": draft_rel, "frontmatter": draft_fm, "body": draft.reply_body},
+                    fallback=lambda: write_draft_reply(self._drafts_dir, draft),
+                )
+                draft_path = self._drafts_dir / f"draft-{context.message_id[:8]}.md"
             if filepath:
-                update_frontmatter(filepath, {"status": "pending_approval"})
+                src_rel = str(filepath.relative_to(self.vault_path))
+                await self._obsidian_mcp.call_tool(
+                    "write_note",
+                    {"path": src_rel,
+                     "frontmatter": {"status": "pending_approval"},
+                     "body": context.body or ""},
+                    fallback=lambda: update_frontmatter(filepath, {"status": "pending_approval"}),
+                )
 
         elif decision.decision == "needs_info":
             if filepath:
                 note = f"**AI needs more info**: {decision.info_needed}"
-                append_to_body(filepath, note)
-                update_frontmatter(filepath, {"status": "needs_info"})
+                src_rel = str(filepath.relative_to(self.vault_path))
+                await self._obsidian_mcp.call_tool(
+                    "write_note",
+                    {"path": src_rel,
+                     "frontmatter": {"status": "needs_info"},
+                     "body": (context.body or "") + f"\n\n{note}"},
+                    fallback=lambda: (
+                        append_to_body(filepath, note),
+                        update_frontmatter(filepath, {"status": "needs_info"}),
+                    ),
+                )
 
         elif decision.decision == "archive":
-            # Update status then move to Done/
             if filepath:
-                update_frontmatter(filepath, {"status": "done"})
-                move_to_done(filepath, self._done_dir)
+                src_rel = str(filepath.relative_to(self.vault_path))
+                dst_rel = str(
+                    Path("Done") / filepath.name
+                )
+                await self._obsidian_mcp.call_tool(
+                    "move_note",
+                    {"source": src_rel, "destination": dst_rel},
+                    fallback=lambda: (
+                        update_frontmatter(filepath, {"status": "done"}),
+                        move_to_done(filepath, self._done_dir),
+                    ),
+                )
 
         elif decision.decision == "urgent":
             if filepath:
-                update_frontmatter(filepath, {"status": "pending_approval", "priority": "urgent"})
+                src_rel = str(filepath.relative_to(self.vault_path))
+                await self._obsidian_mcp.call_tool(
+                    "write_note",
+                    {"path": src_rel,
+                     "frontmatter": {"status": "pending_approval", "priority": "urgent"},
+                     "body": context.body or ""},
+                    fallback=lambda: update_frontmatter(
+                        filepath, {"status": "pending_approval", "priority": "urgent"}
+                    ),
+                )
                 if decision.reply_body:
                     draft = DraftReply(
                         source_message_id=context.message_id,
                         to=context.sender,
                         subject=context.subject,
-                        drafted_by=f"{self._provider.provider_name()}:{self._provider.model_name()}",
+                        drafted_by=decided_by,
                         drafted_at=DraftReply.now_iso(),
                         reply_body=decision.reply_body,
                     )
-                    draft_path = write_draft_reply(self._drafts_dir, draft)
+                    draft_rel = str(
+                        Path("Drafts") / f"draft-{context.message_id[:8]}.md"
+                    )
+                    draft_fm = {
+                        "type": draft.type,
+                        "status": draft.status,
+                        "source_message_id": draft.source_message_id,
+                        "to": draft.to,
+                        "subject": draft.subject,
+                        "drafted_by": draft.drafted_by,
+                        "drafted_at": draft.drafted_at,
+                    }
+                    await self._obsidian_mcp.call_tool(
+                        "write_note",
+                        {"path": draft_rel, "frontmatter": draft_fm, "body": draft.reply_body},
+                        fallback=lambda: write_draft_reply(self._drafts_dir, draft),
+                    )
+                    draft_path = self._drafts_dir / f"draft-{context.message_id[:8]}.md"
 
         elif decision.decision == "delegate":
             if filepath:
                 note = f"**AI delegation recommendation**: {decision.delegation_target}"
-                append_to_body(filepath, note)
-                update_frontmatter(filepath, {"status": "pending_approval"})
+                src_rel = str(filepath.relative_to(self.vault_path))
+                await self._obsidian_mcp.call_tool(
+                    "write_note",
+                    {"path": src_rel,
+                     "frontmatter": {"status": "pending_approval"},
+                     "body": (context.body or "") + f"\n\n{note}"},
+                    fallback=lambda: (
+                        append_to_body(filepath, note),
+                        update_frontmatter(filepath, {"status": "pending_approval"}),
+                    ),
+                )
 
         return draft_path
+
+    # -----------------------------------------------------------------------
+    # Phase 4: Approved draft send loop (HITL send via Gmail MCP)
+    # -----------------------------------------------------------------------
+
+    async def _run_poll_cycle(self) -> None:
+        """Override BaseWatcher poll cycle to add approved draft processing."""
+        await super()._run_poll_cycle()
+
+        # Process approved drafts (Phase 4 HITL send loop)
+        try:
+            approved = await self._scan_approved_drafts()
+            for draft_path in approved:
+                await self._send_approved_draft(draft_path)
+        except Exception as e:
+            self._log("approved_draft_scan_error", LogSeverity.ERROR, {"error": str(e)})
+
+    async def _scan_approved_drafts(self) -> list[Path]:
+        """Scan vault/Approved/ for *.md files with status: pending_approval.
+
+        Approved draft files are not email notes (no message_id required).
+        Parses frontmatter directly rather than using read_email_context.
+        """
+        import yaml
+
+        approved = []
+        for path in sorted(self._approved_dir.glob("*.md")):
+            try:
+                content = path.read_text(encoding="utf-8")
+                parts = content.split("---", 2)
+                if len(parts) < 3:
+                    continue
+                fm = yaml.safe_load(parts[1]) or {}
+                if fm.get("status") == "pending_approval":
+                    approved.append(path)
+            except Exception as e:
+                self._log("read_approved_error", LogSeverity.ERROR, {
+                    "path": str(path),
+                    "error": str(e),
+                })
+        return approved
+
+    async def _send_approved_draft(self, draft_path: Path) -> None:
+        """Send an approved draft via Gmail MCP, then move to Done/ on success."""
+        import yaml
+
+        content = draft_path.read_text(encoding="utf-8")
+        parts = content.split("---", 2)
+        if len(parts) < 3:
+            self._log("invalid_draft", LogSeverity.ERROR, {"path": str(draft_path)})
+            return
+
+        fm = yaml.safe_load(parts[1]) or {}
+        body = parts[2].strip()
+        to = fm.get("to", "")
+        subject = fm.get("subject", "")
+        reply_to = fm.get("original_message_id")
+
+        if not to or not subject:
+            self._log("incomplete_draft", LogSeverity.ERROR, {
+                "path": str(draft_path),
+                "fm": fm,
+            })
+            return
+
+        async def fallback():
+            """Fallback: keep draft in Approved/ for retry next cycle."""
+            self._log("send_skipped_mcp_unavailable", LogSeverity.WARNING, {
+                "path": str(draft_path),
+            })
+            return {}
+
+        result = await self._gmail_mcp.call_tool(
+            "send_email",
+            {
+                "to": to,
+                "subject": subject,
+                "body": body,
+                "reply_to_message_id": reply_to,
+            },
+            fallback=fallback,
+        )
+
+        if result.get("error"):
+            self._log("email_send_failed", LogSeverity.ERROR, {
+                "path": str(draft_path),
+                "error": result,
+            })
+            return
+
+        # Success: move to Done/
+        move_to_done(draft_path, self._done_dir)
+        self._log("email_sent", LogSeverity.INFO, {
+            "draft": str(draft_path),
+            "message_id": result.get("message_id"),
+            "sent_at": result.get("sent_at"),
+        })
 
     # -----------------------------------------------------------------------
     # Extended state persistence
