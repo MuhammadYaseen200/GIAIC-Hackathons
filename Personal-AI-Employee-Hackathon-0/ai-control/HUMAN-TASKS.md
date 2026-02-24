@@ -14,7 +14,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 ## Critical Priority (Blocks Phase 1-2)
 
 ### HT-001: Create Obsidian Vault and Folder Structure
-- **Status**: PENDING
+- **Status**: DONE (2026-02-17 — vault/ initialized with all required dirs)
 - **Blocks**: Phase 1 (Obsidian Vault)
 - **Why Human**: Obsidian is a desktop application. Claude cannot launch GUI apps or create vaults through the Obsidian interface.
 - **Instructions**:
@@ -41,7 +41,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Create markdown templates, populate Dashboard.md, write watcher output files
 
 ### HT-002: Set Up Gmail API OAuth2 Credentials
-- **Status**: PENDING
+- **Status**: DONE (2026-02-20 — token.json created, 52 emails processed live)
 - **Blocks**: Phase 2 (First Watcher - Bronze)
 - **Why Human**: Google Cloud Console requires browser login, project creation, and OAuth consent screen setup. These are interactive GUI flows with CAPTCHA and 2FA.
 - **Instructions**:
@@ -310,7 +310,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Deploy watchers, orchestrator, and MCP servers to cloud
 
 ### HT-010: Verify LLM Provider Connectivity
-- **Status**: PENDING
+- **Status**: DONE (2026-02-23 — ANTHROPIC_API_KEY verified, orchestrator ran live against vault/Needs_Action/)
 - **Blocks**: Phase 3 (LLM Reasoning Loop) — must confirm before relying on live orchestrator
 - **Why Human**: Requires your actual API key and network access to the provider endpoint. Claude cannot call external APIs directly without your credentials.
 - **Instructions**:

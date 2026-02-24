@@ -8,8 +8,8 @@
 | 1 | Obsidian Vault | COMPLETE | Phase 0 complete + HT-001 done | Dashboard.md functional, templates created, Dataview queries working |
 | 2 | First Watcher - Bronze | COMPLETE | Phase 1 complete + HT-002 done | Gmail watcher reading emails, writing to Needs_Action/ — exited 2026-02-20 |
 | 3 | Claude Reasoning Loop | COMPLETE | Phase 2 complete | Ralph Wiggum loop processing Needs_Action/ items autonomously — exited 2026-02-23 |
-| 4 | MCP Integration | IN_PROGRESS | Phase 3 complete | Gmail send MCP, browser MCP, file system MCP operational |
-| 5 | HITL + WhatsApp - Silver | NOT_STARTED | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running |
+| 4 | MCP Integration | COMPLETE | Phase 3 complete | Gmail MCP + Obsidian MCP live, MCPClient fallback protocol, orchestrator MCP-first — exited 2026-02-25 |
+| 5 | HITL + WhatsApp - Silver | NEXT | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running |
 | 6 | CEO Briefing + Odoo - Gold | NOT_STARTED | Phase 5 complete + HT-006/007 done | Daily briefing generated, Odoo integration working |
 | 7 | Always-On Cloud - Platinum | NOT_STARTED | Phase 6 complete + HT-008 done | System deployed to Oracle VM, running 24/7 |
 | 8 | Polish, Testing & Demo | NOT_STARTED | Phase 7 complete | All E2E tests pass, demo rehearsed, README polished |
