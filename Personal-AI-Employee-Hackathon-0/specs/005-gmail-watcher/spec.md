@@ -2,7 +2,7 @@
 
 **Feature Branch**: `005-gmail-watcher`
 **Created**: 2026-02-17
-**Status**: Draft
+**Status**: Complete ✅
 **Phase**: 2 (First Watcher -- Bronze)
 **Input**: User description: "Create BaseWatcher class and GmailWatcher for Phase 2 -- read Gmail inbox via OAuth2, parse emails, write actionable items as markdown files to vault/Needs_Action/"
 
@@ -25,22 +25,22 @@ Per Constitution Principle VII (Phase-Gated Delivery), Phase 2 MUST NOT begin un
 
 ### Entry Criteria (from Phase 1)
 
-- [ ] Obsidian vault initialized at `vault/` with canonical folder structure (HT-001 DONE)
-- [ ] `vault/Needs_Action/`, `vault/Inbox/`, `vault/Logs/`, `vault/Done/` directories exist
-- [ ] `Dashboard.md` and `Company_Handbook.md` templates created
-- [ ] Phase 1 QA-Overseer sign-off recorded
-- [ ] `/phase-execution-controller` validates Phase 1 complete
+- [x] Obsidian vault initialized at `vault/` with canonical folder structure (HT-001 DONE)
+- [x] `vault/Needs_Action/`, `vault/Inbox/`, `vault/Logs/`, `vault/Done/` directories exist
+- [x] `Dashboard.md` and `Company_Handbook.md` templates created
+- [x] Phase 1 QA-Overseer sign-off recorded
+- [x] `/phase-execution-controller` validates Phase 1 complete
 
 ### Exit Criteria (for Phase 2)
 
-- [ ] BaseWatcher abstract class exists with lifecycle contract (start/stop/poll/process_item)
-- [ ] GmailWatcher extends BaseWatcher, connects via OAuth2, and reads inbox
-- [ ] Emails produce correctly formatted markdown files in vault directories
-- [ ] Duplicate prevention verified across 100+ poll cycles (SC-002)
-- [ ] Watcher runs for 24+ hours without memory leaks or crashes (SC-006)
-- [ ] Integration tests pass with mock Gmail data
-- [ ] All acceptance scenarios in this spec verified by QA-Overseer
-- [ ] `/phase-execution-controller` validates Phase 2 complete
+- [x] BaseWatcher abstract class exists with lifecycle contract (start/stop/poll/process_item)
+- [x] GmailWatcher extends BaseWatcher, connects via OAuth2, and reads inbox
+- [x] Emails produce correctly formatted markdown files in vault directories
+- [x] Duplicate prevention verified across 100+ poll cycles (SC-002)
+- [x] Watcher runs for 24+ hours without memory leaks or crashes (SC-006)
+- [x] Integration tests pass with mock Gmail data
+- [x] All acceptance scenarios in this spec verified by QA-Overseer
+- [x] `/phase-execution-controller` validates Phase 2 complete
 
 ## Constraints (DEFINE FIRST)
 
