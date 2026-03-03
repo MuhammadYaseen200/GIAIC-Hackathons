@@ -1,0 +1,107 @@
+{
+  "server": "whatsapp_mcp",
+  "version": "1.0.0",
+  "transport": "stdio",
+  "framework": "FastMCP + Pydantic v2",
+  "entry_point": "mcp_servers/whatsapp/server.py",
+  "env_required": ["OWNER_WHATSAPP_NUMBER", "WHATSAPP_BACKEND", "WHATSAPP_BRIDGE_URL"],
+  "tools": [
+    {
+      "name": "send_message",
+      "description": "Send a WhatsApp text message to a recipient. Routes to Go bridge (default) or pywa backend based on WHATSAPP_BACKEND env var.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Recipient phone number in E.164 format (e.g., '+923001234567') or WhatsApp JID (e.g., '923001234567@s.whatsapp.net')",
+            "pattern": "^(\\+\\d{10,15}|\\d{10,15}@s\\.whatsapp\\.net)$"
+          },
+          "body": {
+            "type": "string",
+            "description": "Text message content (max 4096 characters)",
+            "maxLength": 4096
+          }
+        },
+        "required": ["to", "body"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": { "type": "string", "description": "Sent message ID from backend" },
+          "status": { "type": "string", "enum": ["sent", "queued"], "description": "Send status" },
+          "sent_at": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp" }
+        },
+        "required": ["message_id", "status", "sent_at"]
+      },
+      "errorCodes": ["send_failed", "auth_required", "rate_limited", "internal_error"],
+      "notes": [
+        "For WHATSAPP_BACKEND=go_bridge: calls POST http://<WHATSAPP_BRIDGE_URL>/send",
+        "For WHATSAPP_BACKEND=pywa: calls wa.send_message() via pywa library",
+        "Sensitive content MUST be redacted by Privacy Gate before calling this tool",
+        "Max 1 message per second to avoid rate limiting"
+      ]
+    },
+    {
+      "name": "health_check",
+      "description": "Check WhatsApp backend connectivity and return status information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["healthy", "degraded", "down"],
+            "description": "Backend health status"
+          },
+          "connected_number": {
+            "type": ["string", "null"],
+            "description": "E.164 phone number if connected, null if not connected"
+          },
+          "backend": {
+            "type": "string",
+            "enum": ["go_bridge", "pywa"],
+            "description": "Active backend type"
+          },
+          "bridge_url": {
+            "type": ["string", "null"],
+            "description": "Go bridge URL (e.g., 'http://localhost:8080') if backend=go_bridge"
+          }
+        },
+        "required": ["status", "backend"]
+      },
+      "errorCodes": ["internal_error"],
+      "notes": [
+        "health_check must respond within 3 seconds",
+        "Returns degraded if backend responds but with errors",
+        "Returns down if backend is unreachable"
+      ]
+    }
+  ],
+  "errorFormat": {
+    "description": "All errors returned as CallToolResult(isError=True) with JSON content",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "enum": ["auth_required", "not_found", "rate_limited", "permission_denied", "parse_error", "send_failed", "mcp_unavailable", "internal_error"]
+        },
+        "message": { "type": "string" },
+        "details": { "type": ["object", "null"] }
+      },
+      "required": ["error", "message"]
+    }
+  },
+  "contractTests": [
+    "tests/contract/test_whatsapp_mcp_contracts.py",
+    "Verify send_message output matches outputSchema",
+    "Verify error format matches errorFormat schema",
+    "Verify health_check responds within 3s",
+    "Verify isError=True flag set on all error responses"
+  ]
+}
