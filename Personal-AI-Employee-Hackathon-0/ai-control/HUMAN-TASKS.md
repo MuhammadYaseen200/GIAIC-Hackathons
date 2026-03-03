@@ -14,7 +14,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 ## Critical Priority (Blocks Phase 1-2)
 
 ### HT-001: Create Obsidian Vault and Folder Structure
-- **Status**: PENDING
+- **Status**: DONE (2026-02-17 — vault/ initialized with all required dirs)
 - **Blocks**: Phase 1 (Obsidian Vault)
 - **Why Human**: Obsidian is a desktop application. Claude cannot launch GUI apps or create vaults through the Obsidian interface.
 - **Instructions**:
@@ -41,7 +41,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Create markdown templates, populate Dashboard.md, write watcher output files
 
 ### HT-002: Set Up Gmail API OAuth2 Credentials
-- **Status**: PENDING
+- **Status**: DONE (2026-02-20 — token.json created, 52 emails processed live)
 - **Blocks**: Phase 2 (First Watcher - Bronze)
 - **Why Human**: Google Cloud Console requires browser login, project creation, and OAuth consent screen setup. These are interactive GUI flows with CAPTCHA and 2FA.
 - **Instructions**:
@@ -108,7 +108,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 ## High Priority (Blocks Phase 5 Silver)
 
 ### HT-004: Authenticate WhatsApp Web Session
-- **Status**: DONE (2026-02-25 — paired as 923128294076:4@s.whatsapp.net; bridge running on :8080)
+- **Status**: DONE (2026-02-25 — paired as XXXXXXXXXXXX:4@s.whatsapp.net; bridge running on :8080)
 - **Blocks**: Phase 5 (HITL Approval + WhatsApp)
 - **Why Human**: WhatsApp Web requires scanning a QR code with your phone. This is a physical authentication step.
 - **Instructions**:
@@ -232,6 +232,49 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Verification**: After Claude Code restart, both `gmail_mcp` and `obsidian_mcp` appear as available MCP servers in the session
 - **Claude Can Then**: Use `gmail_mcp` and `obsidian_mcp` tools natively in any Claude Code session for this project; orchestrator can send approved draft replies live
 
+### HT-011: Authorize Google Calendar API OAuth2
+- **Status**: IN_PROGRESS (2026-03-02 — calendar.readonly scope added to consent screen; awaiting calendar_auth.py run to generate calendar_token.json)
+- **Blocks**: Phase 5 Calendar MCP live run
+- **Why Human**: Google Cloud Console requires browser login and OAuth consent screen setup. Requires interactive 2FA.
+- **Instructions**:
+  1. Go to https://console.cloud.google.com/ (same project: "H0-Personal-AI-Employee")
+  2. Enable Google Calendar API: APIs & Services → Library → Google Calendar API → Enable
+  3. Add scope to existing OAuth consent screen: `calendar.readonly`
+  4. Re-download `credentials.json` (or add scope to existing credentials if that is sufficient)
+  5. Run initial Calendar auth flow (Claude will provide `scripts/calendar_auth.py`):
+     ```bash
+     python scripts/calendar_auth.py
+     ```
+     This will open a browser for you to log in and authorize calendar access.
+  6. `calendar_token.json` will be created. Add to `.env`:
+     ```
+     GOOGLE_CALENDAR_CREDENTIALS_PATH=./credentials.json
+     GOOGLE_CALENDAR_TOKEN_PATH=./calendar_token.json
+     ```
+- **Verification**: `calendar_token.json` exists and contains valid `refresh_token`; `python scripts/calendar_auth.py --verify` exits 0
+- **Claude Can Then**: Run Calendar MCP server live, query events.list(), test check_availability tool
+
+### HT-012: Configure pywa Cloud API Credentials (if using pywa backend)
+- **Status**: DEFERRED (2026-03-02 — Go bridge `:8080` is the primary backend; pywa is secondary fallback. HT-012 only needed if Go bridge fails during Phase 5.)
+- **Blocks**: pywa backend for WhatsApp watcher (Go bridge is the fallback that already works)
+- **Why Human**: Requires Meta Developer account, WhatsApp Business App setup, phone number registration, and webhook configuration through Meta's browser console.
+- **Instructions**:
+  1. Go to https://developers.facebook.com/ and create a developer account
+  2. Create a new App (type: Business) named "H0-AI-Employee"
+  3. Add "WhatsApp" product to the app
+  4. Register your phone number in WhatsApp Business API
+  5. Generate a System User Token with `whatsapp_business_messaging` and `whatsapp_business_management` scopes
+  6. Set up webhook URL (requires a public HTTPS endpoint — use ngrok for local testing)
+  7. Add to `.env`:
+     ```
+     WHATSAPP_ACCESS_TOKEN=<your-token>
+     WHATSAPP_PHONE_NUMBER_ID=<your-phone-number-id>
+     WHATSAPP_VERIFY_TOKEN=<your-webhook-verify-token>
+     WHATSAPP_BACKEND=pywa
+     ```
+- **Verification**: pywa watcher receives a test message and writes to `vault/Needs_Action/`
+- **Claude Can Then**: Use pywa backend in addition to (or instead of) the Go bridge
+
 ---
 
 ## Medium Priority (Blocks Phase 6 Gold)
@@ -310,7 +353,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Deploy watchers, orchestrator, and MCP servers to cloud
 
 ### HT-010: Verify LLM Provider Connectivity
-- **Status**: PENDING
+- **Status**: DONE (2026-02-23 — ANTHROPIC_API_KEY verified, orchestrator ran live against vault/Needs_Action/)
 - **Blocks**: Phase 3 (LLM Reasoning Loop) — must confirm before relying on live orchestrator
 - **Why Human**: Requires your actual API key and network access to the provider endpoint. Claude cannot call external APIs directly without your credentials.
 - **Instructions**:
@@ -342,7 +385,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 | HT-009 | Configure LLM Provider API Key(s) | 2026-02-22 | ANTHROPIC_API_KEY set in .env, anthropic SDK installed, LLM_PROVIDER=anthropic |
 | HT-010 | Verify LLM Provider Connectivity | 2026-02-23 (PENDING) | Run `python scripts/verify_llm_provider.py` from project root to confirm provider responds correctly. Requires HT-009 complete. Exit 0 = pass. |
 | HT-005 | Add Gmail MCP + Obsidian MCP to ~/.claude.json | 2026-02-25 | Both servers registered; restart Claude Code to activate gmail_mcp and obsidian_mcp |
-| HT-004 | Authenticate WhatsApp Web Session | 2026-02-25 | Paired as 923128294076:4@s.whatsapp.net; Go bridge on :8080; Python MCP server configured |
+| HT-004 | Authenticate WhatsApp Web Session | 2026-02-25 | Paired as XXXXXXXXXXXX:4@s.whatsapp.net; Go bridge on :8080; Python MCP server configured |
 
 ---
 
