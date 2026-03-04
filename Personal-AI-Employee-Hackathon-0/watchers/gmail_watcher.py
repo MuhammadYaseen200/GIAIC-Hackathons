@@ -20,6 +20,7 @@ from googleapiclient.discovery import build
 
 from watchers.base_watcher import BaseWatcher
 from watchers.models import Classification, EmailItem, LogSeverity
+from watchers.privacy_gate import run_privacy_gate, PrivacyLogEntry
 from watchers.utils import (
     PrerequisiteError,
     atomic_write,
@@ -478,7 +479,37 @@ class GmailWatcher(BaseWatcher):
 
     async def process_item(self, item: Any) -> None:
         """Process a single email: generate file, write to vault, update state."""
+        import json as _json
+
         email: EmailItem = item
+
+        # Privacy Gate — Layer 0 (ADR-0010)
+        _pg_result = run_privacy_gate(body=email.body, media_type="text")
+        email = EmailItem(
+            message_id=email.message_id,
+            sender=email.sender,
+            recipients=email.recipients,
+            subject=email.subject,
+            body=_pg_result.body,
+            date=email.date,
+            labels=email.labels,
+            classification=email.classification,
+            has_attachments=email.has_attachments,
+            raw_size=email.raw_size,
+        )
+        if _pg_result.redaction_applied or _pg_result.media_blocked:
+            _log_entry = PrivacyLogEntry(
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                media_blocked=_pg_result.media_blocked,
+                redaction_applied=_pg_result.redaction_applied,
+                patterns_matched=_pg_result.patterns_matched,
+                source="gmail",
+            )
+            _log_path = self.vault_path / "Logs" / "privacy_gate.jsonl"
+            _log_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(_log_path, "a") as f:
+                f.write(_json.dumps(_log_entry.to_dict()) + "\n")
+
         target_dir = self._get_vault_target_dir(email.classification)
         filename = self._generate_filename(email, target_dir)
         content = self._render_markdown(email)

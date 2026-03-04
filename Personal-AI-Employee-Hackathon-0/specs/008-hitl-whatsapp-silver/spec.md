@@ -3,7 +3,7 @@
 **Feature Branch**: `008-hitl-whatsapp-silver`
 **Created**: 2026-03-02
 **Version**: 2.0.0 *(enriched with full governance, RI, agent team, SWARM plan)*
-**Status**: Draft
+**Status**: Complete
 **Phase**: 5 — Silver Tier
 **Input**: Phase 5: HITL + WhatsApp Silver tier — WhatsApp watcher, HITL approval workflow, Google Calendar MCP integration
 

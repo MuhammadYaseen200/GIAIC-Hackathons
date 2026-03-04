@@ -45,12 +45,22 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 | 7 | **mcp_server_mysql** | Redundant MySQL config | Remove (using postgres for H0) | postgres MCP | LOW |
 | 8 | **peppeteer** | Misconfigured (typo in name?) | Fix config or remove (playwright covers this) | playwright MCP | LOW |
 
-## Project-Custom MCP Servers (Built — Phase 4)
+## Project-Custom MCP Servers (Built — Phase 4+5)
 
 | # | Server | Purpose | Tools | Path | Health Check | Phase |
 |---|--------|---------|-------|------|-------------|-------|
 | 1 | **gmail_mcp** | Gmail email send/read/act | `send_email`, `list_emails`, `get_email`, `move_email`, `add_label`, `health_check` | `mcp_servers/gmail/server.py` | `python3 -c "import asyncio; from mcp_servers.gmail.tools import GmailTools; from pathlib import Path; asyncio.run(GmailTools(Path('./vault')).health_check())"` | Phase 4 |
 | 2 | **obsidian_mcp** | Vault read/write/search | `read_note`, `write_note`, `list_notes`, `move_note`, `search_notes`, `health_check` | `mcp_servers/obsidian/server.py` | `python3 -c "import asyncio; from mcp_servers.obsidian.tools import ObsidianTools; from pathlib import Path; asyncio.run(ObsidianTools(Path('./vault')).health_check())"` | Phase 4 |
+| 3 | **whatsapp_mcp** | Send WhatsApp messages and check bridge health | `send_message`, `health_check` | `mcp_servers/whatsapp/server.py` | `python3 -c "import asyncio; from mcp_servers.whatsapp.server import mcp; print('ok')"` | Phase 5 |
+| 4 | **calendar_mcp** | Query Google Calendar events and check slot availability | `list_events`, `check_availability`, `health_check` | `mcp_servers/calendar/server.py` | `python3 -c "import asyncio; from mcp_servers.calendar.server import mcp; print('ok')"` | Phase 5 |
+
+**Env required (Phase 5 servers)**:
+- `whatsapp_mcp`: `WHATSAPP_BACKEND`, `WHATSAPP_BRIDGE_URL`, `OWNER_WHATSAPP_NUMBER`
+- `calendar_mcp`: `CALENDAR_CREDENTIALS_PATH`, `CALENDAR_TOKEN_PATH`
+
+**Fallback behavior (Phase 5 servers)**:
+- `whatsapp_mcp`: `MCPUnavailableError` logged to `vault/Logs/`; HITL notification skipped
+- `calendar_mcp`: Orchestrator uses `⚠️ Calendar data unavailable` note in draft; non-blocking
 
 **Registration**: See `ai-control/HUMAN-TASKS.md` HT-005 for exact `~/.claude.json` config blocks.
 
@@ -58,8 +68,8 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 
 | # | Server | Purpose | Phase Required | Human Action Required | Priority |
 |---|--------|---------|---------------|----------------------|----------|
-| 1 | **WhatsApp MCP** | Message monitoring and sending | Phase 5 (Silver) | Authenticate WhatsApp Web session, configure MCP | HIGH |
-| 2 | **Calendar MCP** | Schedule management | Phase 5 (Silver) | Set up Google Calendar API credentials | MEDIUM |
+| 1 | ~~**WhatsApp MCP**~~ | ~~Message monitoring and sending~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#3) | ~~HIGH~~ |
+| 2 | ~~**Calendar MCP**~~ | ~~Schedule management~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#4) | ~~MEDIUM~~ |
 | 3 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
 
 ## MCP Fallback Protocol

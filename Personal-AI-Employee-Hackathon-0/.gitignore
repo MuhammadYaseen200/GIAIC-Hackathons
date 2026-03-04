@@ -3,6 +3,7 @@
 .env.*
 credentials.json
 token.json
+calendar_token.json
 *.pem
 *.key
 
@@ -14,9 +15,19 @@ vault/.obsidian/workspace-mobile.json
 vault/Needs_Action/*.md
 vault/Inbox/*.md
 vault/Logs/*.log
+vault/Logs/*.jsonl
 vault/Logs/*_state.json
 vault/Logs/*.lock
 vault/Untitled.base
+
+# Vault HITL runtime data — demo artifacts with real decision metadata
+vault/Approved/*.md
+vault/Rejected/*.md
+
+# WhatsApp bridge databases — session keys and message history
+store/messages.db
+store/whatsapp.db
+store/*.db
 
 # Personal prompt notes — not for public repo
 How-I-give-prompts/

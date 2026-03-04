@@ -86,7 +86,6 @@
       "WebSearch",
       "Bash(claude mcp add:*)",
       "Bash(echo:*)",
-
       "Bash(wait:*)",
       "Bash(curl:*)",
       "mcp__obsidian__read_note_tool",
@@ -120,7 +119,16 @@
       "WebFetch(domain:github.com)",
       "Bash(bash /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/.specify/scripts/bash/update-agent-context.sh claude 2>&1 | head -20)",
       "Bash(ls /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/history/adr/ 2>/dev/null && echo \"---\" && cat /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/history/adr/*.md 2>/dev/null | head -10 || echo \"No ADRs found\")",
-      "Bash(bash /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/.specify/scripts/bash/create-adr.sh --title \"Privacy Gate Mandatory Pre-Processing Layer\" --json 2>&1)"
+      "Bash(bash /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/.specify/scripts/bash/create-adr.sh --title \"Privacy Gate Mandatory Pre-Processing Layer\" --json 2>&1)",
+      "Bash(PYTHONPATH=. .venv/bin/python demos/demo1_privacy_gate.py 2>&1)",
+      "Bash(PYTHONPATH=. .venv/bin/python demos/demo3_calendar.py 2>&1)",
+      "Bash(PYTHONPATH=. .venv/bin/python demos/demo1_privacy_gate.py 2>&1; echo \"\"; PYTHONPATH=. .venv/bin/python demos/demo2_hitl_cycle.py 2>&1)",
+      "Bash(PYTHONPATH=. .venv/bin/python demos/demo3_calendar.py 2>&1; echo \"\"; PYTHONPATH=. .venv/bin/python demos/demo4_whatsapp_send.py 2>&1)",
+      "Bash(PYTHONPATH=. .venv/bin/python -m pytest --tb=no -q 2>&1 | tail -5)",
+      "Bash(PYTHONPATH=. .venv/bin/python -m pytest --tb=no -q --co 2>&1 | tail -3)",
+      "Bash(PYTHONPATH=. .venv/bin/python -m pytest --tb=no -q --ignore=tests/integration 2>&1 | tail -5)",
+      "Bash(cat /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/history/adr/*.md 2>/dev/null | grep \"^# ADR\" | head -20)",
+      "Bash(.venv/bin/pip-audit --requirement requirements.txt --format=json 2>&1 | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); vulns=[v for dep in d['dependencies'] for v in dep.get\\('vulns',[]\\)] if isinstance\\(d,dict\\) and 'dependencies' in d else []; print\\(f'{len\\(vulns\\)} vulnerabilities' if vulns else 'No known vulnerabilities'\\); [print\\(f\\\\\"  {v['id']}: {v['description'][:100]}\\\\\"\\) for v in vulns]\" 2>/dev/null || echo \"\\(pip-audit not available — skipping CVE check\\)\")"
     ]
   }
 }
