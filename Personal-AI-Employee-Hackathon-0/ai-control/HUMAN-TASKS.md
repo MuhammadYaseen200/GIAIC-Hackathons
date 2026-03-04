@@ -233,7 +233,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Use `gmail_mcp` and `obsidian_mcp` tools natively in any Claude Code session for this project; orchestrator can send approved draft replies live
 
 ### HT-011: Authorize Google Calendar API OAuth2
-- **Status**: IN_PROGRESS (2026-03-02 — calendar.readonly scope added to consent screen; awaiting calendar_auth.py run to generate calendar_token.json)
+- **Status**: DONE (2026-03-04 — calendar_token.json generated successfully via python3 scripts/calendar_auth.py; Calendar MCP is now authorized and live tests are runnable)
 - **Blocks**: Phase 5 Calendar MCP live run
 - **Why Human**: Google Cloud Console requires browser login and OAuth consent screen setup. Requires interactive 2FA.
 - **Instructions**:

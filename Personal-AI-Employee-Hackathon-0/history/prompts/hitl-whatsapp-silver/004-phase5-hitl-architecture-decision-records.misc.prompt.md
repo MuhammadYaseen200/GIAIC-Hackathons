@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-6
 feature: hitl-whatsapp-silver
 branch: 008-hitl-whatsapp-silver
-user: MuhammadYaseen200
+user: owner
 command: /sp.adr
 labels: ["phase-5","adr","privacy-gate","hitl","whatsapp-backend","tiered-classifier","architecture"]
 links:

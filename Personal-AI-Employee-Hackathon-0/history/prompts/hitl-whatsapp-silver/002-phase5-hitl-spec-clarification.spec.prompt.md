@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-6
 feature: hitl-whatsapp-silver
 branch: 008-hitl-whatsapp-silver
-user: MuhammadYaseen200
+user: owner
 command: /sp.clarify
 labels: ["phase-5","whatsapp","hitl","calendar","clarification","spec"]
 links:

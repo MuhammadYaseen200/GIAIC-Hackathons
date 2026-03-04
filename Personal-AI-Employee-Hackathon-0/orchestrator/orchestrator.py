@@ -20,7 +20,9 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime, timezone
+import re
+from dataclasses import dataclass
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +45,7 @@ from orchestrator.prompts import (
     build_user_message,
     prepare_body_for_context,
 )
+from orchestrator.hitl_manager import HITLManager
 from orchestrator.mcp_client import MCPClient
 from orchestrator.providers.base import LLMProvider
 from orchestrator.vault_ops import (
@@ -54,6 +57,18 @@ from orchestrator.vault_ops import (
     update_frontmatter,
     write_draft_reply,
 )
+
+
+PROJECT_ROOT = Path(__file__).parent.parent
+
+
+@dataclass
+class PriorityClassification:
+    """Result of the three-layer tiered email classifier (ADR-0013)."""
+    priority: str        # "SKIP" | "HIGH" | "MED" | "LOW"
+    layer_used: int      # 1 (spam filter), 2 (keyword), 3 (LLM)
+    trigger_calendar: bool  # True if MED from Layer 2
+    reasoning: str | None = None  # Only populated for Layer 3 LLM
 
 
 class MaxIterationsExceeded(Exception):
@@ -106,6 +121,30 @@ class RalphWiggumOrchestrator(BaseWatcher):
         )
         self._approved_dir = self.vault_path / "Approved"
         self._approved_dir.mkdir(parents=True, exist_ok=True)
+
+        # Phase 5: Calendar MCP client for scheduling context (FR-026, ADR-0009)
+        self._calendar_mcp = MCPClient(
+            server_name="calendar",
+            command=["python3", str(PROJECT_ROOT / "mcp_servers" / "calendar" / "server.py")],
+            vault_path=self.vault_path,
+        )
+
+        # Phase 5: WhatsApp MCP client + HITL manager (ADR-0011, ADR-0012, T020)
+        self.whatsapp_client = MCPClient(
+            server_name="whatsapp",
+            command=["python3", str(PROJECT_ROOT / "mcp_servers" / "whatsapp" / "server.py")],
+            vault_path=self.vault_path,
+        )
+        self.hitl_manager = HITLManager(
+            whatsapp_client=self.whatsapp_client,
+            gmail_client=self._gmail_mcp,
+            vault_path=self.vault_path,
+            owner_number=os.getenv("OWNER_WHATSAPP_NUMBER", ""),
+            batch_delay_seconds=int(os.getenv("HITL_BATCH_DELAY_SECONDS", "120")),
+            reminder_hours=int(os.getenv("HITL_REMINDER_HOURS", "24")),
+            timeout_hours=int(os.getenv("HITL_TIMEOUT_HOURS", "48")),
+            max_concurrent_drafts=int(os.getenv("HITL_MAX_CONCURRENT_DRAFTS", "5")),
+        )
 
     # -----------------------------------------------------------------------
     # BaseWatcher abstract method implementations
@@ -461,6 +500,103 @@ class RalphWiggumOrchestrator(BaseWatcher):
         return draft_path
 
     # -----------------------------------------------------------------------
+    # Phase 5: Tiered priority classifier + Calendar context (ADR-0013, FR-025)
+    # -----------------------------------------------------------------------
+
+    async def _classify_priority(
+        self, subject: str, body: str, sender: str = ""
+    ) -> PriorityClassification:
+        """Three-layer classifier per ADR-0013.
+
+        Layer 1: Spam filter (0 tokens) — regex on sender + subject
+        Layer 2: Keyword heuristic (0 tokens) — HIGH/MED keywords
+        Layer 3: LLM for AMBIGUOUS (only when layers 1+2 don't match)
+        """
+        # Layer 1: Spam filter (0 tokens)
+        SPAM_PATTERNS = [
+            r"noreply@", r"no-reply@", r"donotreply@", r"newsletter",
+            r"unsubscribe", r"marketing@", r"automated\s+response",
+            r"out\s+of\s+office", r"auto-reply", r"vacation\s+notice",
+            r"delivery\s+status", r"mailer-daemon",
+        ]
+        combined = f"{sender} {subject}".lower()
+        for pat in SPAM_PATTERNS:
+            if re.search(pat, combined, re.I):
+                return PriorityClassification(
+                    priority="SKIP", layer_used=1, trigger_calendar=False
+                )
+
+        # Layer 2: Keyword heuristic (0 tokens)
+        HIGH_KEYWORDS = [
+            "urgent", "asap", "immediately", "critical",
+            "emergency", "deadline today", "overdue",
+        ]
+        MED_KEYWORDS = [
+            "meeting", "schedule", "availability", "calendar",
+            "call", "appointment", "discuss", "reschedule",
+        ]
+        text = f"{subject} {body}".lower()
+        for kw in HIGH_KEYWORDS:
+            if kw in text:
+                return PriorityClassification(
+                    priority="HIGH", layer_used=2, trigger_calendar=False
+                )
+        for kw in MED_KEYWORDS:
+            if kw in text:
+                return PriorityClassification(
+                    priority="MED", layer_used=2, trigger_calendar=True
+                )
+
+        # Layer 3: LLM for AMBIGUOUS
+        llm_result = await self._llm_classify(subject=subject, body=body)
+        return PriorityClassification(
+            priority=llm_result,
+            layer_used=3,
+            trigger_calendar=llm_result == "MED",
+            reasoning="LLM classification",
+        )
+
+    async def _llm_classify(self, subject: str, body: str) -> str:
+        """Layer 3: LLM classification for AMBIGUOUS emails.
+
+        Returns: "HIGH", "MED", or "LOW"
+        """
+        prompt = (
+            "Classify this email as exactly one of: HIGH, MED, LOW.\n"
+            "Reply with ONLY the single word.\n\n"
+            f"Subject: {subject}\n"
+            f"Body (first 500 chars): {body[:500]}"
+        )
+        try:
+            text, _, _ = await self._provider.complete(
+                system_prompt="You classify emails. Reply with exactly one word: HIGH, MED, or LOW.",
+                user_message=prompt,
+            )
+            result = text.strip().upper()
+            if result in ("HIGH", "MED", "LOW"):
+                return result
+        except Exception:
+            pass
+        return "LOW"  # default fallback
+
+    async def _fetch_calendar_context(
+        self, time_min: str, time_max: str
+    ) -> dict:
+        """Fetch calendar context with graceful fallback (FR-027)."""
+        try:
+            result = await self._calendar_mcp.call_tool(
+                "list_events",
+                {"time_min": time_min, "time_max": time_max, "max_results": 10},
+            )
+            return result
+        except Exception:
+            return {
+                "error": "mcp_unavailable",
+                "events": [],
+                "note": "\u26a0\ufe0f Calendar data unavailable",
+            }
+
+    # -----------------------------------------------------------------------
     # Phase 4: Approved draft send loop (HITL send via Gmail MCP)
     # -----------------------------------------------------------------------
 
@@ -475,6 +611,12 @@ class RalphWiggumOrchestrator(BaseWatcher):
                 await self._send_approved_draft(draft_path)
         except Exception as e:
             self._log("approved_draft_scan_error", LogSeverity.ERROR, {"error": str(e)})
+
+        # Phase 5: HITL timeout checks (ADR-0011, T020)
+        try:
+            await self.hitl_manager.check_timeouts()
+        except Exception as e:
+            self._log("hitl_timeout_check_error", LogSeverity.ERROR, {"error": str(e)})
 
     async def _scan_approved_drafts(self) -> list[Path]:
         """Scan vault/Approved/ for *.md files with status: pending_approval.

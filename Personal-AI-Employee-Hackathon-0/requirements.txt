@@ -24,6 +24,9 @@ mcp>=1.0.0         # FastMCP server framework (gmail_mcp + obsidian_mcp servers)
 jsonschema>=4.0.0  # Contract test validation
 anyio>=4.0.0       # Async I/O foundation for MCP (transitively required)
 
+# --- Phase 5: HITL + WhatsApp Silver ---
+httpx>=0.27        # Go bridge REST client (mcp_servers/whatsapp/bridge.py)
+
 # --- Testing ---
 pytest
 pytest-asyncio     # Async test support for orchestrator lifecycle tests
