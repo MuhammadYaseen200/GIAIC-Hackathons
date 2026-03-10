@@ -196,7 +196,7 @@ ai-control/HUMAN-TASKS.md        ← MODIFIED: update HT-011 progress; HT-012 re
 
 **Key design decisions**:
 - `bridge.py` provides `send_via_go_bridge(to, body)` using `httpx.post()` — no retry in MCP layer (MCPClient handles retries via `_retry_with_backoff`).
-- Number normalization: `+923001234567` (E.164) → `923001234567@s.whatsapp.net` (WhatsApp JID) for Go bridge calls.
+- Number normalization: `+OWNER_NUMBER` (E.164) → `OWNER_NUMBER@s.whatsapp.net` (WhatsApp JID) for Go bridge calls.
 - `health_check()` calls `GET http://localhost:8080/health` with 3s timeout; returns `{"status": "healthy"}` on 200, `{"status": "down"}` on timeout/error.
 - Error returned as `CallToolResult(isError=True)` per ADR-0008 — never raises exception.
 
@@ -356,16 +356,16 @@ ai-control/HUMAN-TASKS.md        ← MODIFIED: update HT-011 progress; HT-012 re
 
 ## Acceptance Criteria (from spec.md)
 
-- [ ] SC-001: WhatsApp messages appear in `vault/Needs_Action/` within ≤30 seconds
-- [ ] SC-002: HITL batch notification sent within ≤2 minutes of first draft write
-- [ ] SC-003: Approved email sent within ≤60 seconds of owner approval reply
-- [ ] SC-004: Approve/reject routed to correct draft — 100% accuracy with 3 concurrent drafts
-- [ ] SC-005: Zero emails sent without explicit "approve" reply (invariant test)
-- [ ] SC-006: Calendar context in ≥95% of scheduling-keyword drafts when Calendar MCP available
-- [ ] SC-007: Zero partial vault files observable during concurrent writes
-- [ ] SC-008: Full recovery after 60-second Go bridge connectivity drop
-- [ ] SC-009: Sensitive text (password/OTP/PIN) NEVER written to vault or sent to LLM — always `[REDACTED]`
-- [ ] SC-010: Media content NEVER stored, processed by LLM, or forwarded
+- [x] SC-001: WhatsApp messages appear in `vault/Needs_Action/` within ≤30 seconds
+- [x] SC-002: HITL batch notification sent within ≤2 minutes of first draft write
+- [x] SC-003: Approved email sent within ≤60 seconds of owner approval reply
+- [x] SC-004: Approve/reject routed to correct draft — 100% accuracy with 3 concurrent drafts
+- [x] SC-005: Zero emails sent without explicit "approve" reply (invariant test)
+- [x] SC-006: Calendar context in ≥95% of scheduling-keyword drafts when Calendar MCP available
+- [x] SC-007: Zero partial vault files observable during concurrent writes
+- [x] SC-008: Full recovery after 60-second Go bridge connectivity drop
+- [x] SC-009: Sensitive text (password/OTP/PIN) NEVER written to vault or sent to LLM — always `[REDACTED]`
+- [x] SC-010: Media content NEVER stored, processed by LLM, or forwarded
 
 ---
 

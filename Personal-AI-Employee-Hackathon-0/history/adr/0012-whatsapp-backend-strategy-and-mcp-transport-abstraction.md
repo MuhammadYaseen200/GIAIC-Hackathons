@@ -38,8 +38,8 @@ Implement a **Go bridge primary + pywa secondary fallback** strategy with a back
 - `PywaStub` class in `bridge.py` serves as placeholder for future pywa implementation
 
 ### Phone Number Format
-- External input: E.164 format (`+923001234567`)
-- Go bridge expects WhatsApp JID: `923001234567@s.whatsapp.net` (strip `+`, append `@s.whatsapp.net`)
+- External input: E.164 format (`+15550001234`)
+- Go bridge expects WhatsApp JID: `15550001234@s.whatsapp.net` (strip `+`, append `@s.whatsapp.net`)
 - Normalization: handled in `GoBridge.send()` — callers always use E.164
 
 ### httpx for Go Bridge

@@ -101,7 +101,7 @@ class TestHealthCheckResponseShape:
 
         result = HealthCheckResult(
             status="healthy",
-            connected_number="+923001234567",
+            connected_number="+15550001234",
             backend="go_bridge",
             bridge_url="http://localhost:8080",
         )

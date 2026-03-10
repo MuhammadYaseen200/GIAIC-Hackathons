@@ -78,7 +78,7 @@ class WhatsAppWatcher(BaseWatcher):
 class RawWhatsAppMessage:
     """Raw message from Go bridge REST response or pywa webhook event."""
     message_id: str                # WhatsApp message ID (for deduplication)
-    sender_number: str             # E.164 format (e.g., "923001234567")
+    sender_number: str             # E.164 format (e.g., "OWNER_NUMBER")
     sender_name: str | None        # Contact display name if available
     body: str                      # Message text (pre-privacy-gate)
     media_type: str                # "text" | "image" | "audio" | "video" | "document"
@@ -94,7 +94,7 @@ Filename: `<YYYYMMDD-HHMMSS>-wa-<message_id>.md`
 ---
 type: whatsapp_message
 message_id: "3EB0C767D61B84A12345"
-sender_number: "923001234567"
+sender_number: "OWNER_NUMBER"
 sender_name: "Ahmed Khan"          # or null if unknown
 received_at: "2026-03-02T14:30:22Z"
 media_type: "text"
@@ -105,7 +105,7 @@ privacy_redacted: false            # true if Privacy Gate redacted anything
 
 # WhatsApp Message
 
-**From**: Ahmed Khan (923001234567)
+**From**: Ahmed Khan (OWNER_NUMBER)
 **Received**: 2026-03-02 14:30:22 UTC
 
 [MEDIA — content not stored]       # for media messages
@@ -123,7 +123,7 @@ All models live in `mcp_servers/whatsapp/models.py`.
 
 ```python
 class SendMessageInput(BaseModel):
-    to: str                        # E.164 phone number (e.g., "+923001234567")
+    to: str                        # E.164 phone number (e.g., "+OWNER_NUMBER")
     body: str                      # Text message content (max 4096 chars)
 
 class HealthCheckInput(BaseModel):

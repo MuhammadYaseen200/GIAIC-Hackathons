@@ -21,7 +21,7 @@ MCPErrorCode = Literal[
 
 
 class SendMessageInput(BaseModel):
-    to: str  # E.164 format e.g. +923001234567
+    to: str  # E.164 format e.g. +15550001234
     body: str  # max 4096 chars
 
 

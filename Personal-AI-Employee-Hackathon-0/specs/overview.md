@@ -10,13 +10,74 @@
 | 3 | Claude Reasoning Loop | COMPLETE | Phase 2 complete | Ralph Wiggum loop processing Needs_Action/ items autonomously — exited 2026-02-23 |
 | 4 | MCP Integration | COMPLETE | Phase 3 complete | Gmail MCP + Obsidian MCP live, MCPClient fallback protocol, orchestrator MCP-first — exited 2026-02-25 |
 | 5 | HITL + WhatsApp - Silver | COMPLETE | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running — exited 2026-03-05 |
-| 6 | CEO Briefing + Odoo - Gold | NOT_STARTED | Phase 5 complete + HT-006/007 done | Daily briefing generated, Odoo integration working |
+| 5.5 | LinkedIn Auto-Poster + Cron - Silver Completion | COMPLETE | Phase 5 complete + HT-LinkedIn done | LinkedIn posts with HITL approval, cron scheduling live, Silver tier 100%, coverage 99% |
+| 6 | CEO Briefing + Odoo - Gold | NOT_STARTED | Phase 5.5 complete + HT-006/007 done | Daily briefing generated, Odoo integration working |
 | 7 | Always-On Cloud - Platinum | NOT_STARTED | Phase 6 complete + HT-008 done | System deployed to Oracle VM, running 24/7 |
 | 8 | Polish, Testing & Demo | NOT_STARTED | Phase 7 complete | All E2E tests pass, demo rehearsed, README polished |
 
 ## Current Focus
 
-**Phase 6: CEO Briefing + Odoo — Gold** | NEXT | Branch: TBD
+**Phase 6: CEO Briefing + Odoo — Gold** | NOT_STARTED | Next up
+
+## Silver Tier — QA Polish Complete (2026-03-10)
+
+### Coverage Fix (Phase 5 + 5.5 post-merge QA)
+All Phase 5 and 5.5 SC-008 coverage gaps resolved. 142 tests, 0 warnings.
+
+| Module | Before | After | Gate |
+|--------|--------|-------|------|
+| `watchers/whatsapp_watcher.py` | 71% | 100% | ✅ |
+| `mcp_servers/whatsapp/bridge.py` | 55% | 100% | ✅ |
+| `mcp_servers/whatsapp/server.py` | 0% | 97% | ✅ |
+| `orchestrator/hitl_manager.py` | 80% | 99% | ✅ |
+| `orchestrator/linkedin_poster.py` | 99% | 99% | ✅ |
+| `mcp_servers/linkedin/*` | 99% | 99% | ✅ |
+
+**Exit criteria for Silver Tier fully verified:**
+- [x] SC-008: All modules ≥80% (achieved 97–100%)
+- [x] 0 DeprecationWarnings (`datetime.utcnow()` replaced)
+- [x] 0 RuntimeWarnings (coroutine leak patched)
+- [x] 142 tests passing, 0 failures
+- [x] No PII in tracked files (phone numbers, names, URNs redacted)
+- [x] Cron installed: 2 H0_CRON_MANAGED entries active in crontab
+
+## Phase 5.5 — COMPLETE (exited 2026-03-08)
+
+**Phase 5.5: LinkedIn Auto-Poster + Cron — Silver Completion** | Branch: `009-linkedin-cron-silver` | Started: 2026-03-05 | Exited: 2026-03-08
+
+### SDD Cycle Status
+- [x] spec.md — Complete (v1.0, 2026-03-05)
+- [x] plan.md — Complete (6 phases, ADR-0014/0015, 2026-03-05)
+- [x] ADRs 0014–0015 — Complete (LinkedIn OAuth2 lifecycle, Cron scheduling strategy)
+- [x] tasks.md — Complete (35 tasks, T001–T035, 2026-03-05)
+- [x] Implementation — COMPLETE (T001–T035 all [X], 2026-03-05/08)
+
+### Phase 5.5 Deliverables (all DONE)
+- [x] T001–T004: Setup (mcp_servers/linkedin/, vault/Config/linkedin_topics.md, .gitignore)
+- [x] T005–T008: LinkedIn MCP models, auth (OAuth2 singleton), client (UGC Posts API), scripts/linkedin_auth.py
+- [x] T009–T012: Contract tests GREEN (13 tests), MCP server (post_update/get_profile/health_check)
+- [x] T013–T018: linkedin_poster.py (draft→HITL→publish workflow, privacy gate, rate limiting)
+- [x] T019–T023: scripts/setup_cron.sh (idempotent, SC-007), scripts/remove_cron.sh
+- [x] T024–T025: Orchestrator lock file (ADR-0015), vault watcher LinkedIn routing
+- [x] T026–T028: tests/test_cron_scripts.sh (WSL-aware, 5 syntax checks + native Linux integration)
+- [x] T029–T031: Vault classifier (type=linkedin_post + #linkedin tag routing → draft_and_notify)
+- [x] T032: ai-control/MCP.md — linkedin_mcp moved to Project-Custom table
+- [x] T033: Security scan PASS (no hardcoded credentials, linkedin_token.json gitignored)
+- [x] T034: Coverage gate PASS (85.94% ≥ 80%, SC-008)
+- [x] T035: specs/overview.md updated → COMPLETE
+
+### Human Tasks
+- [x] HT-013b: `python3 scripts/linkedin_auth.py` — DONE 2026-03-09 (linkedin_token.json created, person_urn set in vault/Config/)
+- [x] HT-013c: LinkedIn credentials in `.env` — DONE 2026-03-09 (LINKEDIN_ACCESS_TOKEN + LINKEDIN_PERSON_URN set)
+- [x] HT-013d: `linkedin_mcp` registered in `~/.claude.json` — DONE 2026-03-09 (+ linkedin-community-mcp)
+
+### Live End-to-End Tests
+- [x] LinkedIn health_check: `healthy: true`, `api_reachable: true`, `display_name: [REDACTED — see vault/Config/]`
+- [x] Post published live: `urn:li:share:[REDACTED]` (201 Created — 2026-03-09)
+
+### Known Limitations
+- `--draft` / `--auto` mode blocked until Anthropic credits restored (LLM drafting requires API)
+- Cron installed and running (`scripts/setup_cron.sh` complete — 2 H0_CRON_MANAGED entries active)
 
 ## Phase 5 — COMPLETE (exited 2026-03-05)
 

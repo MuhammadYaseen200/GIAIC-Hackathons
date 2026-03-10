@@ -47,7 +47,7 @@ def manager(vault, whatsapp_client, gmail_client):
         whatsapp_client=whatsapp_client,
         gmail_client=gmail_client,
         vault_path=vault,
-        owner_number="+923001234567",
+        owner_number="+15550001234",
         batch_delay_seconds=0,
         reminder_hours=24,
         timeout_hours=48,
@@ -114,7 +114,7 @@ async def test_send_batch_notification_format(manager, vault, whatsapp_client):
     call_args = whatsapp_client.call_tool.call_args
     assert call_args[0][0] == "send_message"
     body = call_args[0][1]["body"]
-    assert call_args[0][1]["to"] == "+923001234567"
+    assert call_args[0][1]["to"] == "+15550001234"
 
     # Verify emojis present
     assert "\U0001f534" in body  # red circle for HIGH
@@ -132,7 +132,7 @@ async def test_handle_approve_sends_email_and_moves_file(manager, vault, gmail_c
         priority="HIGH", risk_level="low",
     )
 
-    await manager.handle_owner_reply(f"approve {draft_id}", "+923001234567")
+    await manager.handle_owner_reply(f"approve {draft_id}", "+15550001234")
 
     # Gmail MCP send_email called
     gmail_client.call_tool.assert_called_once()
@@ -162,7 +162,7 @@ async def test_handle_reject_no_email_and_moves_to_rejected(manager, vault, gmai
         priority="MED", risk_level="low",
     )
 
-    await manager.handle_owner_reply(f"reject {draft_id}", "+923001234567")
+    await manager.handle_owner_reply(f"reject {draft_id}", "+15550001234")
 
     # Gmail MCP NOT called
     gmail_client.call_tool.assert_not_called()
@@ -186,7 +186,7 @@ async def test_handle_ambiguous_reply_sends_clarification(manager, vault, gmail_
         priority="MED", risk_level="low",
     )
 
-    await manager.handle_owner_reply("ok", "+923001234567")
+    await manager.handle_owner_reply("ok", "+15550001234")
 
     # Gmail NOT called
     gmail_client.call_tool.assert_not_called()
@@ -277,7 +277,7 @@ async def test_concurrent_drafts_approve_one(manager, vault, gmail_client):
         priority="LOW", risk_level="low",
     )
 
-    await manager.handle_owner_reply(f"approve {id2}", "+923001234567")
+    await manager.handle_owner_reply(f"approve {id2}", "+15550001234")
 
     # Draft 2 moved to Approved
     assert not (vault / "Pending_Approval" / f"{id2}.md").exists()
@@ -305,3 +305,276 @@ async def test_draft_id_collision_detection(manager, vault):
     assert id1 != id2
     assert (vault / "Pending_Approval" / f"{id1}.md").exists()
     assert (vault / "Pending_Approval" / f"{id2}.md").exists()
+
+
+# ── Coverage boost: collision guard (line 52 — _read_frontmatter no-frontmatter) ──
+
+def test_read_frontmatter_no_frontmatter(vault):
+    """_read_frontmatter returns {} when file has no --- delimiters."""
+    from orchestrator.hitl_manager import _read_frontmatter as _rf
+    p = vault / "plain.md"
+    p.write_text("No frontmatter here", encoding="utf-8")
+    assert _rf(p) == {}
+
+
+# ── Coverage boost: _read_body no-frontmatter fallback (line 62) ──
+
+def test_read_body_no_frontmatter(vault):
+    """_read_body returns full text when file has no --- delimiters."""
+    from orchestrator.hitl_manager import _read_body as _rb
+    p = vault / "plain.md"
+    p.write_text("Just body text", encoding="utf-8")
+    assert _rb(p) == "Just body text"
+
+
+# ── Coverage boost: collision guard while-loop body (lines 158-159) ──
+
+@pytest.mark.asyncio
+async def test_submit_draft_collision_guard(manager, vault):
+    """When generated draft_id already exists on disk, a new one is generated."""
+    # Pre-create a file that will collide with the first generated ID
+    with patch("orchestrator.hitl_manager._generate_draft_id") as mock_gen:
+        mock_gen.side_effect = ["COLLIDE-001", "COLLIDE-001", "UNIQUE-002"]
+        # First call returns COLLIDE-001, file exists check triggers loop
+        # Create the collision file
+        (vault / "Pending_Approval" / "COLLIDE-001.md").write_text("exists", encoding="utf-8")
+
+        draft_id = await manager.submit_draft(
+            recipient="a@co.com", subject="Test", body="body",
+            priority="HIGH", risk_level="low",
+        )
+        assert draft_id == "UNIQUE-002"
+        assert (vault / "Pending_Approval" / "UNIQUE-002.md").exists()
+
+
+# ── Coverage boost: empty pending in send_batch_notification (line 196) ──
+
+@pytest.mark.asyncio
+async def test_send_batch_notification_empty(manager, vault, whatsapp_client):
+    """send_batch_notification with no pending drafts does nothing."""
+    # Ensure pending dir is empty (remove any .md files)
+    for f in (vault / "Pending_Approval").glob("*.md"):
+        f.unlink()
+
+    await manager.send_batch_notification()
+    whatsapp_client.call_tool.assert_not_called()
+
+
+# ── Coverage boost: draft not found on approve (lines 331-338) ──
+
+@pytest.mark.asyncio
+async def test_approve_draft_not_found(manager, vault, whatsapp_client, gmail_client):
+    """Approving a nonexistent draft sends 'Draft not found' via WhatsApp."""
+    await manager.handle_owner_reply("approve NOTEXIST123", "+15550001234")
+
+    whatsapp_client.call_tool.assert_called_once()
+    body = whatsapp_client.call_tool.call_args[0][1]["body"]
+    assert "Draft not found" in body
+    gmail_client.call_tool.assert_not_called()
+
+
+# ── Coverage boost: draft not found on reject (lines 398-405) ──
+
+@pytest.mark.asyncio
+async def test_reject_draft_not_found(manager, vault, whatsapp_client, gmail_client):
+    """Rejecting a nonexistent draft sends 'Draft not found' via WhatsApp."""
+    await manager.handle_owner_reply("reject NOTEXIST456", "+15550001234")
+
+    whatsapp_client.call_tool.assert_called_once()
+    body = whatsapp_client.call_tool.call_args[0][1]["body"]
+    assert "Draft not found" in body
+    gmail_client.call_tool.assert_not_called()
+
+
+# ── Coverage boost: LinkedIn post approve path (lines 345-360) ──
+
+@pytest.mark.asyncio
+async def test_approve_linkedin_post(manager, vault, whatsapp_client, gmail_client):
+    """Approving a linkedin_post sets status=approved in place, no email sent."""
+    draft_id = "linkedin-test-001"
+    draft_path = vault / "Pending_Approval" / f"{draft_id}.md"
+    fm = {
+        "type": "linkedin_post",
+        "status": "pending",
+        "draft_id": draft_id,
+        "recipient": "",
+        "subject": "My LinkedIn Post",
+        "priority": "MED",
+        "risk_level": "low",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nLinkedIn post body\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    await manager.handle_owner_reply(f"approve {draft_id}", "+15550001234")
+
+    # File stays in Pending_Approval (not moved to Approved/)
+    assert draft_path.exists()
+    meta = _read_frontmatter(draft_path)
+    assert meta["status"] == "approved"
+    assert "decided_at" in meta
+
+    # Gmail NOT called (LinkedIn doesn't send email)
+    gmail_client.call_tool.assert_not_called()
+
+    # WhatsApp confirmation sent
+    whatsapp_client.call_tool.assert_called_once()
+    body = whatsapp_client.call_tool.call_args[0][1]["body"]
+    assert "LinkedIn" in body and "approved" in body.lower()
+
+    # Audit log written
+    log_path = vault / "Logs" / "hitl_decisions.jsonl"
+    assert log_path.exists()
+    entry = json.loads(log_path.read_text().strip().split("\n")[-1])
+    assert entry["decision"] == "approved"
+    assert entry["draft_id"] == draft_id
+
+
+# ── Coverage boost: LinkedIn post reject path (lines 412-427) ──
+
+@pytest.mark.asyncio
+async def test_reject_linkedin_post(manager, vault, whatsapp_client, gmail_client):
+    """Rejecting a linkedin_post sets status=rejected in place, no email sent."""
+    draft_id = "linkedin-test-002"
+    draft_path = vault / "Pending_Approval" / f"{draft_id}.md"
+    fm = {
+        "type": "linkedin_post",
+        "status": "pending",
+        "draft_id": draft_id,
+        "recipient": "",
+        "subject": "My LinkedIn Post",
+        "priority": "LOW",
+        "risk_level": "low",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nLinkedIn post body\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    await manager.handle_owner_reply(f"reject {draft_id}", "+15550001234")
+
+    # File stays in Pending_Approval (LinkedIn path updates in place)
+    assert draft_path.exists()
+    meta = _read_frontmatter(draft_path)
+    assert meta["status"] == "rejected"
+    assert "decided_at" in meta
+
+    # Gmail NOT called
+    gmail_client.call_tool.assert_not_called()
+
+    # WhatsApp rejection confirmation sent
+    whatsapp_client.call_tool.assert_called_once()
+    body = whatsapp_client.call_tool.call_args[0][1]["body"]
+    assert "rejected" in body.lower()
+
+    # Audit log written
+    log_path = vault / "Logs" / "hitl_decisions.jsonl"
+    entry = json.loads(log_path.read_text().strip().split("\n")[-1])
+    assert entry["decision"] == "rejected"
+
+
+# ── Coverage boost: _find_draft prefix/suffix/frontmatter match (lines 461-475) ──
+
+@pytest.mark.asyncio
+async def test_find_draft_by_suffix_match(manager, vault):
+    """_find_draft matches by suffix of filename stem."""
+    draft_id = "20260310-120000-abcd1234"
+    draft_path = vault / "Pending_Approval" / f"{draft_id}.md"
+    fm = {
+        "type": "approval_request",
+        "status": "pending",
+        "draft_id": draft_id,
+        "recipient": "x@co.com",
+        "subject": "Test",
+        "priority": "LOW",
+        "risk_level": "low",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nbody\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    # Match by suffix (last part of the ID)
+    await manager.handle_owner_reply("approve abcd1234", "+15550001234")
+
+    # Should have found and approved it
+    assert (vault / "Approved" / f"{draft_id}.md").exists()
+
+
+# ── Coverage boost: check_timeouts with no created_at (line 286) ──
+
+@pytest.mark.asyncio
+async def test_check_timeouts_no_created_at(manager, vault, whatsapp_client):
+    """check_timeouts skips drafts with no created_at field."""
+    draft_path = vault / "Pending_Approval" / "no-date-draft.md"
+    fm = {
+        "type": "approval_request",
+        "status": "pending",
+        "draft_id": "no-date-draft",
+        "recipient": "x@co.com",
+        "subject": "Test",
+        "priority": "LOW",
+        "risk_level": "low",
+        # No created_at!
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nbody\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    await manager.check_timeouts()
+
+    # Status unchanged — draft was skipped
+    meta = _read_frontmatter(draft_path)
+    assert meta["status"] == "pending"
+    whatsapp_client.call_tool.assert_not_called()
+
+
+# ── Coverage boost: check_timeouts with invalid created_at (lines 290-291) ──
+
+@pytest.mark.asyncio
+async def test_check_timeouts_invalid_date(manager, vault, whatsapp_client):
+    """check_timeouts skips drafts with unparseable created_at."""
+    draft_path = vault / "Pending_Approval" / "bad-date-draft.md"
+    fm = {
+        "type": "approval_request",
+        "status": "pending",
+        "draft_id": "bad-date-draft",
+        "recipient": "x@co.com",
+        "subject": "Test",
+        "priority": "LOW",
+        "risk_level": "low",
+        "created_at": "not-a-date",
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nbody\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    await manager.check_timeouts()
+
+    meta = _read_frontmatter(draft_path)
+    assert meta["status"] == "pending"
+    whatsapp_client.call_tool.assert_not_called()
+
+
+# ── Coverage boost: check_timeouts with naive datetime (line 294) ──
+
+@pytest.mark.asyncio
+async def test_check_timeouts_naive_datetime(manager, vault, whatsapp_client):
+    """check_timeouts handles naive datetime (no tzinfo) by assuming UTC."""
+    draft_path = vault / "Pending_Approval" / "naive-date-draft.md"
+    # Use a naive ISO string (no +00:00 or Z suffix) that is 25h old
+    naive_time = (datetime.now(timezone.utc) - timedelta(hours=25)).strftime("%Y-%m-%dT%H:%M:%S")
+    fm = {
+        "type": "approval_request",
+        "status": "pending",
+        "draft_id": "naive-date-draft",
+        "recipient": "x@co.com",
+        "subject": "Test",
+        "priority": "LOW",
+        "risk_level": "low",
+        "created_at": naive_time,
+    }
+    content = f"---\n{yaml.dump(fm, default_flow_style=False)}---\n\nbody\n"
+    draft_path.write_text(content, encoding="utf-8")
+
+    await manager.check_timeouts()
+
+    meta = _read_frontmatter(draft_path)
+    assert meta["status"] == "awaiting_reminder"
+    whatsapp_client.call_tool.assert_called()

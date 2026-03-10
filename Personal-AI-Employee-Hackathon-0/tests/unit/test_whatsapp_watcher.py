@@ -19,7 +19,7 @@ class FakeRawMessage:
     """Minimal stand-in mirroring RawWhatsAppMessage fields."""
 
     message_id: str = "3EB0C767D61B84A12345"
-    sender_number: str = "923001234567"
+    sender_number: str = "15550001234"
     sender_name: str | None = "Ahmed Khan"
     body: str = "Hello, can we schedule a meeting?"
     media_type: str = "text"
@@ -45,7 +45,7 @@ def mock_bridge_send():
 @pytest.fixture
 def watcher(wa_vault, mock_bridge_send, monkeypatch):
     """Create a WhatsAppWatcher instance with mocked dependencies."""
-    monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+923009876543")
+    monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+15550009876")
     monkeypatch.setenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
     monkeypatch.setenv("WHATSAPP_BACKEND", "go_bridge")
 
@@ -69,7 +69,7 @@ class TestProcessItemWritesCorrectFilename:
 
         msg = RawWhatsAppMessage(
             message_id="3EB0C767D61B84A12345",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Ahmed Khan",
             body="Hello world",
             media_type="text",
@@ -99,7 +99,7 @@ class TestDeduplication:
 
         msg = RawWhatsAppMessage(
             message_id="DEDUP_TEST_001",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Test",
             body="First message",
             media_type="text",
@@ -118,7 +118,7 @@ class TestPrivacyGateCalledBeforeVaultWrite:
 
     @pytest.mark.asyncio
     async def test_privacy_gate_called(self, wa_vault, monkeypatch):
-        monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+923009876543")
+        monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+15550009876")
         monkeypatch.setenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
         monkeypatch.setenv("WHATSAPP_BACKEND", "go_bridge")
 
@@ -155,7 +155,7 @@ class TestPrivacyGateCalledBeforeVaultWrite:
 
         msg = RawWhatsAppMessage(
             message_id="PG_ORDER_TEST",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Test",
             body="My password: secret123",
             media_type="text",
@@ -181,7 +181,7 @@ class TestMediaMessage:
 
         msg = RawWhatsAppMessage(
             message_id="MEDIA_TEST_001",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Test",
             body="some binary content",
             media_type="image",
@@ -205,7 +205,7 @@ class TestPrivacyAlertSent:
 
         msg = RawWhatsAppMessage(
             message_id="REDACT_ALERT_001",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Ahmed",
             body="My password: supersecret123",
             media_type="text",
@@ -225,7 +225,7 @@ class TestPrivacyAlertSent:
 
         msg = RawWhatsAppMessage(
             message_id="MEDIA_ALERT_001",
-            sender_number="923001234567",
+            sender_number="15550001234",
             sender_name="Ahmed",
             body="image data",
             media_type="image",
@@ -256,3 +256,220 @@ class TestValidatePrerequisites:
         )
         with pytest.raises(Exception):  # PrerequisiteError or ValueError
             w.validate_prerequisites()
+
+
+# ── Coverage expansion: poll(), _get_http_client(), dedup, _send_privacy_alert ─
+
+
+class TestGetHttpClient:
+    """_get_http_client() creates client once (singleton pattern)."""
+
+    @pytest.mark.asyncio
+    async def test_creates_client_on_first_call(self, watcher):
+        import httpx
+
+        client1 = await watcher._get_http_client()
+        assert client1 is not None
+        assert isinstance(client1, httpx.AsyncClient)
+
+    @pytest.mark.asyncio
+    async def test_returns_same_client_on_second_call(self, watcher):
+        client1 = await watcher._get_http_client()
+        client2 = await watcher._get_http_client()
+        assert client1 is client2  # singleton — same object
+
+
+class TestPoll:
+    """poll() fetches messages from Go bridge."""
+
+    @pytest.mark.asyncio
+    async def test_poll_returns_message_list(self, watcher):
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status = MagicMock()
+        mock_resp.json.return_value = [
+            {
+                "id": "MSG001",
+                "from": "15550001234",
+                "pushName": "Test User",
+                "body": "Hello",
+                "type": "text",
+                "timestamp": "2026-03-02T10:00:00Z",
+            },
+            {
+                "id": "MSG002",
+                "from": "15550009876",
+                "pushName": None,
+                "body": "World",
+                "type": "text",
+                "timestamp": "2026-03-02T10:01:00Z",
+            },
+        ]
+
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_resp)
+        watcher._http_client = mock_client
+
+        from watchers.whatsapp_watcher import RawWhatsAppMessage
+
+        messages = await watcher.poll()
+        assert len(messages) == 2
+        assert messages[0].message_id == "MSG001"
+        assert messages[1].message_id == "MSG002"
+        assert watcher._last_message_id == "MSG002"
+
+    @pytest.mark.asyncio
+    async def test_poll_sends_since_param_when_last_id_set(self, watcher):
+        watcher._last_message_id = "PREV123"
+
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status = MagicMock()
+        mock_resp.json.return_value = []
+
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_resp)
+        watcher._http_client = mock_client
+
+        await watcher.poll()
+        mock_client.get.assert_called_once()
+        call_kwargs = mock_client.get.call_args
+        params_passed = call_kwargs.kwargs.get("params", {})
+        assert params_passed.get("since") == "PREV123"
+
+    @pytest.mark.asyncio
+    async def test_poll_strips_jid_suffix_from_sender(self, watcher):
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status = MagicMock()
+        mock_resp.json.return_value = [
+            {
+                "id": "MSG_JID",
+                "from": "15550001234@s.whatsapp.net",
+                "pushName": "User",
+                "body": "hi",
+                "type": "text",
+                "timestamp": "2026-03-02T10:00:00Z",
+            }
+        ]
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_resp)
+        watcher._http_client = mock_client
+
+        messages = await watcher.poll()
+        assert messages[0].sender_number == "15550001234"
+
+    @pytest.mark.asyncio
+    async def test_poll_empty_response_does_not_update_last_id(self, watcher):
+        watcher._last_message_id = "EXISTING"
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status = MagicMock()
+        mock_resp.json.return_value = []
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_resp)
+        watcher._http_client = mock_client
+
+        messages = await watcher.poll()
+        assert messages == []
+        assert watcher._last_message_id == "EXISTING"
+
+    @pytest.mark.asyncio
+    async def test_poll_raises_on_http_error(self, watcher):
+        import httpx
+
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status.side_effect = httpx.HTTPStatusError(
+            "500", request=MagicMock(), response=MagicMock()
+        )
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=mock_resp)
+        watcher._http_client = mock_client
+
+        with pytest.raises(httpx.HTTPStatusError):
+            await watcher.poll()
+
+
+class TestSendPrivacyAlert:
+    """_send_privacy_alert() covers lines 181-190."""
+
+    @pytest.mark.asyncio
+    async def test_send_privacy_alert_posts_to_bridge(self, wa_vault, monkeypatch):
+        monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+15550009876")
+        monkeypatch.setenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
+
+        from watchers.whatsapp_watcher import WhatsAppWatcher
+
+        w = WhatsAppWatcher(name="test_wa", poll_interval=60, vault_path=str(wa_vault))
+
+        mock_client = AsyncMock()
+        mock_client.post = AsyncMock(return_value=MagicMock())
+        w._http_client = mock_client
+
+        await w._send_privacy_alert(to="+15550009876", body="Alert!")
+
+        mock_client.post.assert_called_once()
+        call_args = mock_client.post.call_args
+        assert "/send" in call_args.args[0]
+        assert call_args.kwargs["json"]["body"] == "Alert!"
+        assert "15550009876@s.whatsapp.net" in call_args.kwargs["json"]["to"]
+
+    @pytest.mark.asyncio
+    async def test_send_privacy_alert_swallows_exception(self, wa_vault, monkeypatch):
+        monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+15550009876")
+        monkeypatch.setenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
+
+        from watchers.whatsapp_watcher import WhatsAppWatcher
+
+        w = WhatsAppWatcher(name="test_wa", poll_interval=60, vault_path=str(wa_vault))
+
+        mock_client = AsyncMock()
+        mock_client.post = AsyncMock(side_effect=Exception("Connection refused"))
+        w._http_client = mock_client
+
+        # Should NOT raise
+        await w._send_privacy_alert(to="+15550009876", body="Alert!")
+
+
+class TestDeduplicationPreExisting:
+    """process_item() skips already-processed messages."""
+
+    @pytest.mark.asyncio
+    async def test_dedup_skips_if_file_exists(self, watcher, wa_vault):
+        from watchers.whatsapp_watcher import RawWhatsAppMessage
+
+        msg = RawWhatsAppMessage(
+            message_id="ALREADY_DONE",
+            sender_number="15550001234",
+            sender_name="Test",
+            body="duplicate",
+            media_type="text",
+            caption=None,
+            received_at="2026-03-02T14:30:22Z",
+        )
+        # Create existing file that matches the message_id
+        existing = wa_vault / "Needs_Action" / "20260302-143022-wa-ALREADY_DONE.md"
+        existing.write_text("already processed")
+
+        files_before = list((wa_vault / "Needs_Action").glob("*.md"))
+        await watcher.process_item(msg)
+        files_after = list((wa_vault / "Needs_Action").glob("*.md"))
+        assert len(files_after) == len(files_before)  # no new file written
+
+
+class TestProcessItemBadTimestamp:
+    """process_item() handles invalid received_at gracefully (lines 115-116)."""
+
+    @pytest.mark.asyncio
+    async def test_bad_timestamp_uses_utcnow(self, watcher, wa_vault):
+        from watchers.whatsapp_watcher import RawWhatsAppMessage
+
+        msg = RawWhatsAppMessage(
+            message_id="BAD_TS_001",
+            sender_number="15550001234",
+            sender_name="Test",
+            body="hello",
+            media_type="text",
+            caption=None,
+            received_at="NOT-A-DATE",
+        )
+        await watcher.process_item(msg)
+
+        files = list((wa_vault / "Needs_Action").glob("*-wa-BAD_TS_001.md"))
+        assert len(files) == 1  # File still created with fallback timestamp
