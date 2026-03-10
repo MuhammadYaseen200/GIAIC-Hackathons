@@ -53,14 +53,17 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 | 2 | **obsidian_mcp** | Vault read/write/search | `read_note`, `write_note`, `list_notes`, `move_note`, `search_notes`, `health_check` | `mcp_servers/obsidian/server.py` | `python3 -c "import asyncio; from mcp_servers.obsidian.tools import ObsidianTools; from pathlib import Path; asyncio.run(ObsidianTools(Path('./vault')).health_check())"` | Phase 4 |
 | 3 | **whatsapp_mcp** | Send WhatsApp messages and check bridge health | `send_message`, `health_check` | `mcp_servers/whatsapp/server.py` | `python3 -c "import asyncio; from mcp_servers.whatsapp.server import mcp; print('ok')"` | Phase 5 |
 | 4 | **calendar_mcp** | Query Google Calendar events and check slot availability | `list_events`, `check_availability`, `health_check` | `mcp_servers/calendar/server.py` | `python3 -c "import asyncio; from mcp_servers.calendar.server import mcp; print('ok')"` | Phase 5 |
+| 5 | **linkedin_mcp** | Post to LinkedIn with HITL approval; OAuth2 token lifecycle (ADR-0014) | `post_update`, `get_profile`, `health_check` | `mcp_servers/linkedin/server.py` | `python3 -c "import asyncio; from mcp_servers.linkedin.server import mcp; print('ok')"` | Phase 5.5 |
 
-**Env required (Phase 5 servers)**:
+**Env required (Phase 5/5.5 servers)**:
 - `whatsapp_mcp`: `WHATSAPP_BACKEND`, `WHATSAPP_BRIDGE_URL`, `OWNER_WHATSAPP_NUMBER`
 - `calendar_mcp`: `CALENDAR_CREDENTIALS_PATH`, `CALENDAR_TOKEN_PATH`
+- `linkedin_mcp`: `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`, `LINKEDIN_PERSON_URN` (+ `linkedin_token.json` from `scripts/linkedin_auth.py`)
 
-**Fallback behavior (Phase 5 servers)**:
+**Fallback behavior (Phase 5/5.5 servers)**:
 - `whatsapp_mcp`: `MCPUnavailableError` logged to `vault/Logs/`; HITL notification skipped
 - `calendar_mcp`: Orchestrator uses `⚠️ Calendar data unavailable` note in draft; non-blocking
+- `linkedin_mcp`: `AuthRequiredError` if token missing; draft saved to vault, publish retried next cycle
 
 **Registration**: See `ai-control/HUMAN-TASKS.md` HT-005 for exact `~/.claude.json` config blocks.
 
@@ -70,7 +73,8 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 |---|--------|---------|---------------|----------------------|----------|
 | 1 | ~~**WhatsApp MCP**~~ | ~~Message monitoring and sending~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#3) | ~~HIGH~~ |
 | 2 | ~~**Calendar MCP**~~ | ~~Schedule management~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#4) | ~~MEDIUM~~ |
-| 3 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
+| 3 | **linkedin_mcp** | Post to LinkedIn with HITL approval, OAuth2 auth | Phase 5.5 (Silver completion) | Human MUST create LinkedIn app + provide Client ID/Secret in .env | HIGH |
+| 4 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
 
 ## MCP Fallback Protocol
 

@@ -4,6 +4,7 @@
 credentials.json
 token.json
 calendar_token.json
+linkedin_token.json
 *.pem
 *.key
 
@@ -23,6 +24,8 @@ vault/Untitled.base
 # Vault HITL runtime data — demo artifacts with real decision metadata
 vault/Approved/*.md
 vault/Rejected/*.md
+vault/Pending_Approval/*.md
+vault/Done/*.md
 
 # WhatsApp bridge databases — session keys and message history
 store/messages.db
@@ -54,3 +57,8 @@ node_modules/
 # IDE
 .vscode/
 .idea/
+vault/Config/
+
+# WSL2 Windows path leak prevention — literal Windows paths materialized as dirs
+C:\\
+

@@ -195,6 +195,6 @@ class WhatsAppWatcher(BaseWatcher):
         if not owner:
             raise PrerequisiteError(
                 "OWNER_WHATSAPP_NUMBER not set in environment. "
-                "Add it to .env file in E.164 format (e.g., +923001234567).",
+                "Add it to .env file in E.164 format (e.g., +15550001234).",
                 ht_reference="HT-004",
             )

@@ -618,6 +618,13 @@ class RalphWiggumOrchestrator(BaseWatcher):
         except Exception as e:
             self._log("hitl_timeout_check_error", LogSeverity.ERROR, {"error": str(e)})
 
+        # Phase 5.5: LinkedIn vault trigger routing (T029-T031, ADR-0015)
+        try:
+            from orchestrator.linkedin_poster import process_linkedin_vault_triggers
+            await process_linkedin_vault_triggers(self._needs_action_dir, self._done_dir)
+        except Exception as e:
+            self._log("linkedin_trigger_error", LogSeverity.ERROR, {"error": str(e)})
+
     async def _scan_approved_drafts(self) -> list[Path]:
         """Scan vault/Approved/ for *.md files with status: pending_approval.
 
@@ -767,3 +774,43 @@ def _safe_update(context: EmailContext, updates: dict) -> None:
         update_frontmatter(path, updates)
     except (OSError, ValueError):
         pass
+
+
+# ---------------------------------------------------------------------------
+# Cron entry point (ADR-0015)
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    import asyncio
+    import sys
+    import logging
+
+    from dotenv import load_dotenv
+    from watchers.utils import FileLock
+    from orchestrator.providers.registry import create_provider
+
+    _project_root = Path(__file__).resolve().parents[1]
+    load_dotenv(_project_root / ".env")
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s [orchestrator] %(levelname)s %(message)s")
+    _logger = logging.getLogger("orchestrator.main")
+
+    # Single-instance lock guard (ADR-0015, T026)
+    _lock = FileLock("/tmp/h0_orchestrator.lock")
+    try:
+        _lock.acquire()
+    except RuntimeError as _e:
+        _logger.info(f"Orchestrator already running ({_e}). Exiting.")
+        sys.exit(0)
+
+    try:
+        provider = create_provider()
+        orch = RalphWiggumOrchestrator(provider=provider)
+        # Run one poll cycle (scan Needs_Action)
+        asyncio.run(orch.poll())
+
+        # T027: Process pending LinkedIn approvals at end of each orchestrator run
+        from orchestrator import linkedin_poster
+        asyncio.run(linkedin_poster.check_pending_approvals())
+    finally:
+        _lock.release()

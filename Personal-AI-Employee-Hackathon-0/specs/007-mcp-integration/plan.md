@@ -202,14 +202,14 @@ ai-control/HUMAN-TASKS.md           ← MODIFIED: update HT-005 with exact Claud
 
 ## Acceptance Criteria (from spec.md)
 
-- [ ] Gmail MCP: `health_check` passes within 3s of startup (SC-006)
-- [ ] Gmail MCP: `send_email` sends via live Gmail without credentials in code (SC-005)
-- [ ] Obsidian MCP: `write_note` → `read_note` round-trips correctly (User Story 3, AS-1)
-- [ ] Orchestrator: `_apply_decision(archive)` calls `obsidian.move_note` (not `move_to_done` directly) (User Story 4, AS-1)
-- [ ] Fallback: Obsidian MCP unavailable → orchestrator logs `mcp_fallback` and continues (SC-003)
-- [ ] Contract tests: all 10 tool schemas pass validation with contract test suite (SC-004)
-- [ ] Zero secrets hardcoded (SC-005)
-- [ ] `mcp` in requirements.txt (housekeeping)
+- [x] Gmail MCP: `health_check` passes within 3s of startup (SC-006)
+- [x] Gmail MCP: `send_email` sends via live Gmail without credentials in code (SC-005)
+- [x] Obsidian MCP: `write_note` → `read_note` round-trips correctly (User Story 3, AS-1)
+- [x] Orchestrator: `_apply_decision(archive)` calls `obsidian.move_note` (not `move_to_done` directly) (User Story 4, AS-1)
+- [x] Fallback: Obsidian MCP unavailable → orchestrator logs `mcp_fallback` and continues (SC-003)
+- [x] Contract tests: all 10 tool schemas pass validation with contract test suite (SC-004)
+- [x] Zero secrets hardcoded (SC-005)
+- [x] `mcp` in requirements.txt (housekeeping)
 
 ---
 

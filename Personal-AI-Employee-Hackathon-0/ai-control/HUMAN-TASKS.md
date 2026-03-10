@@ -254,6 +254,27 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Verification**: `calendar_token.json` exists and contains valid `refresh_token`; `python scripts/calendar_auth.py --verify` exits 0
 - **Claude Can Then**: Run Calendar MCP server live, query events.list(), test check_availability tool
 
+### HT-013: Create LinkedIn Developer App + OAuth2 Credentials
+- **Status**: DONE (2026-03-05 — LinkedIn app created at developers.linkedin.com; Client ID + Client Secret added to .env; Products requested: Share on LinkedIn + Sign In with LinkedIn)
+- **Blocks**: Phase 5.5 (LinkedIn Auto-Poster)
+- **Why Human**: LinkedIn Developer Portal requires browser login, app creation, OAuth consent screen setup, and Product request approval. Claude cannot perform browser-based authentication flows.
+- **Verification**: `grep LINKEDIN_CLIENT_ID .env` returns non-empty value
+- **Claude Can Then**: Write `scripts/linkedin_auth.py` to complete OAuth2 Authorization Code flow and generate `linkedin_token.json`
+
+#### HT-013b: Run LinkedIn OAuth2 Auth Flow
+- **Status**: DONE (2026-03-09 — `python3 scripts/linkedin_auth.py` completed; linkedin_token.json created; person_urn stored in vault/Config/)
+- **Notes**: WSL2 browser fix applied; `offline_access` scope removed (not available on standard apps); OIDC endpoint `/v2/userinfo` used; `sub` field for person ID
+
+#### HT-013c: Add LinkedIn Credentials to .env
+- **Status**: DONE (2026-03-09 — LINKEDIN_ACCESS_TOKEN, LINKEDIN_PERSON_URN, LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET all set in .env)
+- **Notes**: Token is 60-day access token (no refresh token on standard LinkedIn apps); re-run HT-013b when it expires
+
+#### HT-013d: Register linkedin_mcp in ~/.claude.json
+- **Status**: DONE (2026-03-09 — linkedin_mcp + linkedin-community-mcp both registered in /home/m-y-j/.claude.json)
+- **Notes**: linkedin_mcp = custom project server at mcp_servers/linkedin/server.py; linkedin-community-mcp = @lurenss/linkedin-mcp via npx
+
+---
+
 ### HT-012: Configure pywa Cloud API Credentials (if using pywa backend)
 - **Status**: DEFERRED (2026-03-02 — Go bridge `:8080` is the primary backend; pywa is secondary fallback. HT-012 only needed if Go bridge fails during Phase 5.)
 - **Blocks**: pywa backend for WhatsApp watcher (Go bridge is the fallback that already works)
@@ -280,7 +301,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 ## Medium Priority (Blocks Phase 6 Gold)
 
 ### HT-006: Provision Neon PostgreSQL Database
-- **Status**: PENDING
+- **Status**: DONE (2026-03-05 — PostgreSQL 17.8 connected via Neon pooler; DATABASE_URL + NEON_PROJECT_ID in .env)
 - **Blocks**: Phase 6 (Gold tier)
 - **Why Human**: Neon requires account creation with email verification and credit card for paid tier (free tier works for development).
 - **Instructions**:
@@ -299,13 +320,13 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Run Alembic migrations, create tables, persist watcher data
 
 ### HT-007: Install Odoo Community Edition
-- **Status**: DEFERRED (Gold tier — start when Bronze/Silver complete)
+- **Status**: DONE (2026-03-05 — Odoo 18 running on localhost:8069 via Docker; h0_odoo database created with demo data; odoo-db (postgres:17) container linked)
 - **Blocks**: Phase 6 (Gold tier)
 - **Why Human**: Odoo requires system-level package installation, database setup, and initial configuration wizard in browser.
 - **Instructions**:
   1. Option A - Docker (recommended):
      ```bash
-     docker run -d -p 8069:8069 --name odoo -t odoo:17.0
+     docker run -d -p 8069:8069 --name odoo odoo:18
      ```
   2. Option B - Local install:
      - Follow https://www.odoo.com/documentation/17.0/administration/install.html
@@ -386,6 +407,13 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 | HT-010 | Verify LLM Provider Connectivity | 2026-02-23 (PENDING) | Run `python scripts/verify_llm_provider.py` from project root to confirm provider responds correctly. Requires HT-009 complete. Exit 0 = pass. |
 | HT-005 | Add Gmail MCP + Obsidian MCP to ~/.claude.json | 2026-02-25 | Both servers registered; restart Claude Code to activate gmail_mcp and obsidian_mcp |
 | HT-004 | Authenticate WhatsApp Web Session | 2026-02-25 | Paired as XXXXXXXXXXXX:4@s.whatsapp.net; Go bridge on :8080; Python MCP server configured |
+| HT-011 | Authorize Google Calendar API OAuth2 | 2026-03-04 | calendar_token.json generated via python3 scripts/calendar_auth.py; Calendar MCP live |
+| HT-006 | Provision Neon PostgreSQL Database | 2026-03-05 | PostgreSQL 17.8 connected via Neon pooler; DATABASE_URL + NEON_PROJECT_ID in .env |
+| HT-007 | Install Odoo Community Edition | 2026-03-05 | Odoo 18 running on localhost:8069 via Docker; h0_odoo database created with demo data |
+| HT-013 | Create LinkedIn Developer App + OAuth2 Credentials | 2026-03-05 | App created; Client ID + Secret in .env; Share on LinkedIn product approved |
+| HT-013b | Run LinkedIn OAuth2 Auth Flow | 2026-03-09 | linkedin_token.json created; person_urn stored in vault/Config/; WSL2 fix applied |
+| HT-013c | Add LinkedIn Credentials to .env | 2026-03-09 | LINKEDIN_ACCESS_TOKEN + LINKEDIN_PERSON_URN set; 60-day token |
+| HT-013d | Register linkedin_mcp in ~/.claude.json | 2026-03-09 | linkedin_mcp + linkedin-community-mcp registered |
 
 ---
 
@@ -405,4 +433,4 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 
 ---
 *Governed by: .specify/memory/constitution.md (Principle III: Human-in-the-Loop)*
-*Updated: 2026-02-16 | Next review: After each phase completion*
+*Updated: 2026-03-09 | Next review: After each phase completion*

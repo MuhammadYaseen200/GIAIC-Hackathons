@@ -14,7 +14,7 @@
         "properties": {
           "to": {
             "type": "string",
-            "description": "Recipient phone number in E.164 format (e.g., '+923001234567') or WhatsApp JID (e.g., '923001234567@s.whatsapp.net')",
+            "description": "Recipient phone number in E.164 format (e.g., '+OWNER_NUMBER') or WhatsApp JID (e.g., 'OWNER_NUMBER@s.whatsapp.net')",
             "pattern": "^(\\+\\d{10,15}|\\d{10,15}@s\\.whatsapp\\.net)$"
           },
           "body": {

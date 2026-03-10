@@ -43,7 +43,7 @@ def manager(vault, whatsapp_client, gmail_client):
         whatsapp_client=whatsapp_client,
         gmail_client=gmail_client,
         vault_path=vault,
-        owner_number="+923001234567",
+        owner_number="+15550001234",
         batch_delay_seconds=0,
         reminder_hours=24,
         timeout_hours=48,
@@ -89,7 +89,7 @@ async def test_full_approve_cycle(manager, vault, whatsapp_client, gmail_client)
 
     # Step 3: owner approves
     whatsapp_client.call_tool.reset_mock()
-    await manager.handle_owner_reply(f"approve {draft_id}", "+923001234567")
+    await manager.handle_owner_reply(f"approve {draft_id}", "+15550001234")
 
     # Gmail MCP send_email called
     gmail_client.call_tool.assert_called_once()
@@ -122,7 +122,7 @@ async def test_full_reject_cycle(manager, vault, gmail_client):
         risk_level="low",
     )
 
-    await manager.handle_owner_reply(f"reject {draft_id}", "+923001234567")
+    await manager.handle_owner_reply(f"reject {draft_id}", "+15550001234")
 
     # Gmail NOT called
     gmail_client.call_tool.assert_not_called()
@@ -149,7 +149,7 @@ async def test_ambiguous_reply_keeps_pending(manager, vault, gmail_client, whats
         risk_level="low",
     )
 
-    await manager.handle_owner_reply("sounds good", "+923001234567")
+    await manager.handle_owner_reply("sounds good", "+15550001234")
 
     # Gmail NOT called
     gmail_client.call_tool.assert_not_called()

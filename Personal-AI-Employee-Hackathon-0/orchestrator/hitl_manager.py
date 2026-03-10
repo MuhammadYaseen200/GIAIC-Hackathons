@@ -321,7 +321,11 @@ class HITLManager:
     # -----------------------------------------------------------------------
 
     async def _approve(self, draft_id: str, decided_by: str) -> None:
-        """Approve a draft: send email via Gmail MCP + move to Approved/ + log."""
+        """Approve a draft: dispatch by type.
+
+        - type=linkedin_post: set status=approved in place; linkedin_poster.check_pending_approvals() publishes
+        - type=approval_request (default): send email via Gmail MCP + move to Approved/
+        """
         draft_path = self._find_draft(draft_id)
         if draft_path is None:
             await self._whatsapp.call_tool(
@@ -334,6 +338,28 @@ class HITLManager:
             return
 
         fm = _read_frontmatter(draft_path)
+        draft_type = fm.get("type", "approval_request")
+
+        if draft_type == "linkedin_post":
+            # LinkedIn path: update status in place — check_pending_approvals() handles publish
+            _update_frontmatter(draft_path, {
+                "status": "approved",
+                "decided_at": datetime.now(timezone.utc).isoformat(),
+                "decided_by": decided_by,
+            })
+            self._log_decision(
+                draft_id=fm.get("draft_id", draft_path.stem),
+                decision="approved",
+                decided_by=decided_by,
+                sent_at=None,
+            )
+            await self._whatsapp.call_tool(
+                "send_message",
+                {"to": self._owner_number, "body": "LinkedIn post approved — will publish on next check cycle."},
+            )
+            return
+
+        # Default: email approval flow
         body = _read_body(draft_path)
         recipient = fm.get("recipient", "")
         subject = fm.get("subject", "")
@@ -362,7 +388,11 @@ class HITLManager:
         )
 
     async def _reject(self, draft_id: str, decided_by: str) -> None:
-        """Reject a draft: move to Rejected/ + log (no email sent)."""
+        """Reject a draft: dispatch by type.
+
+        - type=linkedin_post: set status=rejected in place; linkedin_poster.check_pending_approvals() handles cleanup
+        - type=approval_request (default): move to Rejected/ (no email sent)
+        """
         draft_path = self._find_draft(draft_id)
         if draft_path is None:
             await self._whatsapp.call_tool(
@@ -375,7 +405,28 @@ class HITLManager:
             return
 
         fm = _read_frontmatter(draft_path)
+        draft_type = fm.get("type", "approval_request")
 
+        if draft_type == "linkedin_post":
+            # LinkedIn path: update status in place — check_pending_approvals() handles cleanup
+            _update_frontmatter(draft_path, {
+                "status": "rejected",
+                "decided_at": datetime.now(timezone.utc).isoformat(),
+                "decided_by": decided_by,
+            })
+            self._log_decision(
+                draft_id=fm.get("draft_id", draft_path.stem),
+                decision="rejected",
+                decided_by=decided_by,
+                sent_at=None,
+            )
+            await self._whatsapp.call_tool(
+                "send_message",
+                {"to": self._owner_number, "body": "LinkedIn post rejected and discarded."},
+            )
+            return
+
+        # Default: email rejection flow
         # Move to Rejected/
         rejected_path = self._rejected_dir / draft_path.name
         _update_frontmatter(draft_path, {

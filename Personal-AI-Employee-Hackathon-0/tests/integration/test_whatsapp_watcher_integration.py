@@ -60,7 +60,7 @@ def mock_httpx_transport():
                 return httpx.Response(200, json=make_bridge_messages())
             return httpx.Response(200, json=[])
         if "/health" in str(request.url):
-            return httpx.Response(200, json={"status": "ok", "number": "+923001234567"})
+            return httpx.Response(200, json={"status": "ok", "number": "+15550001234"})
         if "/send" in str(request.url):
             return httpx.Response(200, json={"id": "sent_001", "status": "sent"})
         return httpx.Response(404)
@@ -71,7 +71,7 @@ def mock_httpx_transport():
 @pytest.fixture
 def integration_watcher(integration_vault, mock_httpx_transport, monkeypatch):
     """Create a WhatsAppWatcher with mocked httpx transport."""
-    monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+923009876543")
+    monkeypatch.setenv("OWNER_WHATSAPP_NUMBER", "+15550009876")
     monkeypatch.setenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
     monkeypatch.setenv("WHATSAPP_BACKEND", "go_bridge")
 
