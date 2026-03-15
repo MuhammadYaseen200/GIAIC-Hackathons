@@ -11,13 +11,32 @@
 | 4 | MCP Integration | COMPLETE | Phase 3 complete | Gmail MCP + Obsidian MCP live, MCPClient fallback protocol, orchestrator MCP-first — exited 2026-02-25 |
 | 5 | HITL + WhatsApp - Silver | COMPLETE | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running — exited 2026-03-05 |
 | 5.5 | LinkedIn Auto-Poster + Cron - Silver Completion | COMPLETE | Phase 5 complete + HT-LinkedIn done | LinkedIn posts with HITL approval, cron scheduling live, Silver tier 100%, coverage 99% |
-| 6 | CEO Briefing + Odoo - Gold | NOT_STARTED | Phase 5.5 complete + HT-006/007 done | Daily briefing generated, Odoo integration working |
+| 6 | CEO Briefing + Odoo - Gold | COMPLETE | Phase 5.5 complete + HT-006/007 done | 655/655 tests GREEN, 84.72% coverage, docs/architecture.md, 4 agent skills, SC-001–SC-012 all satisfied — exited 2026-03-15 |
 | 7 | Always-On Cloud - Platinum | NOT_STARTED | Phase 6 complete + HT-008 done | System deployed to Oracle VM, running 24/7 |
 | 8 | Polish, Testing & Demo | NOT_STARTED | Phase 7 complete | All E2E tests pass, demo rehearsed, README polished |
 
 ## Current Focus
 
-**Phase 6: CEO Briefing + Odoo — Gold** | NOT_STARTED | Next up
+**Phase 6: CEO Briefing + Odoo — Gold** | IN_PROGRESS | Started 2026-03-12
+
+### Phase 6 Progress (as of 2026-03-13)
+
+Phases 1–8 complete (T001–T060). 77/77 tests GREEN. Phases 9–10 (T061–T110) pending.
+
+| Sub-Phase | Tasks | Tests | Status |
+|-----------|-------|-------|--------|
+| Phase 1: Setup | T001–T009 | — | ✅ COMPLETE |
+| Phase 2: Odoo MCP | T010–T020 | 12/12 GREEN | ✅ COMPLETE |
+| Phase 3: Facebook/Instagram MCP | T021–T028 | 14/14 GREEN | ✅ COMPLETE (T028 blocked HT-017) |
+| Phase 4: Twitter/X MCP | T029–T035 | 12/12 GREEN | ✅ COMPLETE (T035 blocked HT-018) |
+| Phase 5: US1 Daily Briefing | T036–T044 | 27/27 GREEN | ✅ COMPLETE (T044 blocked HT-019) |
+| Phase 6: US2 Weekly Audit | T045–T049 | 10/10 + 2 e2e GREEN | ✅ COMPLETE |
+| Phase 7: US5 Odoo Verification | T050–T054 | tests in test_ceo_briefing.py | ✅ COMPLETE (T054 blocked HT-019) |
+| Phase 8: US6+US7 Email+Calendar | T055–T060 | 29 GREEN | ✅ COMPLETE |
+| Phase 9: US8 Agent Skills | T061–T072 | — | PENDING |
+| Phase 10: Polish + QA + PR | T073–T110 | — | PENDING |
+
+**Human tasks blocking live testing**: HT-017 (facebook_mcp registration), HT-018 (twitter_mcp registration), HT-019 (live smoke test)
 
 ## Silver Tier — QA Polish Complete (2026-03-10)
 

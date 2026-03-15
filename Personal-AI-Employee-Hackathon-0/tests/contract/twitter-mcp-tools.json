@@ -1,0 +1,5 @@
+{
+  "server": "twitter",
+  "tools": ["post_tweet", "get_recent_tweets", "health_check"],
+  "version": "1.0"
+}

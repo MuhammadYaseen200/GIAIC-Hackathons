@@ -1,0 +1,15 @@
+# Coverage configuration for H0 Personal AI Employee
+# Gmail, Obsidian modules use integration tests (not unit tests) — excluded from unit coverage gate.
+[run]
+omit =
+    mcp_servers/gmail/*
+    mcp_servers/obsidian/*
+    */test_*
+    */__pycache__/*
+    */migrations/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    raise NotImplementedError

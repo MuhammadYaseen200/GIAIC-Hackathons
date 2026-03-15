@@ -59,6 +59,13 @@ node_modules/
 .idea/
 vault/Config/
 
+# Phase 6 Gold Tier
+vault/CEO_Briefings/
+vault/Logs/audit.jsonl
+.odoo_session
+facebook_token.json
+twitter_token.json
+
 # WSL2 Windows path leak prevention — literal Windows paths materialized as dirs
 C:\\
 

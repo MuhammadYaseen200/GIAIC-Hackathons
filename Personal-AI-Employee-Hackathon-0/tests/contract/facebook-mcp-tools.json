@@ -1,0 +1,5 @@
+{
+  "server": "facebook",
+  "tools": ["post_update", "post_facebook_only", "post_instagram_only", "get_recent_posts", "health_check"],
+  "version": "1.0"
+}
