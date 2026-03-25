@@ -1,0 +1,5 @@
+{
+  "server": "odoo",
+  "tools": ["get_gl_summary", "get_ar_aging", "get_invoices_due", "health_check"],
+  "version": "1.0"
+}

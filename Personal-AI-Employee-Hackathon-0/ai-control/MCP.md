@@ -54,18 +54,31 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 | 3 | **whatsapp_mcp** | Send WhatsApp messages and check bridge health | `send_message`, `health_check` | `mcp_servers/whatsapp/server.py` | `python3 -c "import asyncio; from mcp_servers.whatsapp.server import mcp; print('ok')"` | Phase 5 |
 | 4 | **calendar_mcp** | Query Google Calendar events and check slot availability | `list_events`, `check_availability`, `health_check` | `mcp_servers/calendar/server.py` | `python3 -c "import asyncio; from mcp_servers.calendar.server import mcp; print('ok')"` | Phase 5 |
 | 5 | **linkedin_mcp** | Post to LinkedIn with HITL approval; OAuth2 token lifecycle (ADR-0014) | `post_update`, `get_profile`, `health_check` | `mcp_servers/linkedin/server.py` | `python3 -c "import asyncio; from mcp_servers.linkedin.server import mcp; print('ok')"` | Phase 5.5 |
+| 6 | **odoo_mcp** | Odoo 18 JSON-RPC financial data (GL summary, AR aging, invoices due) | `get_gl_summary`, `get_ar_aging`, `get_invoices_due`, `health_check` | `mcp_servers/odoo/server.py` | `python3 -c "import asyncio; from mcp_servers.odoo.server import mcp; print('ok')"` | Phase 6 Gold |
+| 7 | **facebook_mcp** | Post to Facebook + Instagram with HITL approval; Meta Graph API v21.0 | `post_update`, `post_facebook_only`, `post_instagram_only`, `get_recent_posts`, `health_check` | `mcp_servers/facebook/server.py` | `python3 -c "from mcp_servers.facebook.server import mcp; print('ok')"` | Phase 6 Gold |
+| 8 | **twitter_mcp** | Post tweets with HITL approval; tweepy OAuth 1.0a | `post_tweet`, `get_recent_tweets`, `health_check` | `mcp_servers/twitter/server.py` | `python3 -c "from mcp_servers.twitter.server import mcp; print('ok')"` | Phase 6 Gold |
 
 **Env required (Phase 5/5.5 servers)**:
 - `whatsapp_mcp`: `WHATSAPP_BACKEND`, `WHATSAPP_BRIDGE_URL`, `OWNER_WHATSAPP_NUMBER`
 - `calendar_mcp`: `CALENDAR_CREDENTIALS_PATH`, `CALENDAR_TOKEN_PATH`
 - `linkedin_mcp`: `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`, `LINKEDIN_PERSON_URN` (+ `linkedin_token.json` from `scripts/linkedin_auth.py`)
 
+**Env required (Phase 6 Gold servers)**:
+- `odoo_mcp`: `ODOO_URL`, `ODOO_DB`, `ODOO_USER`, `ODOO_PASSWORD`
+- `facebook_mcp`: `FACEBOOK_PAGE_ID`, `FACEBOOK_PAGE_ACCESS_TOKEN`, `INSTAGRAM_BUSINESS_ACCOUNT_ID` (optional — leave empty if no Instagram Business Account)
+- `twitter_mcp`: `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_TOKEN_SECRET`, `TWITTER_BEARER_TOKEN`
+
 **Fallback behavior (Phase 5/5.5 servers)**:
 - `whatsapp_mcp`: `MCPUnavailableError` logged to `vault/Logs/`; HITL notification skipped
 - `calendar_mcp`: Orchestrator uses `⚠️ Calendar data unavailable` note in draft; non-blocking
 - `linkedin_mcp`: `AuthRequiredError` if token missing; draft saved to vault, publish retried next cycle
 
-**Registration**: See `ai-control/HUMAN-TASKS.md` HT-005 for exact `~/.claude.json` config blocks.
+**Fallback behavior (Phase 6 Gold servers)**:
+- `odoo_mcp`: `OdooConnectionError` caught by `collect_odoo_section()`; briefing shows "Odoo unavailable — check container"; non-blocking
+- `facebook_mcp`: post returns `{"status": "skipped", "reason": "no_ig_account"}` if `INSTAGRAM_BUSINESS_ACCOUNT_ID` empty; Facebook posts unaffected
+- `twitter_mcp`: 429 rate limit → `{"rate_limited": True, "retry_after": N}`; 403 Forbidden → logs gracefully, returns error dict
+
+**Registration**: See `ai-control/HUMAN-TASKS.md` HT-005 (Phase 5 servers), HT-017 (facebook_mcp), HT-018 (twitter_mcp) for `claude mcp add` commands. odoo_mcp registered 2026-03-12.
 
 ## Needed MCP Servers (To Add — Future Phases)
 
@@ -73,8 +86,8 @@ This file is the authoritative registry of all Model Context Protocol (MCP) serv
 |---|--------|---------|---------------|----------------------|----------|
 | 1 | ~~**WhatsApp MCP**~~ | ~~Message monitoring and sending~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#3) | ~~HIGH~~ |
 | 2 | ~~**Calendar MCP**~~ | ~~Schedule management~~ | ~~Phase 5 (Silver)~~ | DONE — moved to Project-Custom table (#4) | ~~MEDIUM~~ |
-| 3 | **linkedin_mcp** | Post to LinkedIn with HITL approval, OAuth2 auth | Phase 5.5 (Silver completion) | Human MUST create LinkedIn app + provide Client ID/Secret in .env | HIGH |
-| 4 | **Odoo MCP** | ERP/accounting integration | Phase 6 (Gold) | Install Odoo Community, create API user, configure MCP | MEDIUM |
+| 3 | ~~**linkedin_mcp**~~ | ~~Post to LinkedIn with HITL approval, OAuth2 auth~~ | ~~Phase 5.5 (Silver completion)~~ | DONE — moved to Project-Custom table (#5) | ~~HIGH~~ |
+| 4 | ~~**Odoo MCP**~~ | ~~ERP/accounting integration~~ | ~~Phase 6 (Gold)~~ | DONE -- moved to Project-Custom table (#6) | ~~MEDIUM~~ |
 
 ## MCP Fallback Protocol
 

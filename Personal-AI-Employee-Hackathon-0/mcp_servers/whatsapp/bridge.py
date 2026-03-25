@@ -5,6 +5,7 @@ PywaStub: placeholder for pywa Cloud API (not yet implemented).
 """
 
 import os
+import re
 from datetime import datetime, timezone
 
 import httpx
@@ -13,9 +14,15 @@ from mcp_servers.whatsapp.models import HealthCheckResult, SendMessageResult
 
 BRIDGE_URL = os.getenv("WHATSAPP_BRIDGE_URL", "http://localhost:8080")
 
+_E164_RE = re.compile(r'^\+?[1-9]\d{1,14}$')
+
 
 def _to_jid(number: str) -> str:
     """E.164 (+923...) -> WhatsApp JID (923...@s.whatsapp.net)."""
+    if not _E164_RE.match(number):
+        raise ValueError(
+            f"Invalid WhatsApp number: {number!r}. Expected E.164 format (e.g. +923001234567)"
+        )
     return number.lstrip("+") + "@s.whatsapp.net"
 
 

@@ -270,7 +270,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Notes**: Token is 60-day access token (no refresh token on standard LinkedIn apps); re-run HT-013b when it expires
 
 #### HT-013d: Register linkedin_mcp in ~/.claude.json
-- **Status**: DONE (2026-03-09 — linkedin_mcp + linkedin-community-mcp both registered in /home/m-y-j/.claude.json)
+- **Status**: DONE (2026-03-09 — linkedin_mcp + linkedin-community-mcp both registered in ~/.claude.json)
 - **Notes**: linkedin_mcp = custom project server at mcp_servers/linkedin/server.py; linkedin-community-mcp = @lurenss/linkedin-mcp via npx
 
 ---
@@ -326,7 +326,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Instructions**:
   1. Option A - Docker (recommended):
      ```bash
-     docker run -d -p 8069:8069 --name odoo odoo:18
+     docker run -d -p 8069:8069 --name odoo odoo:latest
      ```
   2. Option B - Local install:
      - Follow https://www.odoo.com/documentation/17.0/administration/install.html
@@ -341,6 +341,109 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
      ```
 - **Verification**: `curl http://localhost:8069/web/login` returns 200
 - **Claude Can Then**: Build Odoo MCP server, integrate accounting data
+
+### HT-014: Create Facebook Page + Developer App
+- **Status**: DONE (2026-03-12 — reused existing H0-AI-Employee Meta app (App ID: 1246116580321571); brother's e-commerce page "Working With Ahmed" (Page ID: 982971481562290); long-lived Page Access Token generated and stored in .env)
+- **Blocks**: Phase 6 (Facebook/Instagram MCP — FR-016)
+- **Why Human**: Meta Developer Portal requires browser login, business verification, and Facebook Page creation. Claude cannot perform browser-based OAuth flows or create Facebook Pages.
+- **Instructions**:
+  1. Go to https://www.facebook.com/ → create a Facebook Page (type: Personal Brand or Public Figure)
+  2. Go to https://developers.facebook.com/ → create a developer account
+  3. Create new App (type: Business) → name: "H0-AI-Employee"
+  4. Add product: "Facebook Login" + "Instagram Graph API"
+  5. Generate Page Access Token with scopes: `pages_manage_posts`, `pages_read_engagement`
+  6. Link your Instagram Business Account to this Facebook Page (see HT-015)
+  7. Add to `.env`:
+     ```
+     FACEBOOK_APP_ID=<your-app-id>
+     FACEBOOK_APP_SECRET=<your-app-secret>
+     FACEBOOK_PAGE_ID=<your-page-id>
+     FACEBOOK_PAGE_ACCESS_TOKEN=<long-lived-page-access-token>
+     ```
+- **Verification**: `curl "https://graph.facebook.com/me?access_token=<PAGE_ACCESS_TOKEN>"` returns page name and ID
+- **Claude Can Then**: Build Facebook/Instagram MCP server, test post_update tool
+
+### HT-015: Set Up Instagram Business Account (Linked to Facebook Page)
+- **Status**: DEFERRED (2026-03-12 — Instagram linking via Facebook Page Settings could not be confirmed via Graph API; /me/accounts returns only {"id":"982971481562290"} with no instagram_business_account field. Code handles gracefully: all Instagram tools return {"status":"skipped","reason":"no_ig_account"} when INSTAGRAM_BUSINESS_ACCOUNT_ID is empty. Resume when Instagram Business account is available.)
+- **Blocks**: Phase 6 (Facebook/Instagram MCP — FR-016)
+- **Why Human**: Instagram Business Account setup requires phone/browser OAuth and linking to a Facebook Page through the Instagram app.
+- **Instructions**:
+  1. Open Instagram app → Settings → Account → Switch to Professional Account → Creator or Business
+  2. Link to the Facebook Page created in HT-014
+  3. In Meta Developer App (from HT-014), go to Instagram Graph API → get Instagram Business Account ID
+  4. Add to `.env`:
+     ```
+     INSTAGRAM_BUSINESS_ACCOUNT_ID=<your-instagram-account-id>
+     ```
+  Note: Instagram posts via Graph API use the same `FACEBOOK_PAGE_ACCESS_TOKEN` from HT-014.
+- **Verification**: `curl "https://graph.facebook.com/v18.0/<INSTAGRAM_BUSINESS_ACCOUNT_ID>?fields=name,followers_count&access_token=<PAGE_TOKEN>"` returns Instagram account info
+- **Claude Can Then**: Enable `post_instagram_only` and `post_update` (both platforms) in the Facebook/Instagram MCP
+
+### HT-016: Create Twitter/X Developer App
+- **Status**: DONE (2026-03-12 — app "h0-ai-employee" (App ID: 32559073) created on Free tier with Read+Write permissions; OAuth 1.0a (Consumer Key/Secret + Access Token/Secret) and OAuth 2.0 (Client ID/Secret) + Bearer Token all stored in .env)
+- **Blocks**: Phase 6 (Twitter/X MCP — FR-018)
+- **Why Human**: Twitter/X Developer Portal requires browser login, account verification, and app approval. Free tier (`Free`) allows basic read/write access.
+- **Instructions**:
+  1. Go to https://developer.twitter.com/ → sign in with your Twitter/X account
+  2. Apply for Developer Access (Free tier is sufficient for posting)
+  3. Create a new Project + App: name "H0-AI-Employee"
+  4. Set App permissions to "Read and Write"
+  5. Generate: Consumer Keys (API Key + Secret) + Access Token + Access Token Secret
+  6. Add to `.env`:
+     ```
+     TWITTER_API_KEY=<your-api-key>
+     TWITTER_API_SECRET=<your-api-secret>
+     TWITTER_ACCESS_TOKEN=<your-access-token>
+     TWITTER_ACCESS_TOKEN_SECRET=<your-access-token-secret>
+     TWITTER_BEARER_TOKEN=<your-bearer-token>
+     ```
+- **Verification**: `curl -H "Authorization: Bearer <BEARER_TOKEN>" "https://api.twitter.com/2/users/me"` returns your Twitter username
+- **Claude Can Then**: Build Twitter/X MCP server, test post_tweet tool
+
+### HT-017: Register facebook_mcp in Claude Code
+- **Status**: DONE (2026-03-13 — user ran `claude mcp add facebook_mcp`; facebook_mcp appears in /mcp connected list)
+- **Blocks**: Phase 6 (Facebook/Instagram MCP live testing — T028)
+- **Why Human**: `claude mcp add` modifies `~/.claude.json` — agent cannot self-register
+- **Instructions**: Run in project root:
+  ```bash
+  claude mcp add facebook_mcp \
+    --env FACEBOOK_PAGE_ID=982971481562290 \
+    --env FACEBOOK_PAGE_ACCESS_TOKEN="$(grep FACEBOOK_PAGE_ACCESS_TOKEN .env | cut -d= -f2-)" \
+    --env INSTAGRAM_BUSINESS_ACCOUNT_ID="" \
+    --env VAULT_PATH=/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
+    -- python3 /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/facebook/server.py
+  ```
+- **Verification**: `/mcp` shows `facebook_mcp` connected
+- **Claude Can Then**: Use facebook_mcp tools directly in sessions
+
+### HT-018: Register twitter_mcp in Claude Code
+- **Status**: DONE (2026-03-13 — user ran `claude mcp add twitter_mcp`; twitter_mcp appears in /mcp connected list)
+- **Blocks**: Phase 6 (Twitter/X MCP live testing — T035)
+- **Why Human**: `claude mcp add` modifies `~/.claude.json` — agent cannot self-register
+- **Instructions**: Run in project root:
+  ```bash
+  claude mcp add twitter_mcp \
+    --env TWITTER_API_KEY=dgvbzy3PYVJVeauAtuzGcCGN0 \
+    --env TWITTER_API_SECRET="$(grep TWITTER_API_SECRET .env | head -1 | cut -d= -f2-)" \
+    --env TWITTER_ACCESS_TOKEN="$(grep ^TWITTER_ACCESS_TOKEN= .env | cut -d= -f2-)" \
+    --env TWITTER_ACCESS_TOKEN_SECRET="$(grep TWITTER_ACCESS_TOKEN_SECRET .env | cut -d= -f2-)" \
+    --env VAULT_PATH=/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
+    -- python3 /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/twitter/server.py
+  ```
+- **Verification**: `/mcp` shows `twitter_mcp` connected
+- **Claude Can Then**: Use twitter_mcp tools directly in sessions
+
+### HT-019: Run CEO Briefing Live Smoke Test
+- **Status**: DONE (2026-03-16 — vault/CEO_Briefings/2026-03-15.md created, Odoo 19 healthy, T044+T054 verified)
+- **Blocks**: Phase 6 SC-004 verification (T044, T054)
+- **Why Human**: Requires live Odoo Docker container + WhatsApp bridge running
+- **Instructions**:
+  1. Start Odoo: `docker run -p 8069:8069 odoo:latest`
+  2. Run: `python3 orchestrator/ceo_briefing.py --now`
+  3. Verify: `vault/CEO_Briefings/YYYY-MM-DD.md` created with 7 sections
+  4. Check WhatsApp for HITL notification
+- **Verification**: File exists, YAML frontmatter valid, status=pending_approval
+- **Claude Can Then**: Mark Phase 6 US1 as fully verified
 
 ---
 
@@ -433,4 +536,4 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 
 ---
 *Governed by: .specify/memory/constitution.md (Principle III: Human-in-the-Loop)*
-*Updated: 2026-03-09 | Next review: After each phase completion*
+*Updated: 2026-03-13 | Next review: After each phase completion*

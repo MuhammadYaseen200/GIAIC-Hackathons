@@ -57,7 +57,20 @@ node_modules/
 # IDE
 .vscode/
 .idea/
+
+# Local Claude Code workspace settings — machine-specific paths and permissions
+.claude/settings.local.json
+
+# Artefacts created during test runs / mocking
+MagicMock/
 vault/Config/
+
+# Phase 6 Gold Tier
+vault/CEO_Briefings/
+vault/Logs/audit.jsonl
+.odoo_session
+facebook_token.json
+twitter_token.json
 
 # WSL2 Windows path leak prevention — literal Windows paths materialized as dirs
 C:\\
