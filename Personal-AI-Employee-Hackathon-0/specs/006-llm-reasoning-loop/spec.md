@@ -112,11 +112,11 @@ Per `ai-control/HUMAN-TASKS.md`, the following tasks MUST be completed by a huma
 |---------|------|--------|--------|
 | **HT-001** | Create Obsidian Vault and Folder Structure | DONE (2026-02-17) | Vault directories for file output |
 | **HT-002** | Set Up Gmail API OAuth2 Credentials | DONE (2026-02-20) | Gmail watcher producing vault files |
-| **HT-009** | Configure LLM Provider API Key(s) | PENDING | LLM reasoning calls |
+| **HT-009** | Configure LLM Provider API Key(s) | DONE (2026-02-23) | LLM reasoning calls |
 
 ### HT-009: Configure LLM Provider API Key(s) (NEW)
 
-- **Status**: PENDING
+- **Status**: DONE (2026-02-23 — ANTHROPIC_API_KEY set in .env, Claude claude-sonnet-4-6 primary LLM, Ralph Wiggum loop live)
 - **Blocks**: Phase 3 (LLM Reasoning Loop)
 - **Why Human**: LLM provider accounts require sign-up with billing (credit card), interactive web flows, and agreement to terms of service. Claude cannot perform these actions.
 - **Instructions**:

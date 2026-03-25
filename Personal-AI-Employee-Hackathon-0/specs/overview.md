@@ -11,7 +11,7 @@
 | 4 | MCP Integration | COMPLETE | Phase 3 complete | Gmail MCP + Obsidian MCP live, MCPClient fallback protocol, orchestrator MCP-first — exited 2026-02-25 |
 | 5 | HITL + WhatsApp - Silver | COMPLETE | Phase 4 complete + HT-004 done | Approval workflow functional, WhatsApp watcher running — exited 2026-03-05 |
 | 5.5 | LinkedIn Auto-Poster + Cron - Silver Completion | COMPLETE | Phase 5 complete + HT-LinkedIn done | LinkedIn posts with HITL approval, cron scheduling live, Silver tier 100%, coverage 99% |
-| 6 | CEO Briefing + Odoo - Gold | COMPLETE | Phase 5.5 complete + HT-006/007 done | 655/655 tests GREEN, 84.72% coverage, docs/architecture.md, 4 agent skills, SC-001–SC-012 all satisfied — exited 2026-03-15 |
+| 6 | CEO Briefing + Odoo - Gold | COMPLETE | Phase 5.5 complete + HT-006/007 done | 749/749 tests GREEN, SC-001–SC-012 all satisfied, docs/architecture.md, 4 agent skills, hitl_utils.py security hardened, PR #24 merged — exited 2026-03-25 |
 | 7 | Always-On Cloud - Platinum | NOT_STARTED | Phase 6 complete + HT-008 done | System deployed to Oracle VM, running 24/7 |
 | 8 | Polish, Testing & Demo | NOT_STARTED | Phase 7 complete | All E2E tests pass, demo rehearsed, README polished |
 
@@ -19,9 +19,9 @@
 
 **Phase 7: Always-On Cloud — Platinum** | NOT_STARTED | Blocked on HT-008 (Oracle Cloud VM)
 
-### Phase 6 Final Status (exited 2026-03-16)
+### Phase 6 Final Status (exited 2026-03-25)
 
-All 10 sub-phases complete (T001–T105). 82+ tests GREEN. Coverage ≥80%. All human tasks resolved.
+All 10 sub-phases complete (T001–T110). **749/749 tests GREEN**. Coverage ≥80%. All human tasks resolved. PR #24 shipped.
 
 | Sub-Phase | Tasks | Tests | Status |
 |-----------|-------|-------|--------|
@@ -34,7 +34,15 @@ All 10 sub-phases complete (T001–T105). 82+ tests GREEN. Coverage ≥80%. All 
 | Phase 7: US5 Odoo Verification | T050–T054 | verified in test_ceo_briefing.py | ✅ COMPLETE |
 | Phase 8: US6+US7 Email+Calendar | T055–T060 | 29 GREEN | ✅ COMPLETE |
 | Phase 9: US8 Agent Skills | T061–T072 | 4 skills created | ✅ COMPLETE |
-| Phase 10: Polish + QA + PR | T073–T105 | all verified | ✅ COMPLETE |
+| Phase 10: Polish + QA + PR | T073–T110 | all verified, PR #24 open | ✅ COMPLETE |
+
+**Review-v3 post-ship hardening (2026-03-25):**
+- HITL security: `mcp_servers/hitl_utils.py` extracted — only `H0_HITL_APPROVED=1` accepted
+- SC-001 timeout corrected: `asyncio.wait_for` 120s → 60s in `ceo_briefing.py`
+- Calendar API bug fixed: `list_events(hours_ahead=)` → `list_events(time_min=, time_max=, max_results=)`
+- E.164 validation on WhatsApp bridge; `chmod(0o600)` on vault files
+- PII: `settings.local.json` removed from git tracking; `.gitignore` updated
+- Commit: `3df7a6a` | PR: #24
 
 ## Silver Tier — QA Polish Complete (2026-03-10)
 

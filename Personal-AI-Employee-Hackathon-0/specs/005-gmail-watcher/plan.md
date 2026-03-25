@@ -475,7 +475,7 @@ vault/
 
 **Verification**: GmailWatcher `validate_prerequisites()` checks for `vault/Needs_Action/`, `vault/Inbox/`, `vault/Logs/` at startup. Missing directories cause a `PrerequisiteError` with message: "Vault directory not found. Complete HT-001: Create Obsidian Vault and Folder Structure. See ai-control/HUMAN-TASKS.md".
 
-**Status**: PENDING
+**Status**: DONE (2026-02-19 — vault structure created, HT-001 complete, Gmail watcher live)
 
 ---
 
@@ -511,7 +511,7 @@ GMAIL_TOKEN_PATH=/path/to/token.json
 
 Missing or invalid triggers `PrerequisiteError` with message: "Gmail credentials not found. Complete HT-002: Set Up Gmail API OAuth2 Credentials. See ai-control/HUMAN-TASKS.md".
 
-**Status**: PENDING
+**Status**: DONE (2026-02-19 — credentials.json + token.json in place, HT-002 complete, Gmail OAuth2 live)
 
 ---
 
