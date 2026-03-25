@@ -57,6 +57,12 @@ node_modules/
 # IDE
 .vscode/
 .idea/
+
+# Local Claude Code workspace settings — machine-specific paths and permissions
+.claude/settings.local.json
+
+# Artefacts created during test runs / mocking
+MagicMock/
 vault/Config/
 
 # Phase 6 Gold Tier

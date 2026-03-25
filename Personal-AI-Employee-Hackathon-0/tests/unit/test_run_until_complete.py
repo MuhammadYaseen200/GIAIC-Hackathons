@@ -238,3 +238,103 @@ async def test_on_exhausted_sends_whatsapp_notification():
     assert len(whatsapp_messages) == 1
     assert "briefing" in whatsapp_messages[0]
     assert "collect_odoo" in whatsapp_messages[0]
+
+
+@pytest.mark.asyncio
+async def test_on_exhausted_exception_does_not_propagate():
+    """on_exhausted that itself raises must not cause run_until_complete to re-raise."""
+    from orchestrator.run_until_complete import run_until_complete
+
+    async def bad_callback(wf, step, exc):
+        raise RuntimeError("callback itself exploded")
+
+    always_fails = AsyncMock(side_effect=ValueError("boom"))
+
+    with patch("orchestrator.run_until_complete.asyncio.sleep", new_callable=AsyncMock):
+        # Must not raise — the callback exception is swallowed internally
+        result = await run_until_complete(
+            "test_wf",
+            [("always_fails", always_fails)],
+            max_retries=2,
+            on_exhausted=bad_callback,
+        )
+
+    assert result["status"] == "failed"
+    assert result["failed_step"] == "always_fails"
+
+
+@pytest.mark.asyncio
+async def test_all_steps_succeed_three_steps():
+    """Explicit 3-step run → status=complete, completed has all 3 names."""
+    from orchestrator.run_until_complete import run_until_complete
+
+    step1 = AsyncMock(return_value=None)
+    step2 = AsyncMock(return_value=None)
+    step3 = AsyncMock(return_value=None)
+
+    result = await run_until_complete(
+        "three_step_wf",
+        [("step1", step1), ("step2", step2), ("step3", step3)],
+    )
+
+    assert result["status"] == "complete"
+    assert result["completed"] == ["step1", "step2", "step3"]
+
+
+@pytest.mark.asyncio
+async def test_default_max_retries_is_three():
+    """Calling without max_retries defaults to 3 attempts per failing step."""
+    from orchestrator.run_until_complete import run_until_complete
+
+    always_fails = AsyncMock(side_effect=RuntimeError("always fails"))
+
+    with patch("orchestrator.run_until_complete.asyncio.sleep", new_callable=AsyncMock):
+        result = await run_until_complete(
+            "test_wf",
+            [("bad", always_fails)],
+            # max_retries intentionally omitted to test default
+        )
+
+    assert result["status"] == "failed"
+    assert always_fails.call_count == 3  # default is 3
+
+
+@pytest.mark.asyncio
+async def test_audit_log_entries(tmp_path):
+    """run_until_complete writes entries to vault/Logs/audit.jsonl via tmpdir fixture."""
+    import json
+    import orchestrator.run_until_complete as ruc_mod
+    from orchestrator.run_until_complete import run_until_complete
+
+    audit_log = tmp_path / "Logs" / "audit.jsonl"
+    original_log = ruc_mod.AUDIT_LOG
+    ruc_mod.AUDIT_LOG = audit_log
+
+    steps = [
+        ("step1", AsyncMock(return_value=None)),
+        ("step2", AsyncMock(return_value=None)),
+    ]
+
+    try:
+        with patch("orchestrator.run_until_complete.asyncio.sleep", new_callable=AsyncMock):
+            result = await run_until_complete("audit_wf", steps)
+    finally:
+        ruc_mod.AUDIT_LOG = original_log
+
+    assert result["status"] == "complete"
+    assert audit_log.exists(), "audit.jsonl must be created by _log_audit"
+
+    lines = [json.loads(line) for line in audit_log.read_text().strip().splitlines()]
+    assert len(lines) >= 2  # at least one entry per step
+
+    for entry in lines:
+        assert entry["workflow"] == "audit_wf"
+        assert "ts" in entry
+        assert "step" in entry
+        assert "attempt" in entry
+        assert "outcome" in entry
+
+    # Both successful steps should have outcome=success
+    outcomes = {e["step"]: e["outcome"] for e in lines}
+    assert outcomes["step1"] == "success"
+    assert outcomes["step2"] == "success"

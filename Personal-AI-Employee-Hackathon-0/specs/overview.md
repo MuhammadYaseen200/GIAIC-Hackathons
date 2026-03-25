@@ -17,26 +17,24 @@
 
 ## Current Focus
 
-**Phase 6: CEO Briefing + Odoo — Gold** | IN_PROGRESS | Started 2026-03-12
+**Phase 7: Always-On Cloud — Platinum** | NOT_STARTED | Blocked on HT-008 (Oracle Cloud VM)
 
-### Phase 6 Progress (as of 2026-03-13)
+### Phase 6 Final Status (exited 2026-03-16)
 
-Phases 1–8 complete (T001–T060). 77/77 tests GREEN. Phases 9–10 (T061–T110) pending.
+All 10 sub-phases complete (T001–T105). 82+ tests GREEN. Coverage ≥80%. All human tasks resolved.
 
 | Sub-Phase | Tasks | Tests | Status |
 |-----------|-------|-------|--------|
 | Phase 1: Setup | T001–T009 | — | ✅ COMPLETE |
 | Phase 2: Odoo MCP | T010–T020 | 12/12 GREEN | ✅ COMPLETE |
-| Phase 3: Facebook/Instagram MCP | T021–T028 | 14/14 GREEN | ✅ COMPLETE (T028 blocked HT-017) |
-| Phase 4: Twitter/X MCP | T029–T035 | 12/12 GREEN | ✅ COMPLETE (T035 blocked HT-018) |
-| Phase 5: US1 Daily Briefing | T036–T044 | 27/27 GREEN | ✅ COMPLETE (T044 blocked HT-019) |
+| Phase 3: Facebook/Instagram MCP | T021–T028 | 14/14 GREEN | ✅ COMPLETE |
+| Phase 4: Twitter/X MCP | T029–T035 | 12/12 GREEN | ✅ COMPLETE |
+| Phase 5: US1 Daily Briefing | T036–T044 | 19/19 GREEN | ✅ COMPLETE |
 | Phase 6: US2 Weekly Audit | T045–T049 | 10/10 + 2 e2e GREEN | ✅ COMPLETE |
-| Phase 7: US5 Odoo Verification | T050–T054 | tests in test_ceo_briefing.py | ✅ COMPLETE (T054 blocked HT-019) |
+| Phase 7: US5 Odoo Verification | T050–T054 | verified in test_ceo_briefing.py | ✅ COMPLETE |
 | Phase 8: US6+US7 Email+Calendar | T055–T060 | 29 GREEN | ✅ COMPLETE |
-| Phase 9: US8 Agent Skills | T061–T072 | — | PENDING |
-| Phase 10: Polish + QA + PR | T073–T110 | — | PENDING |
-
-**Human tasks blocking live testing**: HT-017 (facebook_mcp registration), HT-018 (twitter_mcp registration), HT-019 (live smoke test)
+| Phase 9: US8 Agent Skills | T061–T072 | 4 skills created | ✅ COMPLETE |
+| Phase 10: Polish + QA + PR | T073–T105 | all verified | ✅ COMPLETE |
 
 ## Silver Tier — QA Polish Complete (2026-03-10)
 

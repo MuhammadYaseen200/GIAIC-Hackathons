@@ -4,6 +4,11 @@ Per ADR-0019: LLM primary + template fallback.
 Per ADR-0018: run_until_complete per-step retry.
 """
 from __future__ import annotations
+import os as _os, sys as _sys
+# Ensure project root is on sys.path when run as a script (e.g. via cron)
+_PROJECT_ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+if _PROJECT_ROOT not in _sys.path:
+    _sys.path.insert(0, _PROJECT_ROOT)
 
 import asyncio
 import json
@@ -19,6 +24,8 @@ VAULT_PATH = Path(os.getenv("VAULT_PATH", "vault"))
 BRIEFING_DIR = VAULT_PATH / "CEO_Briefings"
 LOG_DIR = VAULT_PATH / "Logs"
 BRIEFING_LOG = LOG_DIR / "ceo_briefing.jsonl"
+
+MAX_WHATSAPP_MSG_LENGTH = 500  # SC-003: HITL notifications must fit in one WhatsApp message
 
 
 def _log_event(event: str, **kwargs: Any) -> None:
@@ -78,7 +85,12 @@ async def collect_calendar_section(period: str = "daily") -> dict:
         hours = 48 if period == "daily" else 168
         try:
             from mcp_servers.calendar.server import list_events
-            result = await list_events(hours_ahead=hours)
+            now_iso = datetime.now(timezone.utc).isoformat()
+            future_iso = (datetime.now(timezone.utc) + timedelta(hours=hours)).isoformat()
+            result = await asyncio.wait_for(
+                list_events(time_min=now_iso, time_max=future_iso, max_results=10),
+                timeout=10.0,
+            )
             if isinstance(result, dict) and "content" in result:
                 return json.loads(result["content"])
         except Exception as e:
@@ -93,7 +105,7 @@ async def collect_odoo_section(period: str = "daily") -> dict:
     try:
         from mcp_servers.odoo.client import get_invoices_due_data
         import httpx
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             invoices = await get_invoices_due_data(client, days=0)
         overdue = [i for i in invoices if i.get("days_remaining", 0) < 0]
         if not overdue:
@@ -143,9 +155,9 @@ async def _llm_draft(sections: dict, period: str) -> str:
     """Generate briefing using Anthropic LLM (primary path, ADR-0019)."""
     import anthropic
 
-    client = anthropic.Anthropic()
+    client = anthropic.AsyncAnthropic(timeout=60.0)
 
-    sections_text = json.dumps(sections, indent=2, default=str)
+    sections_text = json.dumps(sections, separators=(',', ':'), default=str)
     prompt = f"""You are generating a {period} CEO briefing for H0 Personal AI Employee.
 
 Data collected:
@@ -162,13 +174,19 @@ Generate a structured CEO briefing with EXACTLY these 7 sections:
 
 Be concise, factual, and actionable. Use bullet points. If data is unavailable for a section, say so briefly."""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2000,
-        messages=[{"role": "user", "content": prompt}],
+    message = await asyncio.wait_for(
+        client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
+        ),
+        timeout=25.0,
     )
 
-    return message.content[0].text
+    text = message.content[0].text
+    if not text or not text.strip():
+        raise ValueError("LLM returned empty response")
+    return text
 
 
 async def _template_draft(sections: dict, period: str) -> str:
@@ -241,10 +259,12 @@ async def draft_briefing(sections: dict, period: str) -> str:
 
 async def write_briefing_vault(content: str, period: str) -> Path:
     """Write briefing to vault/CEO_Briefings/ with YAML frontmatter (idempotent)."""
+    if not content or not content.strip():
+        raise ValueError("Briefing content is empty — refusing to write misleading vault entry")
     BRIEFING_DIR.mkdir(parents=True, exist_ok=True)
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    filename = f"{today}.md" if period == "daily" else f"week-{datetime.now(timezone.utc).strftime('%Y-W%W')}.md"
+    filename = f"{today}.md" if period == "daily" else f"week-{datetime.now(timezone.utc).strftime('%G-W%V')}.md"
     briefing_path = BRIEFING_DIR / filename
 
     # Detect LLM mode from content
@@ -269,6 +289,7 @@ created_at: {datetime.now(timezone.utc).isoformat()}
     tmp_path = briefing_path.with_suffix(".md.tmp")
     tmp_path.write_text(full_content, encoding="utf-8")
     tmp_path.replace(briefing_path)
+    briefing_path.chmod(0o600)  # CEO briefings contain sensitive financial data
 
     logger.info(f"Briefing written: {briefing_path}")
     return briefing_path
@@ -288,11 +309,14 @@ async def send_hitl_notification(briefing_path: Path, metrics: dict) -> None:
             f"{sections} sections | {duration:.0f}s | {mode}\n"
             f"Reply APPROVE to send via email, REJECT to discard."
         )
-        msg = msg[:500]  # SC-003: hard cap at 500 chars
+        msg = msg[:MAX_WHATSAPP_MSG_LENGTH]  # SC-003: hard cap
 
         owner_wa = os.environ.get("OWNER_WHATSAPP_NUMBER", "")
+        if not owner_wa:
+            logger.warning("OWNER_WHATSAPP_NUMBER not set — skipping HITL notification")
+            return
         bridge = GoBridge()
-        await bridge.send(owner_wa, msg)
+        await asyncio.wait_for(bridge.send(owner_wa, msg), timeout=15.0)
         logger.info(f"HITL notification sent ({len(msg)} chars)")
     except Exception as e:
         logger.warning(f"HITL notification failed (non-blocking): {e}")
@@ -335,83 +359,113 @@ async def check_approval_and_email(briefing_path: Path) -> dict:
 async def run_daily_briefing() -> dict:
     """Run daily CEO briefing via run_until_complete."""
     from orchestrator.run_until_complete import run_until_complete
+    from watchers.utils import FileLock
 
-    start_time = datetime.now(timezone.utc)
-    sections: dict = {}
-    briefing_path: Path | None = None
+    _lock = FileLock("/tmp/h0_ceo_briefing.lock")
+    try:
+        _lock.acquire()
+    except RuntimeError as _e:
+        logger.info(f"CEO briefing already running ({_e}). Skipping.")
+        return {"status": "skipped", "reason": "already_running"}
 
-    async def step_collect_email() -> None:
-        sections["email"] = await collect_email_summary()
+    try:
+        start_time = datetime.now(timezone.utc)
+        sections: dict = {}
+        briefing_path: Path | None = None
 
-    async def step_collect_calendar() -> None:
-        sections["calendar"] = await collect_calendar_section("daily")
+        async def step_collect_email() -> None:
+            sections["email"] = await collect_email_summary()
 
-    async def step_collect_odoo() -> None:
-        sections["odoo"] = await collect_odoo_section("daily")
+        async def step_collect_calendar() -> None:
+            sections["calendar"] = await collect_calendar_section("daily")
 
-    async def step_collect_social() -> None:
-        sections["social"] = await collect_social_section("daily")
+        async def step_collect_odoo() -> None:
+            sections["odoo"] = await collect_odoo_section("daily")
 
-    async def step_draft() -> None:
-        sections["content"] = await draft_briefing(sections, "daily")
+        async def step_collect_social() -> None:
+            sections["social"] = await collect_social_section("daily")
 
-    async def step_write_vault() -> None:
-        nonlocal briefing_path
-        briefing_path = await write_briefing_vault(sections.get("content", ""), "daily")
+        async def step_collect_all() -> None:
+            await asyncio.gather(
+                step_collect_email(),
+                step_collect_calendar(),
+                step_collect_odoo(),
+                step_collect_social(),
+            )
 
-    async def step_send_hitl() -> None:
-        if briefing_path:
-            duration = (datetime.now(timezone.utc) - start_time).total_seconds()
-            mode = "template" if "[TEMPLATE MODE]" in sections.get("content", "") else "llm"
-            await send_hitl_notification(briefing_path, {
-                "duration_s": duration,
-                "llm_mode": mode,
-                "sections": sections.get("content", "").count("## "),
-            })
+        async def step_draft() -> None:
+            sections["content"] = await draft_briefing(sections, "daily")
 
-    async def on_exhausted(workflow: str, step: str, error: Exception) -> None:
-        logger.error(f"Briefing failed at step {step}: {error}")
+        async def step_write_vault() -> None:
+            nonlocal briefing_path
+            briefing_path = await write_briefing_vault(sections.get("content", ""), "daily")
+
+        async def step_send_hitl() -> None:
+            if briefing_path:
+                duration = (datetime.now(timezone.utc) - start_time).total_seconds()
+                mode = "template" if "[TEMPLATE MODE]" in sections.get("content", "") else "llm"
+                await send_hitl_notification(briefing_path, {
+                    "duration_s": duration,
+                    "llm_mode": mode,
+                    "sections": sections.get("content", "").count("## "),
+                })
+
+        async def on_exhausted(workflow: str, step: str, error: Exception) -> None:
+            logger.error(f"Briefing failed at step {step}: {error}")
+            try:
+                from mcp_servers.whatsapp.bridge import GoBridge
+                owner_wa = os.environ.get("OWNER_WHATSAPP_NUMBER", "")
+                if owner_wa:
+                    bridge = GoBridge()
+                    await bridge.send(owner_wa, f"CEO Briefing failed at step '{step}' after 3 retries. Error: {str(error)[:200]}"[:MAX_WHATSAPP_MSG_LENGTH])
+            except Exception:
+                pass
+
         try:
-            from mcp_servers.whatsapp.bridge import GoBridge
-            owner_wa = os.environ.get("OWNER_WHATSAPP_NUMBER", "")
-            bridge = GoBridge()
-            await bridge.send(owner_wa, f"CEO Briefing failed at step '{step}' after 3 retries. Error: {str(error)[:200]}"[:500])
-        except Exception:
-            pass
+            result = await asyncio.wait_for(
+                run_until_complete(
+                    "daily_briefing",
+                    [
+                        ("collect_all", step_collect_all),
+                        ("draft", step_draft),
+                        ("write_vault", step_write_vault),
+                        ("send_hitl", step_send_hitl),
+                    ],
+                    max_retries=3,
+                    on_exhausted=on_exhausted,
+                ),
+                timeout=60.0,  # SC-001: daily briefing must complete within 60s
+            )
+        except asyncio.TimeoutError:
+            logger.error("Daily briefing exceeded 60s timeout (SC-001)")
+            result = {"status": "failed", "error": "timeout", "completed": []}
 
-    result = await run_until_complete(
-        "daily_briefing",
-        [
-            ("collect_email", step_collect_email),
-            ("collect_calendar", step_collect_calendar),
-            ("collect_odoo", step_collect_odoo),
-            ("collect_social", step_collect_social),
-            ("draft", step_draft),
-            ("write_vault", step_write_vault),
-            ("send_hitl", step_send_hitl),
-        ],
-        max_retries=3,
-        on_exhausted=on_exhausted,
-    )
-
-    # Log completion
-    duration = (datetime.now(timezone.utc) - start_time).total_seconds()
-    _log_event(
-        "briefing_generated",
-        period="daily",
-        status=result["status"],
-        duration_s=duration,
-        completed_steps=result.get("completed", []),
-    )
-
+        # Log completion
+        duration = (datetime.now(timezone.utc) - start_time).total_seconds()
+        _log_event(
+            "briefing_generated",
+            period="daily",
+            status=result["status"],
+            duration_s=duration,
+            completed_steps=result.get("completed", []),
+        )
+    finally:
+        _lock.release()
     return result
 
 
 if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv(_PROJECT_ROOT + "/.env")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s — %(message)s",
+    )
+
     import argparse
     parser = argparse.ArgumentParser(description="CEO Daily Briefing")
     parser.add_argument("--now", action="store_true", help="Run immediately")
-    parser.add_argument("--dry-run", action="store_true", help="Skip notifications")
     args = parser.parse_args()
 
     if args.now:

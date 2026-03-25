@@ -4,6 +4,11 @@ Per ADR-0019: LLM primary + template fallback.
 Per ADR-0018: run_until_complete per-step retry.
 """
 from __future__ import annotations
+import os as _os, sys as _sys
+# Ensure project root is on sys.path when run as a script (e.g. via cron)
+_PROJECT_ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+if _PROJECT_ROOT not in _sys.path:
+    _sys.path.insert(0, _PROJECT_ROOT)
 
 import asyncio
 import json
@@ -14,6 +19,8 @@ from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+MAX_WHATSAPP_MSG_LENGTH = 500  # SC-003: HITL notifications must fit in one WhatsApp message
 
 VAULT_PATH = Path(os.getenv("VAULT_PATH", "vault"))
 BRIEFING_DIR = VAULT_PATH / "CEO_Briefings"
@@ -79,6 +86,34 @@ async def collect_invoices_due() -> dict:
     except Exception as e:
         logger.warning(f"collect_invoices_due error: {e}")
         return {"status": "unavailable", "error": str(e)}
+
+
+async def collect_odoo_all() -> dict:
+    """Fetch GL, AR, and invoices from Odoo in parallel using a shared HTTP client."""
+    from mcp_servers.odoo.client import get_gl_summary_data, get_ar_aging_data, get_invoices_due_data
+    from mcp_servers.odoo.auth import get_odoo_session
+    import httpx
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        # Pre-warm session so parallel calls don't all race to authenticate
+        try:
+            await get_odoo_session(client)
+        except Exception:
+            pass  # auth errors handled per-call below
+        gl, ar, invoices_raw = await asyncio.gather(
+            get_gl_summary_data(client),
+            get_ar_aging_data(client),
+            get_invoices_due_data(client, days=7),
+            return_exceptions=True,
+        )
+    gl_result = gl if isinstance(gl, dict) else {"status": "unavailable", "error": str(gl)}
+    ar_result = ar if isinstance(ar, dict) else {"status": "unavailable", "error": str(ar)}
+    if isinstance(invoices_raw, list):
+        overdue = [i for i in invoices_raw if i.get("days_remaining", 0) < 0]
+        upcoming = [i for i in invoices_raw if i.get("days_remaining", 0) >= 0]
+        invoices_result = {"overdue": overdue, "upcoming": upcoming, "total_count": len(invoices_raw)}
+    else:
+        invoices_result = {"status": "unavailable", "error": str(invoices_raw)}
+    return {"gl": gl_result, "ar": ar_result, "invoices": invoices_result}
 
 
 async def collect_7day_social_rollup() -> dict:
@@ -152,8 +187,8 @@ async def _llm_draft_weekly(sections: dict) -> str:
     """Generate weekly audit using Anthropic LLM (primary path)."""
     import anthropic
 
-    client = anthropic.Anthropic()
-    sections_text = json.dumps(sections, indent=2, default=str)
+    client = anthropic.AsyncAnthropic(timeout=60.0)
+    sections_text = json.dumps(sections, separators=(',', ':'), default=str)
     prompt = f"""You are generating a weekly financial audit for H0 Personal AI Employee.
 
 Data collected:
@@ -170,12 +205,18 @@ Generate a structured weekly audit with EXACTLY these 7 sections:
 
 Be concise, factual, and actionable. Use bullet points and tables where appropriate."""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2000,
-        messages=[{"role": "user", "content": prompt}],
+    message = await asyncio.wait_for(
+        client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
+        ),
+        timeout=25.0,
     )
-    return message.content[0].text
+    text = message.content[0].text
+    if not text or not text.strip():
+        raise ValueError("LLM returned empty response")
+    return text
 
 
 async def _template_draft_weekly(sections: dict) -> str:
@@ -263,11 +304,13 @@ async def draft_weekly_audit(sections: dict) -> str:
 
 async def write_audit_vault(content: str) -> Path:
     """Write weekly audit to vault/CEO_Briefings/week-YYYY-WNN.md (idempotent)."""
+    if not content or not content.strip():
+        raise ValueError("Audit content is empty — refusing to write misleading vault entry")
     BRIEFING_DIR.mkdir(parents=True, exist_ok=True)
 
     now = datetime.now(timezone.utc)
     today = now.strftime("%Y-%m-%d")
-    filename = f"week-{now.strftime('%Y-W%W')}.md"
+    filename = f"week-{now.strftime('%G-W%V')}.md"  # ISO 8601 week (matches `date +%G-W%V`)
     audit_path = BRIEFING_DIR / filename
 
     llm_mode = "template" if "[TEMPLATE MODE]" in content else "llm"
@@ -291,6 +334,7 @@ created_at: {now.isoformat()}
     tmp_path = audit_path.with_suffix(".md.tmp")
     tmp_path.write_text(full_content, encoding="utf-8")
     tmp_path.replace(audit_path)
+    audit_path.chmod(0o600)  # Weekly audits contain sensitive financial data
 
     logger.info(f"Weekly audit written: {audit_path}")
     return audit_path
@@ -310,11 +354,14 @@ async def send_hitl_notification(audit_path: Path, metrics: dict) -> None:
             f"{sections} sections | {duration:.0f}s | {mode}\n"
             f"Reply APPROVE to send via email, REJECT to discard."
         )
-        msg = msg[:500]
+        msg = msg[:MAX_WHATSAPP_MSG_LENGTH]  # SC-003: hard cap
 
         owner_wa = os.environ.get("OWNER_WHATSAPP_NUMBER", "")
+        if not owner_wa:
+            logger.warning("OWNER_WHATSAPP_NUMBER not set — skipping HITL notification")
+            return
         bridge = GoBridge()
-        await bridge.send(owner_wa, msg)
+        await asyncio.wait_for(bridge.send(owner_wa, msg), timeout=15.0)
         logger.info(f"HITL notification sent ({len(msg)} chars)")
     except Exception as e:
         logger.warning(f"HITL notification failed (non-blocking): {e}")
@@ -323,19 +370,24 @@ async def send_hitl_notification(audit_path: Path, metrics: dict) -> None:
 async def run_weekly_audit() -> dict:
     """Run weekly audit via run_until_complete."""
     from orchestrator.run_until_complete import run_until_complete
+    from watchers.utils import FileLock
+
+    _lock = FileLock("/tmp/h0_weekly_audit.lock")
+    try:
+        _lock.acquire()
+    except RuntimeError as _e:
+        logger.info(f"Weekly audit already running ({_e}). Skipping.")
+        return {"status": "skipped", "reason": "already_running"}
 
     start_time = datetime.now(timezone.utc)
     sections: dict = {}
     audit_path: Path | None = None
 
-    async def step_collect_gl() -> None:
-        sections["gl"] = await collect_full_gl()
-
-    async def step_collect_ar() -> None:
-        sections["ar"] = await collect_full_ar()
-
-    async def step_collect_invoices() -> None:
-        sections["invoices"] = await collect_invoices_due()
+    async def step_collect_odoo_all() -> None:
+        result = await collect_odoo_all()
+        sections["gl"] = result["gl"]
+        sections["ar"] = result["ar"]
+        sections["invoices"] = result["invoices"]
 
     async def step_collect_social() -> None:
         sections["social"] = await collect_7day_social_rollup()
@@ -362,37 +414,60 @@ async def run_weekly_audit() -> dict:
 
     async def on_exhausted(workflow: str, step: str, error: Exception) -> None:
         logger.error(f"Weekly audit failed at step {step}: {error}")
+        try:
+            from mcp_servers.whatsapp.bridge import GoBridge
+            owner_wa = os.environ.get("OWNER_WHATSAPP_NUMBER", "")
+            if owner_wa:
+                bridge = GoBridge()
+                await bridge.send(owner_wa, f"Weekly Audit failed at step '{step}' after 3 retries. Error: {str(error)[:200]}"[:MAX_WHATSAPP_MSG_LENGTH])
+        except Exception:
+            pass
 
-    result = await run_until_complete(
-        "weekly_audit",
-        [
-            ("collect_gl", step_collect_gl),
-            ("collect_ar", step_collect_ar),
-            ("collect_invoices", step_collect_invoices),
-            ("collect_social", step_collect_social),
-            ("collect_email", step_collect_email),
-            ("draft", step_draft),
-            ("write_vault", step_write_vault),
-            ("send_hitl", step_send_hitl),
-        ],
-        max_retries=3,
-        on_exhausted=on_exhausted,
-    )
+    try:
+        try:
+            result = await asyncio.wait_for(
+                run_until_complete(
+                    "weekly_audit",
+                    [
+                        ("collect_odoo_all", step_collect_odoo_all),  # GL + AR + invoices in parallel
+                        ("collect_social", step_collect_social),
+                        ("collect_email", step_collect_email),
+                        ("draft", step_draft),
+                        ("write_vault", step_write_vault),
+                        ("send_hitl", step_send_hitl),
+                    ],
+                    max_retries=3,
+                    on_exhausted=on_exhausted,
+                ),
+                timeout=120.0,
+            )
+        except asyncio.TimeoutError:
+            logger.error("Weekly audit exceeded 120s timeout")
+            result = {"status": "failed", "error": "timeout", "completed": []}
 
-    # Log completion
-    duration = (datetime.now(timezone.utc) - start_time).total_seconds()
-    _log_event(
-        "weekly_audit_generated",
-        period="weekly",
-        status=result["status"],
-        duration_s=duration,
-        completed_steps=result.get("completed", []),
-    )
-
+        # Log completion
+        duration = (datetime.now(timezone.utc) - start_time).total_seconds()
+        _log_event(
+            "weekly_audit_generated",
+            period="weekly",
+            status=result["status"],
+            duration_s=duration,
+            completed_steps=result.get("completed", []),
+        )
+    finally:
+        _lock.release()
     return result
 
 
 if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv(_PROJECT_ROOT + "/.env")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s — %(message)s",
+    )
+
     import argparse
     parser = argparse.ArgumentParser(description="Weekly Audit")
     parser.add_argument("--now", action="store_true", help="Run immediately")

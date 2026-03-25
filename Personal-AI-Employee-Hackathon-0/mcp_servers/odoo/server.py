@@ -13,6 +13,11 @@ Registration: Add to ~/.claude.json mcpServers:
     "env": {}
   }
 """
+import os as _os, sys as _sys
+_PROJECT_ROOT = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+if _PROJECT_ROOT not in _sys.path:
+    _sys.path.insert(0, _PROJECT_ROOT)
+
 import json
 import logging
 

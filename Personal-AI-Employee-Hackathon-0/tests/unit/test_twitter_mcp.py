@@ -33,7 +33,8 @@ async def test_post_tweet_text_exactly_280_accepted():
     from mcp_servers.twitter.server import post_tweet
 
     exact_text = "Y" * 280
-    with patch("mcp_servers.twitter.server.post_tweet_client") as mock_fn:
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": "1"}), \
+         patch("mcp_servers.twitter.server.post_tweet_client") as mock_fn:
         mock_fn.return_value = {"success": True, "tweet_id": "789", "url": "https://twitter.com/i/web/status/789"}
         result = await post_tweet(text=exact_text)
     assert result.get("isError") is not True
@@ -44,7 +45,8 @@ async def test_post_tweet_rate_limited_graceful():
     """Rate limit returns structured response, not exception."""
     from mcp_servers.twitter.server import post_tweet
 
-    with patch("mcp_servers.twitter.server.post_tweet_client") as mock_fn:
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": "1"}), \
+         patch("mcp_servers.twitter.server.post_tweet_client") as mock_fn:
         mock_fn.return_value = {"success": False, "error": "Rate limited", "rate_limited": True}
         result = await post_tweet(text="Test")
     assert isinstance(result, dict)
@@ -325,3 +327,217 @@ async def test_client_get_client_singleton():
 
     tw_client.TWITTER_API_KEY = original_key
     tw_client._tweepy_client = original
+
+
+# -- ADDITIONAL CLIENT COVERAGE TESTS --
+
+
+@pytest.mark.asyncio
+async def test_client_get_client_import_error():
+    """_get_client raises ImportError when tweepy not installed."""
+    import sys
+    from mcp_servers.twitter import client as tw_client
+
+    original = tw_client._tweepy_client
+    tw_client._tweepy_client = None
+
+    # Remove tweepy from sys.modules if present, block import
+    saved = sys.modules.pop("tweepy", None)
+    # Install a mock that raises ImportError on import
+    import unittest.mock
+    with unittest.mock.patch.dict("sys.modules", {"tweepy": None}):
+        with pytest.raises((ImportError, TypeError)):
+            tw_client._get_client()
+
+    if saved is not None:
+        sys.modules["tweepy"] = saved
+    tw_client._tweepy_client = original
+
+
+@pytest.mark.asyncio
+async def test_client_post_tweet_generic_exception():
+    """post_tweet handles non-rate-limit, non-403 exceptions."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.create_tweet = MagicMock(side_effect=Exception("Database connection error"))
+
+    original_key = tw_client.TWITTER_API_KEY
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_API_KEY = "test-key"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.post_tweet("Some tweet")
+
+    tw_client.TWITTER_API_KEY = original_key
+    tw_client._tweepy_client = original_client
+
+    assert result["success"] is False
+    assert result["rate_limited"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_tweets_no_access_token():
+    """get_recent_tweets returns [] when TWITTER_ACCESS_TOKEN not set."""
+    from mcp_servers.twitter import client as tw_client
+
+    original = tw_client.TWITTER_ACCESS_TOKEN
+    tw_client.TWITTER_ACCESS_TOKEN = ""
+
+    result = await tw_client.get_recent_tweets()
+
+    tw_client.TWITTER_ACCESS_TOKEN = original
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_tweets_me_none():
+    """get_recent_tweets returns [] when get_me returns None."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(return_value=None)
+
+    original_token = tw_client.TWITTER_ACCESS_TOKEN
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_ACCESS_TOKEN = "test-token"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.get_recent_tweets()
+
+    tw_client.TWITTER_ACCESS_TOKEN = original_token
+    tw_client._tweepy_client = original_client
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_tweets_empty_data():
+    """get_recent_tweets returns [] when tweets_resp.data is None."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_me = MagicMock()
+    mock_me.data.id = "user-456"
+
+    mock_tweets_resp = MagicMock()
+    mock_tweets_resp.data = None
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(return_value=mock_me)
+    mock_tweepy.get_users_tweets = MagicMock(return_value=mock_tweets_resp)
+
+    original_token = tw_client.TWITTER_ACCESS_TOKEN
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_ACCESS_TOKEN = "test-token"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.get_recent_tweets()
+
+    tw_client.TWITTER_ACCESS_TOKEN = original_token
+    tw_client._tweepy_client = original_client
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_tweets_rate_limited():
+    """get_recent_tweets returns [] on 429 rate limit."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(side_effect=Exception("429 Too Many Requests"))
+
+    original_token = tw_client.TWITTER_ACCESS_TOKEN
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_ACCESS_TOKEN = "test-token"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.get_recent_tweets()
+
+    tw_client.TWITTER_ACCESS_TOKEN = original_token
+    tw_client._tweepy_client = original_client
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_tweets_generic_exception():
+    """get_recent_tweets returns [] on generic exception."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(side_effect=Exception("SSL certificate verify failed"))
+
+    original_token = tw_client.TWITTER_ACCESS_TOKEN
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_ACCESS_TOKEN = "test-token"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.get_recent_tweets()
+
+    tw_client.TWITTER_ACCESS_TOKEN = original_token
+    tw_client._tweepy_client = original_client
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_health_check_twitter_unauthorized():
+    """health_check_twitter returns healthy=False on 401 Unauthorized."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(side_effect=Exception("401 Unauthorized"))
+
+    original_key = tw_client.TWITTER_API_KEY
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_API_KEY = "test-key"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.health_check_twitter()
+
+    tw_client.TWITTER_API_KEY = original_key
+    tw_client._tweepy_client = original_client
+    assert result["healthy"] is False
+    assert result["token_valid"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_health_check_twitter_generic_exception():
+    """health_check_twitter returns healthy=False on generic connection error."""
+    from mcp_servers.twitter import client as tw_client
+
+    mock_tweepy = MagicMock()
+    mock_tweepy.get_me = MagicMock(side_effect=Exception("Connection refused"))
+
+    original_key = tw_client.TWITTER_API_KEY
+    original_client = tw_client._tweepy_client
+    tw_client.TWITTER_API_KEY = "test-key"
+    tw_client._tweepy_client = mock_tweepy
+
+    result = await tw_client.health_check_twitter()
+
+    tw_client.TWITTER_API_KEY = original_key
+    tw_client._tweepy_client = original_client
+    assert result["healthy"] is False
+    assert result["api_reachable"] is False
+
+
+# -- HITL GATE TESTS --
+
+@pytest.mark.asyncio
+async def test_post_tweet_hitl_rejected_when_not_approved():
+    """HITL gate blocks post_tweet when H0_HITL_APPROVED is not set."""
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": ""}, clear=False):
+        from mcp_servers.twitter.server import post_tweet
+        result = await post_tweet("Test tweet content")
+    assert result.get("isError") is True
+    data = json.loads(result["content"])
+    assert data["error"] == "HITL_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_post_tweet_hitl_approved_when_env_set():
+    """HITL gate allows post_tweet when H0_HITL_APPROVED=1."""
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": "1"}):
+        with patch("mcp_servers.twitter.server.post_tweet_client", new_callable=AsyncMock) as mock_tw:
+            mock_tw.return_value = {"id": "789", "success": True}
+            from mcp_servers.twitter.server import post_tweet
+            result = await post_tweet("Approved tweet")
+    assert result.get("isError") is not True

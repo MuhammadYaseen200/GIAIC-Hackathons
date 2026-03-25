@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def _log_audit(action: str, outcome: str, error: str = "") -> None:
     try:
         AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
         entry = {
-            "ts": datetime.utcnow().isoformat() + "Z",
+            "ts": datetime.now(timezone.utc).isoformat(),
             "action": action,
             "agent": "social_dm_monitor",
             "attempt": 1,

@@ -270,7 +270,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Notes**: Token is 60-day access token (no refresh token on standard LinkedIn apps); re-run HT-013b when it expires
 
 #### HT-013d: Register linkedin_mcp in ~/.claude.json
-- **Status**: DONE (2026-03-09 — linkedin_mcp + linkedin-community-mcp both registered in /home/m-y-j/.claude.json)
+- **Status**: DONE (2026-03-09 — linkedin_mcp + linkedin-community-mcp both registered in ~/.claude.json)
 - **Notes**: linkedin_mcp = custom project server at mcp_servers/linkedin/server.py; linkedin-community-mcp = @lurenss/linkedin-mcp via npx
 
 ---
@@ -326,7 +326,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Instructions**:
   1. Option A - Docker (recommended):
      ```bash
-     docker run -d -p 8069:8069 --name odoo odoo:18
+     docker run -d -p 8069:8069 --name odoo odoo:latest
      ```
   2. Option B - Local install:
      - Follow https://www.odoo.com/documentation/17.0/administration/install.html
@@ -434,11 +434,11 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Use twitter_mcp tools directly in sessions
 
 ### HT-019: Run CEO Briefing Live Smoke Test
-- **Status**: PENDING
+- **Status**: DONE (2026-03-16 — vault/CEO_Briefings/2026-03-15.md created, Odoo 19 healthy, T044+T054 verified)
 - **Blocks**: Phase 6 SC-004 verification (T044, T054)
 - **Why Human**: Requires live Odoo Docker container + WhatsApp bridge running
 - **Instructions**:
-  1. Start Odoo: `docker run -p 8069:8069 odoo:17`
+  1. Start Odoo: `docker run -p 8069:8069 odoo:latest`
   2. Run: `python3 orchestrator/ceo_briefing.py --now`
   3. Verify: `vault/CEO_Briefings/YYYY-MM-DD.md` created with 7 sections
   4. Check WhatsApp for HITL notification

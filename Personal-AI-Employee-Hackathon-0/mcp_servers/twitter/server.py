@@ -1,6 +1,11 @@
 """Twitter/X MCP Server -- FastMCP tools."""
 from __future__ import annotations
 
+import os as _os, sys as _sys
+_PROJECT_ROOT = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+if _PROJECT_ROOT not in _sys.path:
+    _sys.path.insert(0, _PROJECT_ROOT)
+
 import json
 import logging
 
@@ -21,6 +26,9 @@ def _error(msg: str) -> dict:
     return {"isError": True, "content": json.dumps({"error": msg})}
 
 
+from mcp_servers.hitl_utils import check_hitl_approval as _check_hitl_approval
+
+
 @mcp.tool()
 async def post_tweet(text: str) -> dict:
     """Post a tweet to Twitter/X.
@@ -28,6 +36,9 @@ async def post_tweet(text: str) -> dict:
     Args:
         text: Tweet content (<=280 chars)
     """
+    hitl_check = _check_hitl_approval()
+    if hitl_check:
+        return hitl_check
     try:
         try:
             TweetInput(text=text)

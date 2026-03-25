@@ -625,6 +625,13 @@ class RalphWiggumOrchestrator(BaseWatcher):
         except Exception as e:
             self._log("linkedin_trigger_error", LogSeverity.ERROR, {"error": str(e)})
 
+        # Phase 6: Social DM monitor — check all 3 platforms (T080)
+        try:
+            from watchers.social_dm_monitor import run_dm_monitor
+            await run_dm_monitor()
+        except Exception as e:
+            self._log("social_dm_monitor_error", LogSeverity.ERROR, {"error": str(e)})
+
     async def _scan_approved_drafts(self) -> list[Path]:
         """Scan vault/Approved/ for *.md files with status: pending_approval.
 

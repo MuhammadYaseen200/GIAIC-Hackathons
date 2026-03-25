@@ -107,7 +107,7 @@ async def test_health_check_odoo_healthy():
     mock_response.raise_for_status = MagicMock()
 
     mock_client = AsyncMock()
-    mock_client.get.return_value = mock_response
+    mock_client.post.return_value = mock_response
 
     result = await odoo_client.health_check_odoo(mock_client)
     assert result["healthy"] is True
@@ -120,7 +120,7 @@ async def test_health_check_odoo_connection_error():
     from mcp_servers.odoo import client as odoo_client
 
     mock_client = AsyncMock()
-    mock_client.get.side_effect = httpx.ConnectError("Connection refused")
+    mock_client.post.side_effect = httpx.ConnectError("Connection refused")
 
     result = await odoo_client.health_check_odoo(mock_client)
     assert result["healthy"] is False
@@ -393,4 +393,144 @@ async def test_client_get_invoices_due_with_days_remaining():
     assert len(result) == 1
     assert result[0]["invoice_id"] == 42
     assert result[0]["partner_name"] == "Beta Inc"
-    assert result[0]["days_remaining"] == 3
+    assert 2 <= result[0]["days_remaining"] <= 4  # ±1 day for UTC vs local timezone
+
+
+# -- ADDITIONAL ODOO SERVER COVERAGE TESTS ------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_tool_get_gl_summary_exception_returns_is_error():
+    """get_gl_summary tool returns isError on unexpected exception."""
+    from mcp_servers.odoo.server import get_gl_summary
+
+    with patch("mcp_servers.odoo.server.get_gl_summary_data") as mock_fn:
+        mock_fn.side_effect = RuntimeError("DB connection lost")
+        result = await get_gl_summary()
+
+    assert result.get("isError") is True
+    assert "DB connection lost" in result["content"]
+
+
+@pytest.mark.asyncio
+async def test_tool_get_invoices_due_empty_list():
+    """get_invoices_due tool handles empty list from client."""
+    from mcp_servers.odoo.server import get_invoices_due
+
+    with patch("mcp_servers.odoo.server.get_invoices_due_data") as mock_fn:
+        mock_fn.return_value = []
+        result = await get_invoices_due(days_ahead=7)
+
+    assert isinstance(result, dict)
+    assert "isError" not in result
+    content = json.loads(result["content"])
+    assert content == []
+
+
+@pytest.mark.asyncio
+async def test_tool_get_invoices_due_negative_days():
+    """get_invoices_due tool returns error for negative days_ahead."""
+    from mcp_servers.odoo.server import get_invoices_due
+
+    result = await get_invoices_due(days_ahead=-1)
+
+    assert result.get("isError") is True
+    assert "non-negative" in result["content"]
+
+
+@pytest.mark.asyncio
+async def test_tool_get_invoices_due_exception_returns_is_error():
+    """get_invoices_due tool returns isError on unexpected exception."""
+    from mcp_servers.odoo.server import get_invoices_due
+
+    with patch("mcp_servers.odoo.server.get_invoices_due_data") as mock_fn:
+        mock_fn.side_effect = Exception("Session expired")
+        result = await get_invoices_due(days_ahead=7)
+
+    assert result.get("isError") is True
+    assert "Session expired" in result["content"]
+
+
+@pytest.mark.asyncio
+async def test_tool_get_ar_aging_exception_returns_is_error():
+    """get_ar_aging tool returns isError on unexpected exception."""
+    from mcp_servers.odoo.server import get_ar_aging
+
+    with patch("mcp_servers.odoo.server.get_ar_aging_data") as mock_fn:
+        mock_fn.side_effect = Exception("Unexpected DB error")
+        result = await get_ar_aging()
+
+    assert result.get("isError") is True
+    assert "Unexpected DB error" in result["content"]
+
+
+@pytest.mark.asyncio
+async def test_tool_health_check_exception_returns_is_error():
+    """health_check tool returns isError on unexpected exception."""
+    from mcp_servers.odoo.server import health_check
+
+    with patch("mcp_servers.odoo.server.health_check_odoo") as mock_fn:
+        mock_fn.side_effect = Exception("Connection refused")
+        result = await health_check()
+
+    assert result.get("isError") is True
+    assert "Connection refused" in result["content"]
+
+
+@pytest.mark.asyncio
+async def test_tool_get_gl_summary_success_content():
+    """get_gl_summary returns JSON content with expected fields."""
+    from mcp_servers.odoo.server import get_gl_summary
+
+    gl_data = {"total_assets": 5000.0, "total_liabilities": 2000.0,
+               "total_equity": 3000.0, "net_income": 1000.0}
+
+    with patch("mcp_servers.odoo.server.get_gl_summary_data") as mock_fn:
+        mock_fn.return_value = gl_data
+        result = await get_gl_summary()
+
+    content = json.loads(result["content"])
+    assert content["total_assets"] == 5000.0
+    assert content["net_income"] == 1000.0
+
+
+@pytest.mark.asyncio
+async def test_tool_get_ar_aging_success_content():
+    """get_ar_aging returns JSON content with aging data."""
+    from mcp_servers.odoo.server import get_ar_aging
+
+    aging_data = {"total_receivable": 1500.0, "partners": [],
+                  "buckets": {"0-30": 500.0, "31-60": 1000.0}}
+
+    with patch("mcp_servers.odoo.server.get_ar_aging_data") as mock_fn:
+        mock_fn.return_value = aging_data
+        result = await get_ar_aging()
+
+    content = json.loads(result["content"])
+    assert content["total_receivable"] == 1500.0
+
+
+@pytest.mark.asyncio
+async def test_tool_health_check_success_content():
+    """health_check returns JSON content with health data."""
+    from mcp_servers.odoo.server import health_check
+
+    health_data = {"healthy": True, "version": "17.0", "db": "h0_odoo"}
+
+    with patch("mcp_servers.odoo.server.health_check_odoo") as mock_fn:
+        mock_fn.return_value = health_data
+        result = await health_check()
+
+    content = json.loads(result["content"])
+    assert content["healthy"] is True
+    assert content["version"] == "17.0"
+
+
+def test_error_helper_returns_correct_format():
+    """_error returns dict with isError=True and JSON content."""
+    from mcp_servers.odoo.server import _error
+
+    result = _error("test error message")
+    assert result["isError"] is True
+    content = json.loads(result["content"])
+    assert content["error"] == "test error message"

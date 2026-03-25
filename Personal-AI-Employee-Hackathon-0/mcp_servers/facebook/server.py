@@ -1,6 +1,11 @@
 """Facebook/Instagram MCP Server -- FastMCP tools for Meta platforms."""
 from __future__ import annotations
 
+import os as _os, sys as _sys
+_PROJECT_ROOT = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+if _PROJECT_ROOT not in _sys.path:
+    _sys.path.insert(0, _PROJECT_ROOT)
+
 import json
 import logging
 
@@ -28,6 +33,9 @@ def _error(msg: str) -> dict:
     return {"isError": True, "content": json.dumps({"error": msg})}
 
 
+from mcp_servers.hitl_utils import check_hitl_approval as _check_hitl_approval
+
+
 @mcp.tool()
 async def post_update(text: str, visibility: str = "EVERYONE") -> dict:
     """Post to both Facebook and Instagram.
@@ -36,6 +44,9 @@ async def post_update(text: str, visibility: str = "EVERYONE") -> dict:
         text: Post content (Facebook <=63206 chars, auto-truncated for Instagram <=2200)
         visibility: EVERYONE or FRIENDS (Facebook only)
     """
+    hitl_check = _check_hitl_approval()
+    if hitl_check:
+        return hitl_check
     try:
         try:
             FacebookPostInput(text=text, visibility=visibility)  # type: ignore
@@ -60,6 +71,9 @@ async def post_facebook_only(text: str) -> dict:
     Args:
         text: Post content (<=63206 chars)
     """
+    hitl_check = _check_hitl_approval()
+    if hitl_check:
+        return hitl_check
     try:
         try:
             FacebookPostInput(text=text)
@@ -80,6 +94,9 @@ async def post_instagram_only(caption: str, image_url: str | None = None) -> dic
         caption: Post caption (<=2200 chars)
         image_url: Optional image URL for media posts
     """
+    hitl_check = _check_hitl_approval()
+    if hitl_check:
+        return hitl_check
     try:
         try:
             InstagramMediaInput(caption=caption, image_url=image_url)

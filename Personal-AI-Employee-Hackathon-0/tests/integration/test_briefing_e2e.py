@@ -66,9 +66,7 @@ async def test_weekly_audit_e2e_mocked():
         wa.LOG_DIR = tmp_path / "Logs"
         wa.BRIEFING_LOG = wa.LOG_DIR / "ceo_briefing.jsonl"
 
-        with patch.object(wa, "collect_full_gl", return_value={"total_assets": 1000}), \
-             patch.object(wa, "collect_full_ar", return_value={"total_receivable": 500}), \
-             patch.object(wa, "collect_invoices_due", return_value={"overdue": [], "upcoming": []}), \
+        with patch.object(wa, "collect_odoo_all", return_value={"gl": {"total_assets": 1000}, "ar": {"total_receivable": 500}, "invoices": {"overdue": [], "upcoming": []}}), \
              patch.object(wa, "collect_7day_social_rollup", return_value={"total": 3}), \
              patch.object(wa, "collect_7day_email_rollup", return_value={"total": 10}), \
              patch.object(wa, "_llm_draft_weekly", side_effect=Exception("LLM mocked off")), \

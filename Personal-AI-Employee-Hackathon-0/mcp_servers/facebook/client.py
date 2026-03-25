@@ -19,7 +19,7 @@ async def post_to_facebook(text: str) -> dict:
     if not PAGE_ACCESS_TOKEN:
         return {"success": False, "error": "FACEBOOK_PAGE_ACCESS_TOKEN not set", "platform": "facebook"}
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.post(
                 f"{GRAPH_API_BASE}/{PAGE_ID}/feed",
                 json={"message": text, "access_token": PAGE_ACCESS_TOKEN},
@@ -52,7 +52,7 @@ async def post_to_instagram(caption: str, image_url: str | None = None) -> dict:
     if not PAGE_ACCESS_TOKEN:
         return {"success": False, "error": "FACEBOOK_PAGE_ACCESS_TOKEN not set", "platform": "instagram"}
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             # Step 1: Create media container
             container_payload: dict = {
                 "caption": caption,
@@ -104,7 +104,7 @@ async def get_recent_facebook_posts(limit: int = 10) -> list:
     if not PAGE_ACCESS_TOKEN:
         return []
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(
                 f"{GRAPH_API_BASE}/{PAGE_ID}/feed",
                 params={

@@ -1,7 +1,7 @@
 # CEO Briefing Quickstart
 
 ## Prerequisites
-- Odoo Docker: `docker run -p 8069:8069 odoo:17`
+- Odoo Docker: `docker run -p 8069:8069 odoo:latest`
 - `.env` filled: ODOO_URL, ODOO_DB, ODOO_USER, ODOO_PASSWORD
 - WhatsApp bridge running (for HITL notifications)
 

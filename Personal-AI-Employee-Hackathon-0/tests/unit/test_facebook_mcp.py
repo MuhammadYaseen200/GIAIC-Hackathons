@@ -49,7 +49,8 @@ async def test_post_update_facebook_fails_instagram_still_posts():
     """If Facebook fails, Instagram still attempts to post."""
     from mcp_servers.facebook.server import post_update
 
-    with patch("mcp_servers.facebook.server.post_to_facebook") as fb_mock, \
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": "1"}), \
+         patch("mcp_servers.facebook.server.post_to_facebook") as fb_mock, \
          patch("mcp_servers.facebook.server.post_to_instagram") as ig_mock:
         fb_mock.return_value = {"success": False, "error": "Token expired", "platform": "facebook"}
         ig_mock.return_value = {"success": True, "post_id": "789", "platform": "instagram"}
@@ -347,3 +348,286 @@ async def test_client_post_to_facebook_no_token():
 
     assert result["success"] is False
     assert "not set" in result["error"]
+
+
+# -- ADDITIONAL CLIENT COVERAGE TESTS --
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_facebook_500_error():
+    """post_to_facebook handles non-auth HTTP errors (e.g. 500) gracefully."""
+    from mcp_servers.facebook import client as fb_client
+    import httpx
+
+    mock_resp = MagicMock()
+    mock_resp.status_code = 500
+    mock_resp.text = "Internal Server Error"
+    error = httpx.HTTPStatusError("500", request=MagicMock(), response=mock_resp)
+
+    mock_http = AsyncMock()
+    mock_http.post = AsyncMock(side_effect=error)
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.post_to_facebook("Hello")
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+    assert result["platform"] == "facebook"
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_facebook_generic_exception():
+    """post_to_facebook handles generic exceptions gracefully."""
+    from mcp_servers.facebook import client as fb_client
+
+    mock_http = AsyncMock()
+    mock_http.post = AsyncMock(side_effect=Exception("Network timeout"))
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.post_to_facebook("Hello")
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_instagram_no_page_token():
+    """post_to_instagram returns error when PAGE_ACCESS_TOKEN missing (IG set)."""
+    from mcp_servers.facebook import client as fb_client
+
+    original_ig = fb_client.IG_ACCOUNT_ID
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.IG_ACCOUNT_ID = "ig-123"
+    fb_client.PAGE_ACCESS_TOKEN = ""
+
+    result = await fb_client.post_to_instagram("Test caption")
+
+    fb_client.IG_ACCOUNT_ID = original_ig
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_instagram_container_creation_fails():
+    """post_to_instagram returns error when container creation returns non-200."""
+    from mcp_servers.facebook import client as fb_client
+
+    container_response = MagicMock()
+    container_response.status_code = 400
+    container_response.text = "Invalid media type"
+
+    mock_http = AsyncMock()
+    mock_http.post = AsyncMock(return_value=container_response)
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_ig = fb_client.IG_ACCOUNT_ID
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.IG_ACCOUNT_ID = "ig-123"
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.post_to_instagram("Test caption", image_url="https://example.com/img.jpg")
+
+    fb_client.IG_ACCOUNT_ID = original_ig
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+    assert "Container creation failed" in result["error"]
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_instagram_publish_fails():
+    """post_to_instagram returns error when publish step returns non-200."""
+    from mcp_servers.facebook import client as fb_client
+
+    container_response = MagicMock()
+    container_response.status_code = 200
+    container_response.json.return_value = {"id": "container-999"}
+
+    publish_response = MagicMock()
+    publish_response.status_code = 400
+    publish_response.text = "Publish failed"
+
+    mock_http = AsyncMock()
+    mock_http.post = AsyncMock(side_effect=[container_response, publish_response])
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_ig = fb_client.IG_ACCOUNT_ID
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.IG_ACCOUNT_ID = "ig-123"
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.post_to_instagram("Test caption", image_url="https://example.com/img.jpg")
+
+    fb_client.IG_ACCOUNT_ID = original_ig
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+    assert "Publish failed" in result["error"]
+
+
+@pytest.mark.asyncio
+async def test_client_post_to_instagram_generic_exception():
+    """post_to_instagram handles generic exceptions gracefully."""
+    from mcp_servers.facebook import client as fb_client
+
+    mock_http = AsyncMock()
+    mock_http.post = AsyncMock(side_effect=Exception("Connection reset"))
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_ig = fb_client.IG_ACCOUNT_ID
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.IG_ACCOUNT_ID = "ig-123"
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.post_to_instagram("Test caption")
+
+    fb_client.IG_ACCOUNT_ID = original_ig
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["success"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_facebook_posts_no_token():
+    """get_recent_facebook_posts returns [] when PAGE_ACCESS_TOKEN not set."""
+    from mcp_servers.facebook import client as fb_client
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = ""
+
+    result = await fb_client.get_recent_facebook_posts()
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_get_recent_facebook_posts_exception():
+    """get_recent_facebook_posts returns [] on exception."""
+    from mcp_servers.facebook import client as fb_client
+
+    mock_http = AsyncMock()
+    mock_http.get = AsyncMock(side_effect=Exception("Timeout"))
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.get_recent_facebook_posts()
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_client_health_check_meta_no_token():
+    """health_check_meta returns healthy=False when no token."""
+    from mcp_servers.facebook import client as fb_client
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = ""
+
+    result = await fb_client.health_check_meta()
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["healthy"] is False
+    assert result["token_valid"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_health_check_meta_token_invalid_401():
+    """health_check_meta returns token_valid=False on 401 response."""
+    from mcp_servers.facebook import client as fb_client
+
+    mock_resp = MagicMock()
+    mock_resp.status_code = 401
+    mock_resp.json.return_value = {"error": {"code": 190, "message": "Invalid OAuth access token"}}
+
+    mock_http = AsyncMock()
+    mock_http.get = AsyncMock(return_value=mock_resp)
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = "expired-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.health_check_meta()
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["healthy"] is False
+    assert result["token_valid"] is False
+
+
+@pytest.mark.asyncio
+async def test_client_health_check_meta_connect_error():
+    """health_check_meta returns healthy=False on ConnectError."""
+    from mcp_servers.facebook import client as fb_client
+    import httpx
+
+    mock_http = AsyncMock()
+    mock_http.get = AsyncMock(side_effect=httpx.ConnectError("Connection refused"))
+    mock_http.__aenter__ = AsyncMock(return_value=mock_http)
+    mock_http.__aexit__ = AsyncMock(return_value=None)
+
+    original_token = fb_client.PAGE_ACCESS_TOKEN
+    fb_client.PAGE_ACCESS_TOKEN = "test-token"
+
+    with patch("mcp_servers.facebook.client.httpx.AsyncClient", return_value=mock_http):
+        result = await fb_client.health_check_meta()
+
+    fb_client.PAGE_ACCESS_TOKEN = original_token
+    assert result["healthy"] is False
+    assert result["page_reachable"] is False
+
+
+# -- HITL GATE TESTS --
+
+@pytest.mark.asyncio
+async def test_post_update_hitl_rejected_when_not_approved():
+    """HITL gate blocks post_update when H0_HITL_APPROVED is not set."""
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": ""}, clear=False):
+        from mcp_servers.facebook.server import post_update
+        result = await post_update("Test post content")
+    assert result.get("isError") is True
+    data = json.loads(result["content"])
+    assert data["error"] == "HITL_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_post_facebook_only_hitl_rejected_when_not_approved():
+    """HITL gate blocks post_facebook_only when H0_HITL_APPROVED is not set."""
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": ""}, clear=False):
+        from mcp_servers.facebook.server import post_facebook_only
+        result = await post_facebook_only("Test post")
+    assert result.get("isError") is True
+    data = json.loads(result["content"])
+    assert data["error"] == "HITL_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_post_update_hitl_approved_when_env_set():
+    """HITL gate allows post_update when H0_HITL_APPROVED=1."""
+    with patch.dict("os.environ", {"H0_HITL_APPROVED": "1"}):
+        with patch("mcp_servers.facebook.server.post_to_facebook", new_callable=AsyncMock) as mock_fb, \
+             patch("mcp_servers.facebook.server.post_to_instagram", new_callable=AsyncMock) as mock_ig:
+            mock_fb.return_value = {"id": "123", "success": True}
+            mock_ig.return_value = {"id": "456", "success": True}
+            from mcp_servers.facebook.server import post_update
+            result = await post_update("Approved post")
+    assert result.get("isError") is not True

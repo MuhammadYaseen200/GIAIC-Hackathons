@@ -107,6 +107,9 @@ All custom MCP servers registered in `~/.claude.json` under `mcpServers`:
 | 7 | `facebook_mcp` | `mcp_servers/facebook/server.py` | post_update, post_facebook_only, post_instagram_only, get_recent_posts, health_check | ✅ Live | ADR-0017 |
 | 8 | `twitter_mcp` | `mcp_servers/twitter/server.py` | post_tweet, get_recent_tweets, health_check | ✅ Live | ADR-0017 |
 
+**Shared utilities** (consumed by multiple MCP servers):
+- `mcp_servers/hitl_utils.py` — HITL approval guard; imported by `facebook_mcp` and `twitter_mcp`. Requires `H0_HITL_APPROVED=1` env var to permit social posting. Directory-existence checks intentionally excluded (trivially bypassable).
+
 **FastMCP pattern** (all servers mirror `mcp_servers/linkedin/server.py`):
 ```python
 from mcp.server.fastmcp import FastMCP

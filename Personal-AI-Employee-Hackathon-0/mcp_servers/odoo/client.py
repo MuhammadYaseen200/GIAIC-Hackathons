@@ -41,7 +41,7 @@ async def get_gl_summary_data(client: httpx.AsyncClient) -> dict:
         headers = {"Cookie": f"session_id={session}"}
         response = await client.post(
             f"{ODOO_URL}/web/dataset/call_kw",
-            json=payload, headers=headers, timeout=30.0,
+            json=payload, headers=headers, timeout=10.0,
         )
         response.raise_for_status()
         data = response.json()
@@ -84,7 +84,7 @@ async def get_ar_aging_data(client: httpx.AsyncClient) -> dict:
         headers = {"Cookie": f"session_id={session}"}
         response = await client.post(
             f"{ODOO_URL}/web/dataset/call_kw",
-            json=payload, headers=headers, timeout=30.0,
+            json=payload, headers=headers, timeout=10.0,
         )
         response.raise_for_status()
         data = response.json()
@@ -153,7 +153,7 @@ async def get_invoices_due_data(client: httpx.AsyncClient, days: int = 7) -> lis
         headers = {"Cookie": f"session_id={session}"}
         response = await client.post(
             f"{ODOO_URL}/web/dataset/call_kw",
-            json=payload, headers=headers, timeout=30.0,
+            json=payload, headers=headers, timeout=10.0,
         )
         response.raise_for_status()
         data = response.json()
@@ -190,10 +190,12 @@ async def get_invoices_due_data(client: httpx.AsyncClient, days: int = 7) -> lis
 
 
 async def health_check_odoo(client: httpx.AsyncClient) -> dict:
-    """Check Odoo connectivity and version."""
+    """Check Odoo connectivity and version (JSON-RPC POST for Odoo 17+)."""
     try:
-        response = await client.get(
+        payload = {"jsonrpc": "2.0", "method": "call", "id": 1, "params": {}}
+        response = await client.post(
             f"{ODOO_URL}/web/webclient/version_info",
+            json=payload,
             timeout=10.0,
         )
         response.raise_for_status()
