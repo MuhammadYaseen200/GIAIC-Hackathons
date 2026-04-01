@@ -91,8 +91,11 @@ async def collect_calendar_section(period: str = "daily") -> dict:
                 list_events(time_min=now_iso, time_max=future_iso, max_results=10),
                 timeout=10.0,
             )
-            if isinstance(result, dict) and "content" in result:
-                return json.loads(result["content"])
+            if isinstance(result, dict):
+                if "content" in result:
+                    return json.loads(result["content"])
+                if "events" in result:
+                    return result
         except Exception as e:
             logger.warning(f"Calendar MCP unavailable: {e}")
         return {"status": "unavailable", "note": "Calendar MCP unavailable"}

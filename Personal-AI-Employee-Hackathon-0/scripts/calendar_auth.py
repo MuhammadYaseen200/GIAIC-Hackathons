@@ -26,28 +26,40 @@ def main():
         print("Download it from Google Cloud Console -> APIs & Services -> Credentials")
         sys.exit(1)
 
+    import os as _os
+    _os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # allow http://localhost in WSL2
     from google_auth_oauthlib.flow import InstalledAppFlow
 
     flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
 
-    print(f"\nStarting local OAuth server on port {PORT}...")
-    print("WSL2 instructions:")
-    print("  1. Copy the URL printed below")
-    print("  2. Paste it into your Windows browser and authorize")
-    print(f"  3. Google will redirect to localhost:{PORT} — the script captures it automatically\n")
-
-    creds = flow.run_local_server(
-        port=PORT,
-        open_browser=False,   # don't try gio/xdg-open — fails in WSL2
+    # WSL2-safe: Windows browser can't reach WSL2 localhost.
+    # Instead: user authorizes, browser shows "connection refused" at localhost:8085,
+    # user copies the full URL from the address bar and pastes it here.
+    flow.redirect_uri = f"http://localhost:{PORT}/"
+    auth_url, _ = flow.authorization_url(
         prompt="consent",
         access_type="offline",
     )
 
+    print("\n" + "="*60)
+    print("STEP 1 — Open this URL in your Windows browser:")
+    print(f"\n  {auth_url}\n")
+    print("STEP 2 — Sign in and click Allow.")
+    print("STEP 3 — Browser will show 'connection refused' — that's normal.")
+    print("STEP 4 — Copy the FULL URL from the browser address bar.")
+    print("         It starts with:  http://localhost:8085/?state=...&code=...")
+    print("="*60 + "\n")
+
+    redirect_response = input("Paste the full redirect URL here: ").strip()
+
+    flow.fetch_token(authorization_response=redirect_response)
+    creds = flow.credentials
+
     with open(TOKEN_PATH, "w") as f:
         f.write(creds.to_json())
 
-    print(f"\nCalendar token saved to: {TOKEN_PATH}")
-    print("HT-011 complete -- Calendar MCP is now authorized.")
+    print(f"\n✅ Calendar token saved to: {TOKEN_PATH}")
+    print("HT-011 complete — Calendar MCP is now authorized.")
 
 
 if __name__ == "__main__":
