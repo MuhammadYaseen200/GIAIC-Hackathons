@@ -469,7 +469,9 @@ Scans entire briefing content for substring. For 2000-token briefing, this is <1
 
 ---
 
-## Appendix: Testing Checklist
+## Appendix: Phase 7 Load-Testing Backlog
+
+> These items require a live cloud deployment (Phase 7 Platinum). Deferred until Oracle VM provisioned (HT-008).
 
 - [ ] Measure actual CEO briefing duration under load (100 emails, network latency)
 - [ ] Measure weekly audit duration with 10k+ lines in email log

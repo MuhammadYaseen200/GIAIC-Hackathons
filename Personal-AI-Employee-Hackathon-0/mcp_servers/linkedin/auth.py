@@ -10,6 +10,8 @@ import time
 from pathlib import Path
 from typing import Optional
 
+_DEFAULT_TOKEN_TTL_SECONDS = 3600  # 1 hour fallback when expires_in not returned by API
+
 import httpx
 
 from mcp_servers.linkedin.models import LinkedInCredentials
@@ -77,7 +79,7 @@ def _refresh_token(creds: LinkedInCredentials) -> LinkedInCredentials:
     new_creds = LinkedInCredentials(
         access_token=data["access_token"],
         refresh_token=data.get("refresh_token", creds.refresh_token),
-        expires_at=time.time() + data.get("expires_in", 3600),
+        expires_at=time.time() + data.get("expires_in", _DEFAULT_TOKEN_TTL_SECONDS),
         person_urn=creds.person_urn,
     )
     _save_token_file(new_creds)

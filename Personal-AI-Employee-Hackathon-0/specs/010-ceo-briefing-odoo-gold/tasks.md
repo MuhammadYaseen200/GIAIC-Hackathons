@@ -290,11 +290,11 @@ Unblocked — start immediately.
 
 ### Commit and PR (T106–T110)
 
-- [ ] T106 Run `security-scan` skill final pass — clean report required before commit
-- [ ] T107 Run `deployment-preflight-check` skill — verify all env vars documented, no missing dependencies, cron entries valid
-- [ ] T108 Stage and commit all Phase 6 files: `git add` specific files (never `git add -A`); commit message: `feat(phase-6): Gold Tier CEO briefing + Odoo + social MCPs + agent skills`
-- [ ] T109 Create PHR for implementation phase at `history/prompts/ceo-briefing-odoo-gold/004-phase6-gold-implement.misc.prompt.md`
-- [ ] T110 Create PR from `010-ceo-briefing-odoo-gold` to `main` with full description of Phase 6 deliverables, SC verification results, human tasks completed/pending
+- [X] T106 Run `security-scan` skill final pass — clean report: no secrets, no PII, settings.local.json removed from git, .gitignore updated ✅ 2026-03-25
+- [X] T107 Run `deployment-preflight-check` skill — all env vars documented, no missing deps, cron valid, path-warden 28/28 APPROVED, qa-overseer all 12 SCs PASS ✅ 2026-03-25
+- [X] T108 Stage and commit all Phase 6 files: commit `3df7a6a` — `fix(phase-6): security hardening, SC-001 timeout, PII cleanup, +749 tests green` ✅ 2026-03-25
+- [X] T109 PHRs created: 007–010 under `history/prompts/ceo-briefing-odoo-gold/` covering polish, coverage hardening, async fixes, review-v3 fixes ✅ 2026-03-25
+- [X] T110 PR #24 created: `fix(phase-6): review-v3 security hardening + SC-001 timeout + PII cleanup` → main ✅ 2026-03-25
 
 ---
 

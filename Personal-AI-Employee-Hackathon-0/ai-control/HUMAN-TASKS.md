@@ -70,7 +70,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
 - **Claude Can Then**: Build gmail_watcher.py, Gmail MCP server, email processing pipeline
 
 ### HT-003: Fix Broken MCP Servers
-- **Status**: PENDING
+- **Status**: DONE (2026-03-25 — all critical MCPs live: git, odoo_mcp, facebook_mcp, twitter_mcp, whatsapp_mcp, obsidian_mcp, google-workspace/calendar, Neon DB, codex-cli, figma-flutter, windows-cli all registered in .mcp.json)
 - **Blocks**: Various phases depending on MCP
 - **Why Human**: MCP configuration requires editing Claude Code settings files and potentially installing system-level packages.
 - **Instructions**:

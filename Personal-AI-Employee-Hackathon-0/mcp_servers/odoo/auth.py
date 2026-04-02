@@ -6,8 +6,8 @@ import httpx
 logger = logging.getLogger(__name__)
 
 ODOO_URL = os.getenv("ODOO_URL", "http://localhost:8069")
-ODOO_DB = os.getenv("ODOO_DB", "h0_odoo")
-ODOO_USER = os.getenv("ODOO_USER", "admin")
+ODOO_DB = os.getenv("ODOO_DB") or ""
+ODOO_USER = os.getenv("ODOO_USER") or ""
 ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "")
 
 _session_id: str | None = None
@@ -23,6 +23,11 @@ async def get_odoo_session(client: httpx.AsyncClient) -> str:
     global _session_id
     if _session_id:
         return _session_id
+
+    if not ODOO_DB:
+        raise OdooAuthError("ODOO_DB environment variable is required but not set")
+    if not ODOO_USER:
+        raise OdooAuthError("ODOO_USER environment variable is required but not set")
 
     payload = {
         "jsonrpc": "2.0",
