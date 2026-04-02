@@ -59,6 +59,9 @@ def _run_manual_flow(credentials_path: Path) -> Credentials:
     """
     # Allow http://localhost redirect (safe for local dev, never sent over network)
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+    # Allow Google to return a superset of requested scopes (e.g. calendar.readonly
+    # added when user has previously granted it) without raising ScopeChanged error
+    os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
 
     flow = InstalledAppFlow.from_client_secrets_file(
         str(credentials_path),
@@ -142,11 +145,15 @@ def main() -> int:
     if creds and creds.valid:
         print(f"Token already valid at {token_path}")
     elif creds and creds.expired and creds.refresh_token:
-        print("Token expired, refreshing...")
-        creds.refresh(Request())
-        atomic_write(token_path, creds.to_json())
-        print("Token refreshed successfully.")
-    else:
+        print("Token expired, attempting refresh...")
+        try:
+            creds.refresh(Request())
+            atomic_write(token_path, creds.to_json())
+            print("Token refreshed successfully.")
+        except Exception as refresh_err:
+            print(f"Refresh failed ({refresh_err}). Token revoked — starting full re-auth.")
+            creds = None  # fall through to full OAuth flow below
+    if not (creds and creds.valid):
         if _is_wsl():
             creds = _run_manual_flow(credentials_path)
         else:
@@ -156,9 +163,8 @@ def main() -> int:
                 str(credentials_path), SCOPES
             )
             creds = flow.run_local_server(port=0)
-
         atomic_write(token_path, creds.to_json())
-        print(f"\nToken saved to {token_path}")
+        print(f"Token saved to {token_path}")
 
     # Verify with getProfile()
     print("\nVerifying authentication...")

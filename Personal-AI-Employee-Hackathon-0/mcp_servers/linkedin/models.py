@@ -2,6 +2,8 @@
 import time
 from typing import Literal, Optional
 
+_DEFAULT_TOKEN_TTL_SECONDS = 3600  # 1 hour fallback when expires_in not returned by API
+
 from pydantic import BaseModel, Field
 
 
@@ -37,6 +39,6 @@ class LinkedInCredentials(BaseModel):
 
     access_token: str
     refresh_token: Optional[str] = None
-    expires_at: float = Field(default_factory=lambda: time.time() + 3600)
+    expires_at: float = Field(default_factory=lambda: time.time() + _DEFAULT_TOKEN_TTL_SECONDS)
     person_urn: Optional[str] = None
     token_type: str = "Bearer"

@@ -36,7 +36,7 @@ async def post_to_facebook(text: str) -> dict:
             }
     except httpx.HTTPStatusError as e:
         if e.response.status_code in (400, 401, 403):
-            logger.error(f"Facebook auth/permission error: {e.response.text}")
+            logger.error(f"Facebook auth/permission error: HTTP {e.response.status_code}")
             return {"success": False, "error": f"Auth error: {e.response.status_code}", "platform": "facebook"}
         return {"success": False, "error": str(e), "platform": "facebook"}
     except Exception as e:
@@ -138,7 +138,8 @@ async def health_check_meta() -> dict:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(
                 f"{GRAPH_API_BASE}/me",
-                params={"access_token": PAGE_ACCESS_TOKEN, "fields": "id,name"},
+                params={"fields": "id,name"},
+                headers={"Authorization": f"Bearer {PAGE_ACCESS_TOKEN}"},
             )
             if response.status_code == 200:
                 return {"healthy": True, "page_reachable": True, "token_valid": True, "error": None}

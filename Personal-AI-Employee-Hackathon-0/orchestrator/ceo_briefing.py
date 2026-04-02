@@ -322,7 +322,11 @@ async def send_hitl_notification(briefing_path: Path, metrics: dict) -> None:
         await asyncio.wait_for(bridge.send(owner_wa, msg), timeout=15.0)
         logger.info(f"HITL notification sent ({len(msg)} chars)")
     except Exception as e:
-        logger.warning(f"HITL notification failed (non-blocking): {e}")
+        logger.warning(
+            f"HITL notification failed (non-blocking): {e} — "
+            f"WhatsApp bridge offline at {os.getenv('WHATSAPP_BRIDGE_URL', 'http://localhost:8080')}. "
+            f"Restart with: nohup ~/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge &"
+        )
 
 
 async def check_approval_and_email(briefing_path: Path) -> dict:

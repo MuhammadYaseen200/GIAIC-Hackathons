@@ -8,9 +8,11 @@ from mcp_servers.odoo.models import GLSummary, ARAgingResult, InvoiceResult, Odo
 # -- AUTH TESTS ---------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_get_odoo_session_success():
+async def test_get_odoo_session_success(monkeypatch):
     """get_odoo_session returns session_id on success."""
     from mcp_servers.odoo import auth
+    monkeypatch.setattr(auth, "ODOO_DB", "test_db")
+    monkeypatch.setattr(auth, "ODOO_USER", "admin")
     auth._session_id = None  # reset singleton
 
     mock_response = MagicMock()

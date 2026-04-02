@@ -11,6 +11,7 @@ linkedin_token.json
 # Obsidian internals
 vault/.obsidian/workspace.json
 vault/.obsidian/workspace-mobile.json
+vault/.obsidian/plugins/
 
 # Vault runtime data — personal email content, NEVER commit
 vault/Needs_Action/*.md
@@ -60,6 +61,9 @@ node_modules/
 
 # Local Claude Code workspace settings — machine-specific paths and permissions
 .claude/settings.local.json
+
+# MCP server config — contains live API credentials, never commit
+.mcp.json
 
 # Artefacts created during test runs / mocking
 MagicMock/

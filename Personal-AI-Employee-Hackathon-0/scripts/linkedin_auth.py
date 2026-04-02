@@ -10,6 +10,8 @@ import json
 import os
 import sys
 import time
+
+_DEFAULT_TOKEN_TTL_SECONDS = 3600  # 1 hour fallback when expires_in not in token response
 import platform
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -118,7 +120,7 @@ def main():
     token_data = resp.json()
     access_token = token_data["access_token"]
     refresh_token = token_data.get("refresh_token")
-    expires_at = time.time() + token_data.get("expires_in", 3600)
+    expires_at = time.time() + token_data.get("expires_in", _DEFAULT_TOKEN_TTL_SECONDS)
 
     # Fetch person URN via OIDC userinfo endpoint — returns 'sub' as the person ID
     profile_resp = httpx.get(

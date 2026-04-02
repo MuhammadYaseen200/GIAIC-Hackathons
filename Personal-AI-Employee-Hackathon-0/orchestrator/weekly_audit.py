@@ -211,7 +211,7 @@ Be concise, factual, and actionable. Use bullet points and tables where appropri
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}],
         ),
-        timeout=25.0,
+        timeout=55.0,
     )
     text = message.content[0].text
     if not text or not text.strip():
@@ -297,7 +297,7 @@ async def draft_weekly_audit(sections: dict) -> str:
         logger.info("Weekly audit drafted via LLM")
         return content
     except Exception as e:
-        logger.warning(f"LLM draft failed ({e}), using template fallback")
+        logger.warning(f"LLM draft failed ({type(e).__name__}: {e}), using template fallback")
         _log_event("llm_fallback_weekly", reason=str(e))
         return await _template_draft_weekly(sections)
 
@@ -364,7 +364,11 @@ async def send_hitl_notification(audit_path: Path, metrics: dict) -> None:
         await asyncio.wait_for(bridge.send(owner_wa, msg), timeout=15.0)
         logger.info(f"HITL notification sent ({len(msg)} chars)")
     except Exception as e:
-        logger.warning(f"HITL notification failed (non-blocking): {e}")
+        logger.warning(
+            f"HITL notification failed (non-blocking): {e} — "
+            f"WhatsApp bridge offline at {os.getenv('WHATSAPP_BRIDGE_URL', 'http://localhost:8080')}. "
+            f"Restart with: nohup ~/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge &"
+        )
 
 
 async def run_weekly_audit() -> dict:
