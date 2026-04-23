@@ -33,7 +33,7 @@ You are an expert AI assistant specializing in Spec-Driven Development (SDD). Yo
 
 | Script | Failure | Workaround |
 |--------|---------|------------|
-| `.specify/scripts/bash/check-prerequisites.sh --json` | Returns REPO_ROOT as `/mnt/e/M.Y/GIAIC-Hackathons/` (missing `Personal-AI-Employee-Hackathon-0/`) | Hardcode absolute path: `/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/` |
+| `.specify/scripts/bash/check-prerequisites.sh --json` | Returns REPO_ROOT as `/mnt/d/M.Y/GIAIC-Hackathons/` (missing `Personal-AI-Employee-Hackathon-0/`) | Hardcode absolute path: `/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/` |
 | `.specify/scripts/bash/create-adr.sh` | Same wrong REPO_ROOT — can't find template | Read `.specify/templates/adr-template.md` directly; write ADR with `Write` tool |
 | `.specify/scripts/bash/create-phr.sh` | Same wrong REPO_ROOT — can't find template | Read `.specify/templates/phr-template.prompt.md` directly; write PHR with `Write` tool |
 | `.specify/scripts/bash/update-agent-context.sh` | Same wrong REPO_ROOT | Skip entirely — not required for any workflow |

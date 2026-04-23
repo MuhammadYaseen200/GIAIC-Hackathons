@@ -12,6 +12,10 @@ linkedin_token.json
 vault/.obsidian/workspace.json
 vault/.obsidian/workspace-mobile.json
 vault/.obsidian/plugins/
+vault/.obsidian/graph.json
+
+# Vault canvas files — runtime UI state, not source
+vault/*.canvas
 
 # Vault runtime data — personal email content, NEVER commit
 vault/Needs_Action/*.md

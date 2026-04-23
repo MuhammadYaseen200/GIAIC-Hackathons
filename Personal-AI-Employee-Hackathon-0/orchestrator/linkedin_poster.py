@@ -27,7 +27,7 @@ from typing import Optional
 
 # ── Project root guard ─────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REQUIRED_DIR = "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0"
+REQUIRED_DIR = "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0"
 if not str(PROJECT_ROOT).startswith(REQUIRED_DIR):
     print(f"WRONG DIRECTORY: {PROJECT_ROOT}\nRequired: {REQUIRED_DIR}\nSTOP.")
     sys.exit(1)
