@@ -142,12 +142,12 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
   "gmail_mcp": {
     "command": "python3",
     "args": [
-      "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
+      "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
     ],
     "env": {
-      "GMAIL_CREDENTIALS_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
-      "GMAIL_TOKEN_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
-      "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+      "GMAIL_CREDENTIALS_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
+      "GMAIL_TOKEN_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
+      "VAULT_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
     }
   }
   ```
@@ -157,10 +157,10 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
   "obsidian_mcp": {
     "command": "python3",
     "args": [
-      "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
+      "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
     ],
     "env": {
-      "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+      "VAULT_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
     }
   }
   ```
@@ -172,21 +172,21 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
       "gmail_mcp": {
         "command": "python3",
         "args": [
-          "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
+          "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/gmail/server.py"
         ],
         "env": {
-          "GMAIL_CREDENTIALS_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
-          "GMAIL_TOKEN_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
-          "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+          "GMAIL_CREDENTIALS_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/credentials.json",
+          "GMAIL_TOKEN_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/token.json",
+          "VAULT_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
         }
       },
       "obsidian_mcp": {
         "command": "python3",
         "args": [
-          "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
+          "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/obsidian/server.py"
         ],
         "env": {
-          "VAULT_PATH": "/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
+          "VAULT_PATH": "/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault"
         }
       }
     }
@@ -199,7 +199,7 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
   **Step 5 — Verify health_check for each MCP**:
   ```bash
   # Test Gmail MCP health_check manually:
-  cd /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0
+  cd /mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0
   VAULT_PATH=./vault GMAIL_CREDENTIALS_PATH=./credentials.json GMAIL_TOKEN_PATH=./token.json \
     python3 -c "
   import asyncio, sys
@@ -410,8 +410,8 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
     --env FACEBOOK_PAGE_ID=982971481562290 \
     --env FACEBOOK_PAGE_ACCESS_TOKEN="$(grep FACEBOOK_PAGE_ACCESS_TOKEN .env | cut -d= -f2-)" \
     --env INSTAGRAM_BUSINESS_ACCOUNT_ID="" \
-    --env VAULT_PATH=/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
-    -- python3 /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/facebook/server.py
+    --env VAULT_PATH=/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
+    -- python3 /mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/facebook/server.py
   ```
 - **Verification**: `/mcp` shows `facebook_mcp` connected
 - **Claude Can Then**: Use facebook_mcp tools directly in sessions
@@ -427,8 +427,8 @@ This file tracks all tasks that REQUIRE human intervention because Claude Code c
     --env TWITTER_API_SECRET="$(grep TWITTER_API_SECRET .env | head -1 | cut -d= -f2-)" \
     --env TWITTER_ACCESS_TOKEN="$(grep ^TWITTER_ACCESS_TOKEN= .env | cut -d= -f2-)" \
     --env TWITTER_ACCESS_TOKEN_SECRET="$(grep TWITTER_ACCESS_TOKEN_SECRET .env | cut -d= -f2-)" \
-    --env VAULT_PATH=/mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
-    -- python3 /mnt/e/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/twitter/server.py
+    --env VAULT_PATH=/mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/vault \
+    -- python3 /mnt/d/M.Y/GIAIC-Hackathons/Personal-AI-Employee-Hackathon-0/mcp_servers/twitter/server.py
   ```
 - **Verification**: `/mcp` shows `twitter_mcp` connected
 - **Claude Can Then**: Use twitter_mcp tools directly in sessions
